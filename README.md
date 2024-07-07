@@ -3,7 +3,7 @@
 
 ![SAX4BPM-banner](sax4bpm_logo6_w.png "SAX4BPM")
 
-**This is a high-level Python library which aims to provide an easy and intuitive way of exploring various perspectives into a business process - a process model, a causal model , XAI explanations and LLM-based synthesis of explanations based on the three perspectives mentioned above.**
+**This is a designated Python library that aims to provide an easy and intuitive way of deriving explanations about business processes, considering multiple perspectives. Concretely, three major knowledge ingredients—a process model, a causal process model, and XAI attribute ranking—are derived and subsequently synthesized by an LLM for the construction of process and context-aware explanations, namely Situation-aware Explanations (SAX explanations).**
 
 
 <p align="center">
