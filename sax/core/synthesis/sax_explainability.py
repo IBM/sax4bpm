@@ -301,6 +301,7 @@ def _getChain(model: BaseLLM,causal: bool, process:bool, xai:bool, rag:bool, ret
 
     
 
+
 def getSyntethis(data:RawEventData, query:str, model: BaseLLM,causal: bool, process:bool, xai:bool, rag:bool, retriever: DocumentRetrieverLLM =None, modality =Modality.PARENT, prior_knowledge=True, p_value_threshold=None):
     chain = _getChain(model,causal, process, xai, rag, retriever)
     result = chain.invoke({"data":data,"query":query,"modality":modality,"prior_knowledge":prior_knowledge,"p_value_threshold":p_value_threshold})
