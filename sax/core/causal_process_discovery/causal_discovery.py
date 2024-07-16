@@ -42,25 +42,42 @@ def discover_causal_dependencies(dataObject:RawEventData,variant: Optional[Algor
 
     return result     
 
-def get_causal_graph_representation(result: CausalResultInfo,p_value_threshold=None):
-    result_dict = {}
-    np_matrix = result.getAdjacencyMatrix()
-    if p_value_threshold is not None:
-        np_matrix = np.array(np_matrix)
 
-        # Create a boolean mask where True indicates that the value is below the p-value threshold
-        mask = np_matrix < p_value_threshold 
-        
-        # Replace values below the p-value threshold with zeros
-        np_matrix[mask] = 0
 
-    for i, row in enumerate(np_matrix):
-        for j, coefficient in enumerate(row):
-            if coefficient != 0.0:
-                key = (result.columns[j], result.columns[i])
-                result_dict[key] = coefficient
+def getDataCausalRepresentation(dataframe: RawEventData,modality,prior_knowledge,p_value_threshold):
+        """
+        The purpose of this function is to take a raw event log as input and output a dictionary representation of the causal model discovered from this event log.
+        :param dataframe: A pandas dataframe containing the raw event log data.
+        :type dataframe: RawEventData
+        :return: A dictionary representing the causal model, where each key is a tuple representing a transition between two activities, and the value is the strength of that transition as determined causal discovery.
+        :rtype: dict
+        """
+        causalModel = discover_causal_dependencies(dataObject=dataframe,modality=modality,prior_knowledge=prior_knowledge)
+        causalPairs = getModelCausalRepresentation(causalModel,p_value_threshold)
+        return causalPairs
 
-    return result_dict
+def getModelCausalRepresentation(model,p_value_threshold):
+    def _get_causal_graph_representation(result: CausalResultInfo,p_value_threshold=None):
+        result_dict = {}
+        np_matrix = result.getAdjacencyMatrix()
+        if p_value_threshold is not None:
+            np_matrix = np.array(np_matrix)
+
+            # Create a boolean mask where True indicates that the value is below the p-value threshold
+            mask = np_matrix < p_value_threshold 
+            
+            # Replace values below the p-value threshold with zeros
+            np_matrix[mask] = 0
+
+        for i, row in enumerate(np_matrix):
+            for j, coefficient in enumerate(row):
+                if coefficient != 0.0:
+                    key = (result.columns[j], result.columns[i])
+                    result_dict[key] = coefficient
+
+        return result_dict
+    causalRepresentation = _get_causal_graph_representation(model,p_value_threshold)
+    return causalRepresentation
 
 def view_causal_dependencies(dependencies: CausalResultInfo, p_value_threshold: float=None) ->graphviz.Digraph:
     """
