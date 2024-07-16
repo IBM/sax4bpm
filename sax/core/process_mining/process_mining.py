@@ -378,3 +378,24 @@ def getEndActivities(dataframe: RawEventData):
         :rtype: dict
         """      
         return pm4py.get_end_activities(dataframe.getLog())
+
+def getDataProcessRepresentation(dataframe: RawEventData):
+        """
+        The purpose of this function is to take a raw event log as input and output a dictionary representation of the process model discovered when mining this event log.
+        :param dataframe: A pandas dataframe containing the raw event log data.
+        :type dataframe: RawEventData
+        :return: A dictionary representing the process model, where each key is a tuple representing a transition between two activities, and the value is the strength of that transition as determined by the frequency with which it occurs in the event log.
+        :rtype: dict
+        """        
+        dfg,event_log = discover_dfg(dataframe)
+        processRepresentation = getModelProcessRepresentation(dfg)
+        return processRepresentation
+
+def getModelProcessRepresentation(model):
+        def _getPairsProcess(dfgModel):    
+                result_dict = {}
+                for pair, strength in dfgModel.items():
+                        result_dict[pair] = strength
+                return result_dict        
+        processRepresentation = _getPairsProcess(model)
+        return processRepresentation
