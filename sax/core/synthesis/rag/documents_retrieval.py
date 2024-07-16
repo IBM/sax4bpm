@@ -77,16 +77,13 @@ class DocumentRetrieverLLM(BaseRetriever):
         retriever = db.as_retriever(search_type="similarity", search_kwargs={"k":kwargs_to_pass})
 
         # create a chain to answer questions 
-        qa = RetrievalQA.from_chain_type(
-            llm=model.getModel(), chain_type="map_reduce", retriever=retriever, return_source_documents=True)
-        return qa
+        return retriever
     
 
     # ----- Retrieval and Generation Process -----
 
-    def get_context(self, query):        
-        result = self._retriever({"query": query})
-        return result
+    def get_retriever(self):        
+       return self._retriever
  
     def getModel(self)-> BaseLLM:      
         return self._model
