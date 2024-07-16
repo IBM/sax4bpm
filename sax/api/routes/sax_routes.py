@@ -79,8 +79,8 @@ def get_causal_graph(variant_name, modality, prior_knowledge = False, p_value_th
     else:
         variant = imported_data   
     modality = Modality.from_string(modality)     
-    causal_result = cd.discover_causal_dependencies(dataObject=variant,modality=modality,prior_knowledge=prior_knowledge)
-    causal_graph = cd.get_causal_graph_representation(causal_result,p_value_threshold)
+
+    causal_graph = cd.getDataCausalRepresentation(variant,modality,prior_knowledge,p_value_threshold)
     result_list =  [{"from": pair[0], "to": pair[1], "items": count} for pair, count in causal_graph.items()]
     return result_list
 
@@ -366,4 +366,3 @@ def get_explanations_route():
       error = str(e)
       raise ValidationException(error,"Application exception") from e
     return jsonify(discrepancies)
-
