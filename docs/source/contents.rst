@@ -18,7 +18,12 @@ The following page provides entry point for documentation of all available funct
 	- :doc:`Prior Knowledge <sax.core.causal_process_discovery.prior_knowledge>`
 
 3. Process Mining
-	- :doc:`Process Mining Library <sax.core.process_mining>`
+	- :doc:`Process Mining  <sax.core.process_mining>`
+
+4. Synthethis
+	- :doc:`LLM blending  <sax.core.synthesis>`
+	- :doc:`LLMs Wrappers <sax.core.synthesis.llms>`
+	- :doc:`RAG retreivers <sax.core.synthesis.rag>`
 
 
 	

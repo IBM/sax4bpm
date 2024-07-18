@@ -17,12 +17,25 @@ from sax.core.synthesis.rag.base_retrieval import BaseRetriever
 CHROMA_PATH = "db/"
 
 class DocumentRetrieverLLM(BaseRetriever):    
+    """A document retrieval imeplementation based on Chroma vector store
+
+    """
 
     def __init__(self,modelClass: BaseLLM,docLocation,filterFiles=None, chunk_size=None, chunk_overlap=None,retrieved_results=None, dbPath=None):
         self._model = modelClass
         self._retriever = self._indexDocuments(modelClass,docLocation,filterFiles,chunk_size,chunk_overlap,retrieved_results,dbPath)
 
     def _getDocuments(self,docPath,glob = None):
+        """Load all the documents in the given path with the given type and return the loaded docs as array
+    
+        :param docPath: path to the document/folder
+        :type docPath: str
+        :param glob: type of documents to embed (txt,pdf,csv), defaults to None
+        :type glob: str, optional
+        :raises ValidationException: unknown document types in the specified path
+        :return: array of loaded documents
+        :rtype: array
+        """
         documents = []
         if docPath.endswith('.csv'):
             loader =  CSVLoader(docPath)
@@ -57,6 +70,25 @@ class DocumentRetrieverLLM(BaseRetriever):
 
 
     def _indexDocuments(self, model: BaseLLM,docLocation,filterFiles=None,chunk_size=None,chunk_overlap=None,retrieved_results=None,dbPath=None):
+        """Load the documents in the given location , index and store in the Chroma vector store for later contextual retrieval.
+        
+        :param model: the wrapper for the chosen model provider for embedding model
+        :type model: BaseLLM
+        :param docLocation: path to the document/documents folder
+        :type docLocation: str
+        :param filterFiles: extension type of the files to load if any
+        :type filterFiles: str, optional
+        :param chunk_size: the size of the chunk in text splitter, defaults to None
+        :type chunk_size: int, optional
+        :param chunk_overlap: the overlap of chunks in text splitter, defaults to None
+        :type chunk_overlap: int, optional
+        :param retrieved_results: the number of results to retrieve, defaults to None
+        :type retrieved_results: int, optional
+        :param dbPath: path to the Chroma db, defaults to None
+        :type dbPath: str, optional
+        :return: retriever wrapper to use for later retreivals agains the specified docs
+        :rtype: BaseRetriever
+        """
         # load the doc/docs
         pages = self._getDocuments(docLocation,filterFiles)        
 
@@ -82,8 +114,8 @@ class DocumentRetrieverLLM(BaseRetriever):
 
     # ----- Retrieval and Generation Process -----
 
-    def get_retriever(self):        
-       return self._retriever
+    def get_retriever(self):
+        """Return the embedded retriever stored in this wrapper"""
+        return self._retriever
  
-    def getModel(self)-> BaseLLM:      
-        return self._model
+   

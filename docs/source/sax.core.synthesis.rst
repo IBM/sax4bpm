@@ -1,5 +1,15 @@
-sax.core.synthesis package
+LLM Synthethis package
 ==========================
+The package provides methods for using LLMs to blend the results of analysis into various process perspectives (causal, process and XAI) and available process documentation to answer user queries related to the process.
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 1
+
+   sax.core.synthesis.llms
+   sax.core.synthesis.rag
 
 Submodules
 ----------

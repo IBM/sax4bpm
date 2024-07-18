@@ -1,4 +1,4 @@
-sax.core.utils package
+Utils package
 ======================
 
 Submodules
