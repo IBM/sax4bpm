@@ -10,8 +10,7 @@ discovery of causal-execution dependency model. In the nearest future we will ad
 higher-level human-understandable LLM-supported view.
 
 .. toctree::  
-   intro.rst
-   installation.rst
+   intro.rst   
    contents.rst
    tutorials.rst
 
