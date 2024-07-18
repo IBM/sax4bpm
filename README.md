@@ -10,6 +10,9 @@
 <img src="https://img.shields.io/badge/sax4bpm-v1.0.0-green" />
 </p>
 
+## Documentation
+
+The full documentation for this repository can be found at [GitHub Pages](https://ibm.github.io/sax4bpm/).
 
 ## APIs
 
@@ -170,3 +173,4 @@ None
 > ```
 
 </details>
+
