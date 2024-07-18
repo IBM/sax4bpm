@@ -14,4 +14,10 @@
 
 The full documentation for this repository can be found at [GitHub Pages](https://ibm.github.io/sax4bpm/).
 
+## Related Papers
 
+### Causal Business Processes
+- F. Fournier, L. Limonad, I. Skarbovsky, Y. David, [The WHY in Business Processes: Discovery of Causal Execution Dependencies](https://arxiv.org/abs/2310.14975), arXix:2310.14975, 2024.
+
+### Leveraging LLMs to explain Business Processes
+- D. Fahland, F. Fournier, L. Limonad, I. Skarbovsky, A. J. E. Swevels, [How well can large language models explain business processes?](https://arxiv.org/abs/2401.12846), arXiv:2401.12846, 2024.
