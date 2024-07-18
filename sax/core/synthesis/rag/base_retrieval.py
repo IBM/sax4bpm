@@ -4,6 +4,12 @@
 from abc import abstractmethod
 
 class BaseRetriever: 
+    """
+    Base class for all document retriever wrappers   
+    """ 
     @abstractmethod                
-    def getContext(self, query):
+    def get_retriever(self):
+        """Get the embedded retriever
+        """
         pass
+

@@ -8,6 +8,8 @@ from langchain.embeddings.openai import OpenAIEmbeddings
 from sax.core.synthesis.llms.base_llm import BaseLLM
 
 class OpenAILLM(BaseLLM):
+    """OpenAI LLM wrapper, implementation of BaseLLM
+    """
     api_key = os.getenv("OPENAI_KEY")
 
     def __init__(self, model, temperature):  

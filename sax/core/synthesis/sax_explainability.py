@@ -3,7 +3,7 @@
 # -----------------------------------------------------------------------------
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
-from langchain_core.runnables import RunnablePassthrough, RunnableLambda, RunnableParallel, RunnableMap
+from langchain_core.runnables import RunnableLambda, RunnableParallel
 from sax.core.causal_process_discovery import causal_discovery as cd
 from sax.core.causal_process_discovery.causal_constants import Modality
 from sax.core.process_data.raw_event_data import RawEventData
@@ -14,11 +14,51 @@ from sax.core.synthesis.rag.documents_retrieval import DocumentRetrieverLLM
 from operator import itemgetter
 
 def createDocumentContextRetriever(modelType:ModelTypes, modelName: str, temperature: int, documentsPath:str,filter=None,chunk_size=None,chunk_overlap=None,retrieved_results=None,dbPath=None) -> BaseRetriever:
+    """Create a document context retriever to use later for retreiving query-appropriate context.
+
+    :param modelType: the model provider type to use
+    :type modelType: ModelTypes
+    :param modelName: the name of the model by the model provider to use as generative model
+    :type modelName: str
+    :param temperature: the temperature to use with the generative model
+    :type temperature: int
+    :param documentsPath: the path to the document/documents' folder
+    :type documentsPath: str
+    :param filter: file extension of the files to be considered, defaults to None
+    :type filter: str, optional
+    :param chunk_size: chunk_size for document splitting, defaults to None
+    :type chunk_size: int, optional
+    :param chunk_overlap: chunk overlap for document splitting, defaults to None
+    :type chunk_overlap: int, optional
+    :param retrieved_results: number of results to retrieve, defaults to None
+    :type retrieved_results: int, optional
+    :param dbPath: path to the vectore store db, defaults to None
+    :type dbPath: str, optional
+    :return: document retriever to be used later in rag-enhanced syntethis
+    :rtype: BaseRetriever
+    """
     model = BaseLLM.getModelLLM(modelType, modelName, temperature)
     retriever = DocumentRetrieverLLM(model,documentsPath,filter,chunk_size=chunk_size,chunk_overlap=chunk_overlap,retrieved_results=retrieved_results,dbPath=dbPath)
     return retriever
 
 def _getChain(model: BaseLLM,causal: bool, process:bool, xai:bool, rag:bool, retriever: DocumentRetrieverLLM =None):   
+    """
+    Based on the chosen perspectives, builds and returns Langchain chain to invoke later with the user-supplied query for explanation based on thoe chosen perspectives
+    :param model: model wrapper
+    :type model: BaseLLM
+    :param causal: indication whether to use causal perspective
+    :type causal: bool
+    :param process: indication whether to use process perspective
+    :type process: bool
+    :param xai: indication whether to use xai perspective
+    :type xai: bool
+    :param rag: indicatin whether to use document context
+    :type rag: bool
+    :param retriever: in case rag is chosen, need to provide previously created retreiver, defaults to None
+    :type retriever: DocumentRetrieverLLM, optional
+    :return: Langchain chain
+    :rtype: chain
+    """
     print(f"_getChain: process: {process}, causal: {causal}, xai: {xai}, rag: {rag}, retriever: {retriever}")
     def getCausalPerspective(data, modality, prior_knowledge,p_value_threshold):
         result = cd.getDataCausalRepresentation(data,modality=modality,prior_knowledge=prior_knowledge,p_value_threshold=p_value_threshold) 
@@ -304,22 +344,85 @@ def _getChain(model: BaseLLM,causal: bool, process:bool, xai:bool, rag:bool, ret
     
 
 def getSyntethis(data:RawEventData, query:str, model: BaseLLM,causal: bool, process:bool, xai:bool, rag:bool, retriever: DocumentRetrieverLLM =None, modality =Modality.PARENT, prior_knowledge=True, p_value_threshold=None):
+    """Get blended answer based on the user-chosen perspectives for the user provided query
+
+    :param data: event log data
+    :type data: RawEventData
+    :param query: user query
+    :type query: str
+    :param model: LLM model wrapper
+    :type model: BaseLLM
+    :param causal: indication whether to use causal perspective
+    :type causal: bool
+    :param process: indication whether to use process perspective
+    :type process: bool
+    :param xai: indication whether to use xai perspective
+    :type xai: bool
+    :param rag: indicatin whether to use document context
+    :type rag: bool
+    :param retriever: in case rag is chosen, need to provide previously created retreiver, defaults to None
+    :type retriever: DocumentRetrieverLLM, optional
+    :param modality: in case causal perspective is chosen, the desired analysis modality, defaults to Modality.PARENT
+    :type modality: Modality, optional
+    :param prior_knowledge: in case causal perspective is chosen, whether to use prior knowledge or not, defaults to True
+    :type prior_knowledge: bool, optional
+    :param p_value_threshold: in case causal perspective is chosen, whether to filter causal connections below specified threshold, defaults to None
+    :type p_value_threshold: float, optional
+    :return: Blended anwer to the query based on all chosen perspectives
+    :rtype: str
+    """
     chain = _getChain(model,causal, process, xai, rag, retriever)
     result = chain.invoke({"data":data,"query":query,"modality":modality,"prior_knowledge":prior_knowledge,"p_value_threshold":p_value_threshold})
     return result
 
 def getModel(modelType:ModelTypes, modelName: str, temperature: int):
+    """Retrieve desired model wrapper based on the specified model provider, model name and temperature
+
+    :param modelType: model provider type
+    :type modelType: ModelTypes
+    :param modelName: the name of the generative model provided by chosen provider
+    :type modelName: str
+    :param temperature: temperature to use for generation
+    :type temperature: int
+    :return: Chosen model wrapper
+    :rtype: BaseLLM
+    """
+
     return BaseLLM.getModelLLM(modelType, modelName, temperature)
 
 
 
 def getExplanations(data:RawEventData,modality,prior_knowledge = None, p_value_threshold=None ):
+    """Return an array of semantic explanations for all process-causal disrepancies 
+
+    :param data: event log data
+    :type data: RawEventData
+    :param modality: chosen modality for causal discovery
+    :type modality: Modality
+    :param prior_knowledge: whether to use prior knowledge in causal discovery, defaults to None
+    :type prior_knowledge: boolean, optional
+    :param p_value_threshold: a filter for causal connections, connections with strength below the specified threshold will be disregarded, defaults to None
+    :type p_value_threshold: int, optional
+    :return: array of disrepancies
+    :rtype: array[str]
+    """
     dfg,event_log = pm.discover_dfg(data)  
     causalModel = cd.discover_causal_dependencies(dataObject=data,modality=modality,prior_knowledge=prior_knowledge)
     result = enumerateDisrepancies(dfg, causalModel,p_value_threshold=p_value_threshold)
     return result
       
 def enumerateDisrepancies(processModel, causalModel,p_value_threshold=None):   
+    """Enumerate the disrepancies between provided process and causal models
+
+    :param processModel: process model as dfg dictionary
+    :type processModel: dict
+    :param causalModel: causal model as dictionary
+    :type causalModel: dict
+    :param p_value_threshold: filtering threshold for causal connections
+    :type p_value_threshold: int, optional
+    :return: array of disrepancies
+    :rtype: array[str]
+    """
     def _calculateDiff(processRepresentation,causalModel):   
         set1 = set(processRepresentation.keys())
         set2 = set(causalModel.keys())
