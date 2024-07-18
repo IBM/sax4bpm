@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="Python" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LLM Synthethis package &mdash; SAX4BPM 0.0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SAX4BPM
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contents.html">Contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SAX4BPM</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">LLM Synthethis package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/sax.core.synthesis.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="llm-synthethis-package">
+<h1>LLM Synthethis package<a class="headerlink" href="#llm-synthethis-package" title="Permalink to this heading"></a></h1>
+<p>The package provides methods for using LLMs to blend the results of analysis into various process perspectives (causal, process and XAI) and available process documentation to answer user queries related to the process.</p>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="sax.core.synthesis.llms.html">LLM Wrappers package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sax.core.synthesis.rag.html">Document Retrievers package</a></li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-sax.core.synthesis.sax_explainability">
+<span id="sax-core-synthesis-sax-explainability-module"></span><h2>sax.core.synthesis.sax_explainability module<a class="headerlink" href="#module-sax.core.synthesis.sax_explainability" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.core.synthesis.sax_explainability.createDocumentContextRetriever">
+<span class="sig-prename descclassname"><span class="pre">sax.core.synthesis.sax_explainability.</span></span><span class="sig-name descname"><span class="pre">createDocumentContextRetriever</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modelType</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="sax.core.synthesis.llms.html#sax.core.synthesis.llms.base_llm.ModelTypes" title="sax.core.synthesis.llms.base_llm.ModelTypes"><span class="pre">ModelTypes</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">modelName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">documentsPath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunk_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunk_overlap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retrieved_results</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dbPath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="sax.core.synthesis.rag.html#sax.core.synthesis.rag.base_retrieval.BaseRetriever" title="sax.core.synthesis.rag.base_retrieval.BaseRetriever"><span class="pre">BaseRetriever</span></a></span></span><a class="headerlink" href="#sax.core.synthesis.sax_explainability.createDocumentContextRetriever" title="Permalink to this definition"></a></dt>
+<dd><p>Create a document context retriever to use later for retreiving query-appropriate context.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>modelType</strong> (<a class="reference internal" href="sax.core.synthesis.llms.html#sax.core.synthesis.llms.base_llm.ModelTypes" title="sax.core.synthesis.llms.base_llm.ModelTypes"><em>ModelTypes</em></a>) -- the model provider type to use</p></li>
+<li><p><strong>modelName</strong> (<em>str</em>) -- the name of the model by the model provider to use as generative model</p></li>
+<li><p><strong>temperature</strong> (<em>int</em>) -- the temperature to use with the generative model</p></li>
+<li><p><strong>documentsPath</strong> (<em>str</em>) -- the path to the document/documents' folder</p></li>
+<li><p><strong>filter</strong> (<em>str</em><em>, </em><em>optional</em>) -- file extension of the files to be considered, defaults to None</p></li>
+<li><p><strong>chunk_size</strong> (<em>int</em><em>, </em><em>optional</em>) -- chunk_size for document splitting, defaults to None</p></li>
+<li><p><strong>chunk_overlap</strong> (<em>int</em><em>, </em><em>optional</em>) -- chunk overlap for document splitting, defaults to None</p></li>
+<li><p><strong>retrieved_results</strong> (<em>int</em><em>, </em><em>optional</em>) -- number of results to retrieve, defaults to None</p></li>
+<li><p><strong>dbPath</strong> (<em>str</em><em>, </em><em>optional</em>) -- path to the vectore store db, defaults to None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>document retriever to be used later in rag-enhanced syntethis</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="sax.core.synthesis.rag.html#sax.core.synthesis.rag.base_retrieval.BaseRetriever" title="sax.core.synthesis.rag.base_retrieval.BaseRetriever">BaseRetriever</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.core.synthesis.sax_explainability.enumerateDisrepancies">
+<span class="sig-prename descclassname"><span class="pre">sax.core.synthesis.sax_explainability.</span></span><span class="sig-name descname"><span class="pre">enumerateDisrepancies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">processModel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">causalModel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_value_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sax.core.synthesis.sax_explainability.enumerateDisrepancies" title="Permalink to this definition"></a></dt>
+<dd><p>Enumerate the disrepancies between provided process and causal models</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>processModel</strong> (<em>dict</em>) -- process model as dfg dictionary</p></li>
+<li><p><strong>causalModel</strong> (<em>dict</em>) -- causal model as dictionary</p></li>
+<li><p><strong>p_value_threshold</strong> (<em>int</em><em>, </em><em>optional</em>) -- filtering threshold for causal connections</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>array of disrepancies</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>array[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.core.synthesis.sax_explainability.getExplanations">
+<span class="sig-prename descclassname"><span class="pre">sax.core.synthesis.sax_explainability.</span></span><span class="sig-name descname"><span class="pre">getExplanations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="sax.core.process_data.html#sax.core.process_data.raw_event_data.RawEventData" title="sax.core.process_data.raw_event_data.RawEventData"><span class="pre">RawEventData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">modality</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prior_knowledge</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_value_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sax.core.synthesis.sax_explainability.getExplanations" title="Permalink to this definition"></a></dt>
+<dd><p>Return an array of semantic explanations for all process-causal disrepancies</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<a class="reference internal" href="sax.core.process_data.html#sax.core.process_data.raw_event_data.RawEventData" title="sax.core.process_data.raw_event_data.RawEventData"><em>RawEventData</em></a>) -- event log data</p></li>
+<li><p><strong>modality</strong> (<a class="reference internal" href="sax.core.causal_process_discovery.html#sax.core.causal_process_discovery.causal_constants.Modality" title="sax.core.causal_process_discovery.causal_constants.Modality"><em>Modality</em></a>) -- chosen modality for causal discovery</p></li>
+<li><p><strong>prior_knowledge</strong> (<em>boolean</em><em>, </em><em>optional</em>) -- whether to use prior knowledge in causal discovery, defaults to None</p></li>
+<li><p><strong>p_value_threshold</strong> (<em>int</em><em>, </em><em>optional</em>) -- a filter for causal connections, connections with strength below the specified threshold will be disregarded, defaults to None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>array of disrepancies</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>array[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.core.synthesis.sax_explainability.getModel">
+<span class="sig-prename descclassname"><span class="pre">sax.core.synthesis.sax_explainability.</span></span><span class="sig-name descname"><span class="pre">getModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modelType</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="sax.core.synthesis.llms.html#sax.core.synthesis.llms.base_llm.ModelTypes" title="sax.core.synthesis.llms.base_llm.ModelTypes"><span class="pre">ModelTypes</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">modelName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sax.core.synthesis.sax_explainability.getModel" title="Permalink to this definition"></a></dt>
+<dd><p>Retrieve desired model wrapper based on the specified model provider, model name and temperature</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>modelType</strong> (<a class="reference internal" href="sax.core.synthesis.llms.html#sax.core.synthesis.llms.base_llm.ModelTypes" title="sax.core.synthesis.llms.base_llm.ModelTypes"><em>ModelTypes</em></a>) -- model provider type</p></li>
+<li><p><strong>modelName</strong> (<em>str</em>) -- the name of the generative model provided by chosen provider</p></li>
+<li><p><strong>temperature</strong> (<em>int</em>) -- temperature to use for generation</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Chosen model wrapper</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="sax.core.synthesis.llms.html#sax.core.synthesis.llms.base_llm.BaseLLM" title="sax.core.synthesis.llms.base_llm.BaseLLM">BaseLLM</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.core.synthesis.sax_explainability.getSyntethis">
+<span class="sig-prename descclassname"><span class="pre">sax.core.synthesis.sax_explainability.</span></span><span class="sig-name descname"><span class="pre">getSyntethis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="sax.core.process_data.html#sax.core.process_data.raw_event_data.RawEventData" title="sax.core.process_data.raw_event_data.RawEventData"><span class="pre">RawEventData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="sax.core.synthesis.llms.html#sax.core.synthesis.llms.base_llm.BaseLLM" title="sax.core.synthesis.llms.base_llm.BaseLLM"><span class="pre">BaseLLM</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">causal</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">process</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xai</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retriever</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="sax.core.synthesis.rag.html#sax.core.synthesis.rag.documents_retrieval.DocumentRetrieverLLM" title="sax.core.synthesis.rag.documents_retrieval.DocumentRetrieverLLM"><span class="pre">DocumentRetrieverLLM</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modality</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Modality.PARENT</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prior_knowledge</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_value_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sax.core.synthesis.sax_explainability.getSyntethis" title="Permalink to this definition"></a></dt>
+<dd><p>Get blended answer based on the user-chosen perspectives for the user provided query</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<a class="reference internal" href="sax.core.process_data.html#sax.core.process_data.raw_event_data.RawEventData" title="sax.core.process_data.raw_event_data.RawEventData"><em>RawEventData</em></a>) -- event log data</p></li>
+<li><p><strong>query</strong> (<em>str</em>) -- user query</p></li>
+<li><p><strong>model</strong> (<a class="reference internal" href="sax.core.synthesis.llms.html#sax.core.synthesis.llms.base_llm.BaseLLM" title="sax.core.synthesis.llms.base_llm.BaseLLM"><em>BaseLLM</em></a>) -- LLM model wrapper</p></li>
+<li><p><strong>causal</strong> (<em>bool</em>) -- indication whether to use causal perspective</p></li>
+<li><p><strong>process</strong> (<em>bool</em>) -- indication whether to use process perspective</p></li>
+<li><p><strong>xai</strong> (<em>bool</em>) -- indication whether to use xai perspective</p></li>
+<li><p><strong>rag</strong> (<em>bool</em>) -- indicatin whether to use document context</p></li>
+<li><p><strong>retriever</strong> (<a class="reference internal" href="sax.core.synthesis.rag.html#sax.core.synthesis.rag.documents_retrieval.DocumentRetrieverLLM" title="sax.core.synthesis.rag.documents_retrieval.DocumentRetrieverLLM"><em>DocumentRetrieverLLM</em></a><em>, </em><em>optional</em>) -- in case rag is chosen, need to provide previously created retreiver, defaults to None</p></li>
+<li><p><strong>modality</strong> (<a class="reference internal" href="sax.core.causal_process_discovery.html#sax.core.causal_process_discovery.causal_constants.Modality" title="sax.core.causal_process_discovery.causal_constants.Modality"><em>Modality</em></a><em>, </em><em>optional</em>) -- in case causal perspective is chosen, the desired analysis modality, defaults to Modality.PARENT</p></li>
+<li><p><strong>prior_knowledge</strong> (<em>bool</em><em>, </em><em>optional</em>) -- in case causal perspective is chosen, whether to use prior knowledge or not, defaults to True</p></li>
+<li><p><strong>p_value_threshold</strong> (<em>float</em><em>, </em><em>optional</em>) -- in case causal perspective is chosen, whether to filter causal connections below specified threshold, defaults to None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Blended anwer to the query based on all chosen perspectives</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-sax.core.synthesis">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-sax.core.synthesis" title="Permalink to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, IBM Israel, Haifa Research Lab,Business Automation.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

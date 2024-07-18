@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="Python" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Introduction &mdash; SAX4BPM 0.0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Contents" href="contents.html" />
+    <link rel="prev" title="Welcome to SAX4BPM&#39;s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SAX4BPM
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#motivation">Motivation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#limitations-and-acknowledgments">Limitations and Acknowledgments</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contents.html">Contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SAX4BPM</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Introduction</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/intro.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">SAX4BPM</span></code> is a high-level OO Python package which aims to provide an easy and intuitive way of exploring various perspectives into your business-process,such as mining process event
+logs and discovering process model, which in turns drives causal-execution dependency discovery of causal relationships between process activities. This can provide the user more elaborate
+picture into which activities actually affect execution of the other activities in the process. Additionally the causal execution dependency model can drive the explainability of various outcomes
+of decisions made within the scope of the business processes and provide more precise view on feature dependency of those decisions.
+To bring it all together we will integrate all perspectives together using LLMs (Large Language Model) to construct single human-interpretable view into explainations of various process decision
+and outcomes.
+The current causal module implementation relies on techniques and methods described in &lt;&gt;</p>
+<section id="motivation">
+<h2>Motivation<a class="headerlink" href="#motivation" title="Permalink to this heading"></a></h2>
+<p>A crucial element in analyzing the business process outcomes, making informed decisions on process adaptations and improvements is the genuine understanding of current state of affairs - getting sound and true explanations on the factors driving the current process outcomes and decisions made at various points of the
+business process execution. This entails understanding the true relationships between the execution of process activities, understanding how those relationships are affected by and affect various features of the business process,
+and how those are integrated together to provide clear and sound explanations.</p>
+<p>This package is intended to provide a one-place for gaining various perspectives into your business process activities relationship and explainability and such an integrated higher-level synthesis explainability view.</p>
+</section>
+<section id="limitations-and-acknowledgments">
+<h2>Limitations and Acknowledgments<a class="headerlink" href="#limitations-and-acknowledgments" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p>To gain the process model perspective from process event logs, we rely on <a class="reference external" href="https://pm4py-source.readthedocs.io/en/stable/pm4py.html">PM4PY</a> Python package implementation, and wrap it with additional functionality in our  <code class="xref py py-class docutils literal notranslate"><span class="pre">sax.process_data</span></code> module.</p></li>
+<li><p>The current package implementation includes the process discovery and causal discovery modules. In the nearest future we plan to extend it with XAI module and integrated view using LLMs.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to SAX4BPM&#39;s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="contents.html" class="btn btn-neutral float-right" title="Contents" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, IBM Israel, Haifa Research Lab,Business Automation.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

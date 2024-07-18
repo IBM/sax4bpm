@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="Python" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Formatters package &mdash; SAX4BPM 0.0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            SAX4BPM
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contents.html">Contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SAX4BPM</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Formatters package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/sax.core.process_data.formatters.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="formatters-package">
+<h1>Formatters package<a class="headerlink" href="#formatters-package" title="Permalink to this heading"></a></h1>
+<p>The package contains different formatters implementation - allowing to process standard file formats of event logs (XES,MXML and CSV) into data containers.</p>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-sax.core.process_data.formatters.base_formatter">
+<span id="sax-core-process-data-formatters-base-formatter-module"></span><h2>sax.core.process_data.formatters.base_formatter module<a class="headerlink" href="#module-sax.core.process_data.formatters.base_formatter" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="sax.core.process_data.formatters.base_formatter.BaseFormatter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sax.core.process_data.formatters.base_formatter.</span></span><span class="sig-name descname"><span class="pre">BaseFormatter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sax.core.process_data.formatters.base_formatter.BaseFormatter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Formatter base class which can transform event log data from a file in different event log formats to standard raw event log representation for further use.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="sax.core.process_data.formatters.base_formatter.BaseFormatter.extract_data">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">extract_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_log_data</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="sax.core.process_data.html#sax.core.process_data.raw_event_data.RawEventData" title="sax.core.process_data.raw_event_data.RawEventData"><span class="pre">RawEventData</span></a></span></span><a class="headerlink" href="#sax.core.process_data.formatters.base_formatter.BaseFormatter.extract_data" title="Permalink to this definition"></a></dt>
+<dd><p>Create RawEventData data object from the provided event log file</p>
+<section id="parameters">
+<h3>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h3>
+<p>event_log_data : The path designation of the event log file.
+type event_log_data : File</p>
+</section>
+<section id="returns">
+<h3>Returns<a class="headerlink" href="#returns" title="Permalink to this heading"></a></h3>
+<p>A RawEventData representing the event log in a tabular format.
+type : RawEventData</p>
+</section>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-sax.core.process_data.formatters.csv_formatter">
+<span id="sax-core-process-data-formatters-csv-formatter-module"></span><h2>sax.core.process_data.formatters.csv_formatter module<a class="headerlink" href="#module-sax.core.process_data.formatters.csv_formatter" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="sax.core.process_data.formatters.csv_formatter.CSVFormatter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sax.core.process_data.formatters.csv_formatter.</span></span><span class="sig-name descname"><span class="pre">CSVFormatter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sax.core.process_data.formatters.csv_formatter.CSVFormatter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#sax.core.process_data.formatters.base_formatter.BaseFormatter" title="sax.core.process_data.formatters.base_formatter.BaseFormatter"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseFormatter</span></code></a></p>
+<p>Formatter class for CSV event log files transforming the file to standard event log dataframe representation</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="sax.core.process_data.formatters.csv_formatter.CSVFormatter.Parameters">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sax.core.process_data.formatters.csv_formatter.CSVFormatter.Parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Constants representing various default values for mandatory attributes for CSV-based event log</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sax.core.process_data.formatters.csv_formatter.CSVFormatter.Parameters.ACTIVITY">
+<span class="sig-name descname"><span class="pre">ACTIVITY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Source'</span></em><a class="headerlink" href="#sax.core.process_data.formatters.csv_formatter.CSVFormatter.Parameters.ACTIVITY" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sax.core.process_data.formatters.csv_formatter.CSVFormatter.Parameters.CASE_ID">
+<span class="sig-name descname"><span class="pre">CASE_ID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Id'</span></em><a class="headerlink" href="#sax.core.process_data.formatters.csv_formatter.CSVFormatter.Parameters.CASE_ID" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sax.core.process_data.formatters.csv_formatter.CSVFormatter.Parameters.CSV_SEPARATOR">
+<span class="sig-name descname"><span class="pre">CSV_SEPARATOR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">','</span></em><a class="headerlink" href="#sax.core.process_data.formatters.csv_formatter.CSVFormatter.Parameters.CSV_SEPARATOR" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sax.core.process_data.formatters.csv_formatter.CSVFormatter.Parameters.RESOURCE_ID">
+<span class="sig-name descname"><span class="pre">RESOURCE_ID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Resource'</span></em><a class="headerlink" href="#sax.core.process_data.formatters.csv_formatter.CSVFormatter.Parameters.RESOURCE_ID" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sax.core.process_data.formatters.csv_formatter.CSVFormatter.Parameters.STARTTIME_COLUMN">
+<span class="sig-name descname"><span class="pre">STARTTIME_COLUMN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#sax.core.process_data.formatters.csv_formatter.CSVFormatter.Parameters.STARTTIME_COLUMN" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sax.core.process_data.formatters.csv_formatter.CSVFormatter.Parameters.TIMESTAMP">
+<span class="sig-name descname"><span class="pre">TIMESTAMP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Timestamp'</span></em><a class="headerlink" href="#sax.core.process_data.formatters.csv_formatter.CSVFormatter.Parameters.TIMESTAMP" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sax.core.process_data.formatters.csv_formatter.CSVFormatter.Parameters.TIMESTAMP_FORMAT">
+<span class="sig-name descname"><span class="pre">TIMESTAMP_FORMAT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'%Y-%m-%d</span> <span class="pre">%H:%M:%S%z'</span></em><a class="headerlink" href="#sax.core.process_data.formatters.csv_formatter.CSVFormatter.Parameters.TIMESTAMP_FORMAT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sax.core.process_data.formatters.csv_formatter.CSVFormatter.Parameters.TYPE">
+<span class="sig-name descname"><span class="pre">TYPE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Type'</span></em><a class="headerlink" href="#sax.core.process_data.formatters.csv_formatter.CSVFormatter.Parameters.TYPE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sax.core.process_data.formatters.csv_formatter.CSVFormatter.extract_data">
+<span class="sig-name descname"><span class="pre">extract_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_log_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">separator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">','</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="sax.core.process_data.html#sax.core.process_data.raw_event_data.RawEventData" title="sax.core.process_data.raw_event_data.RawEventData"><span class="pre">RawEventData</span></a></span></span><a class="headerlink" href="#sax.core.process_data.formatters.csv_formatter.CSVFormatter.extract_data" title="Permalink to this definition"></a></dt>
+<dd><p>Extract tabular data from the provided CSV event log file, instantiate raw data object containing the tabular data.</p>
+<section id="id1">
+<h3>Parameters<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>event_log_data<span class="classifier">file</span></dt><dd><p>File representing the event log data, in CSV format.</p>
+</dd>
+<dt>separator<span class="classifier">str, optional</span></dt><dd><p>The separator used in the CSV file, by default Constants.CSV_SEPARATOR.</p>
+</dd>
+</dl>
+</section>
+<section id="id2">
+<h3>Returns<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>RawEventData</dt><dd><p>A RawEventData representing the event log in a raw event format.</p>
+</dd>
+</dl>
+</section>
+<section id="raises">
+<h3>Raises<a class="headerlink" href="#raises" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>ValueError</dt><dd><p>If the event_log_data argument is not a file.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sax.core.process_data.formatters.csv_formatter.CSVFormatter.extract_from_dataframe">
+<span class="sig-name descname"><span class="pre">extract_from_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataframe</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="sax.core.process_data.html#sax.core.process_data.raw_event_data.RawEventData" title="sax.core.process_data.raw_event_data.RawEventData"><span class="pre">RawEventData</span></a></span></span><a class="headerlink" href="#sax.core.process_data.formatters.csv_formatter.CSVFormatter.extract_from_dataframe" title="Permalink to this definition"></a></dt>
+<dd><p>Extract event log tabular data from the provided dataframe, instantiate process raw event data object.</p>
+<section id="id3">
+<h3>Parameters<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>dataframe<span class="classifier">pd.DataFrame</span></dt><dd><p>Dataframe representing the event log data.</p>
+</dd>
+</dl>
+</section>
+<section id="id4">
+<h3>Returns<a class="headerlink" href="#id4" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>RawEventData</dt><dd><p>A RawEventData representing the event log in a raw event format.</p>
+</dd>
+</dl>
+</section>
+<section id="id5">
+<h3>Raises<a class="headerlink" href="#id5" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>ValueError</dt><dd><p>If the dataframe argument is not a pandas DataFrame.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-sax.core.process_data.formatters.mxml_formatter">
+<span id="sax-core-process-data-formatters-mxml-formatter-module"></span><h2>sax.core.process_data.formatters.mxml_formatter module<a class="headerlink" href="#module-sax.core.process_data.formatters.mxml_formatter" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="sax.core.process_data.formatters.mxml_formatter.MXMLConstants">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sax.core.process_data.formatters.mxml_formatter.</span></span><span class="sig-name descname"><span class="pre">MXMLConstants</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sax.core.process_data.formatters.mxml_formatter.MXMLConstants" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Constants representing standart metafields in the MXML format</p>
+<ul class="simple">
+<li><p>PROCESS_INSTANCE: designatation of a the process entry</p></li>
+<li><p>TRACE_INSTANCE: designation of separate trace within the process</p></li>
+<li><p>ID_ATTRIBUTE: designation of the attribute representing trace id</p></li>
+<li><p>EVENT_TYPE: designation of event lifecycle element</p></li>
+<li><p>ACTIVITY: designation of activity element</p></li>
+<li><p>RESOURCE: designation of resource element</p></li>
+<li><p>ATTRIBUTE: designation of attribute element</p></li>
+<li><p>ATTRIBUTE_NAME: designation of attribute name field within attribute element</p></li>
+</ul>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sax.core.process_data.formatters.mxml_formatter.MXMLConstants.ACTIVITY">
+<span class="sig-name descname"><span class="pre">ACTIVITY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'WorkflowModelElement'</span></em><a class="headerlink" href="#sax.core.process_data.formatters.mxml_formatter.MXMLConstants.ACTIVITY" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sax.core.process_data.formatters.mxml_formatter.MXMLConstants.ATTRIBUTE">
+<span class="sig-name descname"><span class="pre">ATTRIBUTE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'attribute'</span></em><a class="headerlink" href="#sax.core.process_data.formatters.mxml_formatter.MXMLConstants.ATTRIBUTE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sax.core.process_data.formatters.mxml_formatter.MXMLConstants.ATTRIBUTE_NAME">
+<span class="sig-name descname"><span class="pre">ATTRIBUTE_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'name'</span></em><a class="headerlink" href="#sax.core.process_data.formatters.mxml_formatter.MXMLConstants.ATTRIBUTE_NAME" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sax.core.process_data.formatters.mxml_formatter.MXMLConstants.DATA">
+<span class="sig-name descname"><span class="pre">DATA</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Data'</span></em><a class="headerlink" href="#sax.core.process_data.formatters.mxml_formatter.MXMLConstants.DATA" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sax.core.process_data.formatters.mxml_formatter.MXMLConstants.ELEMENT_ID">
+<span class="sig-name descname"><span class="pre">ELEMENT_ID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'elementId'</span></em><a class="headerlink" href="#sax.core.process_data.formatters.mxml_formatter.MXMLConstants.ELEMENT_ID" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sax.core.process_data.formatters.mxml_formatter.MXMLConstants.EVENT_TYPE">
+<span class="sig-name descname"><span class="pre">EVENT_TYPE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'EventType'</span></em><a class="headerlink" href="#sax.core.process_data.formatters.mxml_formatter.MXMLConstants.EVENT_TYPE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sax.core.process_data.formatters.mxml_formatter.MXMLConstants.ID_ATTRIBUTE">
+<span class="sig-name descname"><span class="pre">ID_ATTRIBUTE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'id'</span></em><a class="headerlink" href="#sax.core.process_data.formatters.mxml_formatter.MXMLConstants.ID_ATTRIBUTE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sax.core.process_data.formatters.mxml_formatter.MXMLConstants.PROCESS_ID">
+<span class="sig-name descname"><span class="pre">PROCESS_ID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'processId'</span></em><a class="headerlink" href="#sax.core.process_data.formatters.mxml_formatter.MXMLConstants.PROCESS_ID" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sax.core.process_data.formatters.mxml_formatter.MXMLConstants.PROCESS_INSTANCE">
+<span class="sig-name descname"><span class="pre">PROCESS_INSTANCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'.//ProcessInstance'</span></em><a class="headerlink" href="#sax.core.process_data.formatters.mxml_formatter.MXMLConstants.PROCESS_INSTANCE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sax.core.process_data.formatters.mxml_formatter.MXMLConstants.RESOURCE">
+<span class="sig-name descname"><span class="pre">RESOURCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'originator'</span></em><a class="headerlink" href="#sax.core.process_data.formatters.mxml_formatter.MXMLConstants.RESOURCE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sax.core.process_data.formatters.mxml_formatter.MXMLConstants.TIMESTAMP">
+<span class="sig-name descname"><span class="pre">TIMESTAMP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Timestamp'</span></em><a class="headerlink" href="#sax.core.process_data.formatters.mxml_formatter.MXMLConstants.TIMESTAMP" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sax.core.process_data.formatters.mxml_formatter.MXMLConstants.TRACE_INSTANCE">
+<span class="sig-name descname"><span class="pre">TRACE_INSTANCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'.//AuditTrailEntry'</span></em><a class="headerlink" href="#sax.core.process_data.formatters.mxml_formatter.MXMLConstants.TRACE_INSTANCE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="sax.core.process_data.formatters.mxml_formatter.MXMLFormatter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sax.core.process_data.formatters.mxml_formatter.</span></span><span class="sig-name descname"><span class="pre">MXMLFormatter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sax.core.process_data.formatters.mxml_formatter.MXMLFormatter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#sax.core.process_data.formatters.base_formatter.BaseFormatter" title="sax.core.process_data.formatters.base_formatter.BaseFormatter"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseFormatter</span></code></a></p>
+<p>Formatter class for MXML event log files transforming the file to standard event log dataframe representation</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="sax.core.process_data.formatters.mxml_formatter.MXMLFormatter.Parameters">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sax.core.process_data.formatters.mxml_formatter.MXMLFormatter.Parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Constants representing various default values for mandatory attributes values for MXML-based event log</p>
+<section id="attributes">
+<h3>Attributes<a class="headerlink" href="#attributes" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>ACTIVITY<span class="classifier">str</span></dt><dd><p>Default value for activity key.</p>
+</dd>
+<dt>CASE_ID<span class="classifier">str</span></dt><dd><p>Default value for case id key.</p>
+</dd>
+<dt>TYPE<span class="classifier">str</span></dt><dd><p>Default value for lifecycle event key.</p>
+</dd>
+<dt>TIMESTAMP<span class="classifier">str</span></dt><dd><p>Default value for timestamp key.</p>
+</dd>
+<dt>TIMESTAMP_FORMAT<span class="classifier">str</span></dt><dd><p>Default value for timestamp format key.</p>
+</dd>
+<dt>RESOURCE_ID<span class="classifier">str</span></dt><dd><p>Default value for resource id key.</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sax.core.process_data.formatters.mxml_formatter.MXMLFormatter.Parameters.ACTIVITY">
+<span class="sig-name descname"><span class="pre">ACTIVITY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'concept:name'</span></em><a class="headerlink" href="#sax.core.process_data.formatters.mxml_formatter.MXMLFormatter.Parameters.ACTIVITY" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sax.core.process_data.formatters.mxml_formatter.MXMLFormatter.Parameters.CASE_ID">
+<span class="sig-name descname"><span class="pre">CASE_ID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'case:concept:name'</span></em><a class="headerlink" href="#sax.core.process_data.formatters.mxml_formatter.MXMLFormatter.Parameters.CASE_ID" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sax.core.process_data.formatters.mxml_formatter.MXMLFormatter.Parameters.RESOURCE_ID">
+<span class="sig-name descname"><span class="pre">RESOURCE_ID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'org:resource'</span></em><a class="headerlink" href="#sax.core.process_data.formatters.mxml_formatter.MXMLFormatter.Parameters.RESOURCE_ID" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sax.core.process_data.formatters.mxml_formatter.MXMLFormatter.Parameters.TIMESTAMP">
+<span class="sig-name descname"><span class="pre">TIMESTAMP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'time:timestamp'</span></em><a class="headerlink" href="#sax.core.process_data.formatters.mxml_formatter.MXMLFormatter.Parameters.TIMESTAMP" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sax.core.process_data.formatters.mxml_formatter.MXMLFormatter.Parameters.TIMESTAMP_FORMAT">
+<span class="sig-name descname"><span class="pre">TIMESTAMP_FORMAT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'%Y-%m-%d</span> <span class="pre">%H:%M:%S.%f'</span></em><a class="headerlink" href="#sax.core.process_data.formatters.mxml_formatter.MXMLFormatter.Parameters.TIMESTAMP_FORMAT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sax.core.process_data.formatters.mxml_formatter.MXMLFormatter.Parameters.TYPE">
+<span class="sig-name descname"><span class="pre">TYPE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'lifecycle:transition'</span></em><a class="headerlink" href="#sax.core.process_data.formatters.mxml_formatter.MXMLFormatter.Parameters.TYPE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sax.core.process_data.formatters.mxml_formatter.MXMLFormatter.extract_data">
+<span class="sig-name descname"><span class="pre">extract_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_log_data</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="sax.core.process_data.html#sax.core.process_data.data.BaseProcessDataObject" title="sax.core.process_data.data.BaseProcessDataObject"><span class="pre">BaseProcessDataObject</span></a></span></span><a class="headerlink" href="#sax.core.process_data.formatters.mxml_formatter.MXMLFormatter.extract_data" title="Permalink to this definition"></a></dt>
+<dd><p>Extract tabular data from the provided MXML event log file, instantiate raw data object containing the tabular data.</p>
+<section id="id6">
+<h3>Parameters<a class="headerlink" href="#id6" title="Permalink to this heading"></a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">param event_log_data<span class="colon">:</span></dt>
+<dd class="field-odd"><p>File representing the event log data, in MXML format</p>
+</dd>
+<dt class="field-even">type event_log_data<span class="colon">:</span></dt>
+<dd class="field-even"><p>file</p>
+</dd>
+</dl>
+</section>
+<section id="id7">
+<h3>Returns<a class="headerlink" href="#id7" title="Permalink to this heading"></a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">return<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A RawEventData representing the event log in a raw event format</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>RawEventData</p>
+</dd>
+</dl>
+</section>
+<section id="id8">
+<h3>Raises<a class="headerlink" href="#id8" title="Permalink to this heading"></a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">raises ValueError<span class="colon">:</span></dt>
+<dd class="field-odd"><p>If the event log data is not in MXML format.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-sax.core.process_data.formatters.xes_formatter">
+<span id="sax-core-process-data-formatters-xes-formatter-module"></span><h2>sax.core.process_data.formatters.xes_formatter module<a class="headerlink" href="#module-sax.core.process_data.formatters.xes_formatter" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="sax.core.process_data.formatters.xes_formatter.XESFormatter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sax.core.process_data.formatters.xes_formatter.</span></span><span class="sig-name descname"><span class="pre">XESFormatter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sax.core.process_data.formatters.xes_formatter.XESFormatter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#sax.core.process_data.formatters.base_formatter.BaseFormatter" title="sax.core.process_data.formatters.base_formatter.BaseFormatter"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseFormatter</span></code></a></p>
+<p>Formatter class for XES event log files transforming the file to standard event log dataframe representation</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="sax.core.process_data.formatters.xes_formatter.XESFormatter.Parameters">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sax.core.process_data.formatters.xes_formatter.XESFormatter.Parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Constants representing various default values for mandatory attributes values for XES-based event log</p>
+<section id="id9">
+<h3>Attributes<a class="headerlink" href="#id9" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>ACTIVITY<span class="classifier">str</span></dt><dd><p>Default value for activity key.</p>
+</dd>
+<dt>CASE_ID<span class="classifier">str</span></dt><dd><p>Default value for case id key.</p>
+</dd>
+<dt>TYPE<span class="classifier">str</span></dt><dd><p>Default value for lifecycle event key.</p>
+</dd>
+<dt>TIMESTAMP<span class="classifier">str</span></dt><dd><p>Default value for timestamp key.</p>
+</dd>
+<dt>TIMESTAMP_FORMAT<span class="classifier">str</span></dt><dd><p>Default value for timestamp format key.</p>
+</dd>
+<dt>RESOURCE_ID<span class="classifier">str</span></dt><dd><p>Default value for resource id key.</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sax.core.process_data.formatters.xes_formatter.XESFormatter.Parameters.ACTIVITY">
+<span class="sig-name descname"><span class="pre">ACTIVITY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'concept:name'</span></em><a class="headerlink" href="#sax.core.process_data.formatters.xes_formatter.XESFormatter.Parameters.ACTIVITY" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sax.core.process_data.formatters.xes_formatter.XESFormatter.Parameters.CASE_ID">
+<span class="sig-name descname"><span class="pre">CASE_ID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'case:concept:name'</span></em><a class="headerlink" href="#sax.core.process_data.formatters.xes_formatter.XESFormatter.Parameters.CASE_ID" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sax.core.process_data.formatters.xes_formatter.XESFormatter.Parameters.RESOURCE_ID">
+<span class="sig-name descname"><span class="pre">RESOURCE_ID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'org:resource'</span></em><a class="headerlink" href="#sax.core.process_data.formatters.xes_formatter.XESFormatter.Parameters.RESOURCE_ID" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sax.core.process_data.formatters.xes_formatter.XESFormatter.Parameters.TIMESTAMP">
+<span class="sig-name descname"><span class="pre">TIMESTAMP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'time:timestamp'</span></em><a class="headerlink" href="#sax.core.process_data.formatters.xes_formatter.XESFormatter.Parameters.TIMESTAMP" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sax.core.process_data.formatters.xes_formatter.XESFormatter.Parameters.TIMESTAMP_FORMAT">
+<span class="sig-name descname"><span class="pre">TIMESTAMP_FORMAT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'%Y-%m-%d</span> <span class="pre">%H:%M:%S.%f'</span></em><a class="headerlink" href="#sax.core.process_data.formatters.xes_formatter.XESFormatter.Parameters.TIMESTAMP_FORMAT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sax.core.process_data.formatters.xes_formatter.XESFormatter.Parameters.TYPE">
+<span class="sig-name descname"><span class="pre">TYPE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'lifecycle:transition'</span></em><a class="headerlink" href="#sax.core.process_data.formatters.xes_formatter.XESFormatter.Parameters.TYPE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sax.core.process_data.formatters.xes_formatter.XESFormatter.extract_data">
+<span class="sig-name descname"><span class="pre">extract_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_log_data</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="sax.core.process_data.html#sax.core.process_data.raw_event_data.RawEventData" title="sax.core.process_data.raw_event_data.RawEventData"><span class="pre">RawEventData</span></a></span></span><a class="headerlink" href="#sax.core.process_data.formatters.xes_formatter.XESFormatter.extract_data" title="Permalink to this definition"></a></dt>
+<dd><p>Extract tabular data from the provided XES event log file, instantiate raw data object containing the tabular data.</p>
+<p>Args:
+:param event_log_data: File representing the event log data, in XES format
+:type event_log_data: file</p>
+<p>Returns:
+:return: A RawEventData representing the event log in a raw event format
+:rtype: RawEventData</p>
+<p>Raises:
+:raises ValueError: If the event log data is not in MXML format.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-sax.core.process_data.formatters">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-sax.core.process_data.formatters" title="Permalink to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, IBM Israel, Haifa Research Lab,Business Automation.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
