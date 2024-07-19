@@ -18,6 +18,7 @@ The full documentation for this repository can be found at [GitHub Pages](https:
 
 ## Introduction
 The library provides three layers of business process analysis- process mining, causal discovery, XAI analysis, and LLM-powered blending of the analysis outcomes into human-readable process explanations functionality. 
+
 We also provide a simple Streamlit UI for experimentation and discovery of the provided library functionalities.
 
 The library allows importing process event logs in standard formats (MXML, XES, CSV) and invoking the discovery functionality of the desired layer. 
