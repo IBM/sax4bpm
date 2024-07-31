@@ -79,3 +79,4 @@ experiments/AutoTwin/perf/neo4j_sample_Performance.csv
 
 add_copyright.py
 .env
+/experiments
