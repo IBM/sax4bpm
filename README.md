@@ -5,16 +5,24 @@
   <img src="https://github.com/IBM/sax4bpm/blob/main/images/sax4bpm_logo6_w.png" alt="SAX4BPM-banner" width="600"/>
 </div>
 
-**This is a designated Python library that aims to provide an easy and intuitive way of deriving explanations about business processes, considering multiple perspectives. Concretely, three major knowledge ingredients—a process model, a causal process model, and XAI attribute ranking—are derived and subsequently synthesized by an LLM for the construction of process and context-aware explanations, namely Situation-aware Explanations (SAX explanations).**
+**This is a designated Python library that aims to provide an easy and intuitive way of deriving explanations about business processes, considering multiple perspectives. Concretely, three major knowledge ingredients—a process model, a causal process model, and XAI attribute ranking—are derived and subsequently synthesized by an LLM for the construction of process and context-aware explanations, namely Situation-aware Explanations (SAX explanations). The repository contains the source code which can be cloned, or the library can be installed as a Python package using `pip install sax4bpm`.**
 
 
 <p align="center">
 <img src="https://img.shields.io/badge/sax4bpm-v1.0.0-green" />
 </p>
 
+<!--🎥 Demo: Here you can see a demo UI with demonstration of the library capabilities [here](https://www.youtube.com/watch?v=EKXFqHtW3Xw&t=6s). In this demo, we use dataset from AutoTwin EU Croma partner to demonstrate library functionality
+
+🏁 Getting started: -->
+
+🛠️ Tutorials: [https://ibm.github.io/sax4bpm/tutorials.html](https://ibm.github.io/sax4bpm/tutorials.html)
+
+📦 Python Package: [https://pypi.org/project/sax4bpm/](https://pypi.org/project/sax4bpm/)
+
 ## Documentation
 
-The full documentation for this repository can be found at [GitHub Pages](https://ibm.github.io/sax4bpm/).
+🗃️  The full documentation for this repository can be found at [GitHub Pages](https://ibm.github.io/sax4bpm/).
 
 ## Introduction
 The library provides three layers of business process analysis- process mining, causal discovery, XAI analysis, and LLM-powered blending of the analysis outcomes into human-readable process explanations functionality. 
