@@ -5,14 +5,13 @@ from typing import Optional
 
 from pandas import DataFrame
 
+import lingam
 from sax.core.causal_process_discovery.algorithms.base_causal_alg import BaseCausalAlgorithm, CausalDataException, \
     CausalResultInfo
 from sax.core.causal_process_discovery.prior_knowledge import PriorKnowledge
-import networkx as nx
 
-from sax.core.causal_process_discovery.algorithms.positive_lingam_impl import positive_direct_lingam
 
-class PositiveLingamImpl(BaseCausalAlgorithm):
+class RcdImpl(BaseCausalAlgorithm):
     """DirectLINGAM causal discovery algorithm wrapper for process execution causal discovery. Make use of `DirectLINGAM algorithm <https://lingam.readthedocs.io/en/latest/reference/direct_lingam.html>`_
 
     :param BaseCausalAlgorithm: base type
@@ -39,10 +38,7 @@ class PositiveLingamImpl(BaseCausalAlgorithm):
         """       
         #TODO implement differently with/without prior knowledge,target variables etc.  
         self.sanity_check()     
-        if self.prior_knowledge is not None:
-            model = positive_direct_lingam.PositiveDirectLiNGAM(prior_knowledge=self.prior_knowledge.getPriorKnowledge())    
-        else:
-            model = positive_direct_lingam.PositiveDirectLiNGAM() 
+        model = lingam.ICALiNGAM()    
         model.fit(self.data)
         
         return CausalResultInfo(model.adjacency_matrix_,list(self.data.columns))
