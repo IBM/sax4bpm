@@ -7,8 +7,10 @@ import numpy as np
 import pandas as pd
 
 from sax.core.utils.constants import Constants
+from ...causal_process_discovery.algorithms.positive_lingam.positive_direct_lingam import PositiveDirectLiNGAM
 from ...causal_process_discovery.algorithms.base_causal_alg import CausalResultInfo
 from ...causal_process_discovery.algorithms.lingam import LingamImpl
+from ...causal_process_discovery.algorithms.rcd import RcdImpl
 from ...causal_process_discovery.causal_constants import DEFAULT_VARIANT, Algorithm
 from ...causal_process_discovery.modalities.base_anchor import BaseAnchor
 from ...causal_process_discovery.prior_knowledge import PriorKnowledge
@@ -27,7 +29,7 @@ class ParentAnchorTransformer(BaseAnchor):
         """
         Transpose the original event log so that each column is activity name and the value is the timestamp of the activity. Calculate all possible pairs of activities
         within this process and all its variants which happen one after the other. For each part, across all variants holding this pair, compute the time diff with the 
-        parent activity of the pair. Apply causal discovery algorithm of the subframe defined by the parent activity and the pair of activities and the  time diff between them. 
+        parent activity of the pair. Apply causal discovery algorithm of the subframe defined by the parent activity and the pair of activities and the time diff between them. 
         This will be a single coefficient in the adjacenty matrix of the whole process. At the end create global adjacency matrix out of all coefficients.
 
         Parameters
@@ -301,12 +303,16 @@ class ParentAnchorTransformer(BaseAnchor):
         if num_rows > 0: 
             if alg_variant == Algorithm.LINGAM:
                 algorithm = LingamImpl(**args)
-                try:
-                    result  = algorithm.run()     
-                    adjacency_matrix = result.getAdjacencyMatrix()
-                    return adjacency_matrix[2,1]             
-                except Exception as e:
-                    print(e)                                
+            elif alg_variant == Algorithm.RCD:
+                algorithm = RcdImpl(**args)
+            elif variant == Algorithm.POSITIVE_LINGAM:
+                algorithm = PositiveLingamImpl(**args)
+            try:
+                result  = algorithm.run()     
+                adjacency_matrix = result.getAdjacencyMatrix()
+                return adjacency_matrix[2,1]             
+            except Exception as e:
+                print(e)                                
         return 0
          
 

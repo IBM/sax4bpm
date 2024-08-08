@@ -5,13 +5,14 @@ from typing import Optional
 
 from pandas import DataFrame
 
-import lingam
 from sax.core.causal_process_discovery.algorithms.base_causal_alg import BaseCausalAlgorithm, CausalDataException, \
     CausalResultInfo
 from sax.core.causal_process_discovery.prior_knowledge import PriorKnowledge
 import networkx as nx
 
-class LingamImpl(BaseCausalAlgorithm):
+from sax.core.causal_process_discovery.algorithms.positive_lingam import positive_direct_lingam
+
+class PositiveLingamImpl(BaseCausalAlgorithm):
     """DirectLINGAM causal discovery algorithm wrapper for process execution causal discovery. Make use of `DirectLINGAM algorithm <https://lingam.readthedocs.io/en/latest/reference/direct_lingam.html>`_
 
     :param BaseCausalAlgorithm: base type
@@ -39,18 +40,16 @@ class LingamImpl(BaseCausalAlgorithm):
         #TODO implement differently with/without prior knowledge,target variables etc.  
         self.sanity_check()     
         if self.prior_knowledge is not None:
-            model = lingam.DirectLiNGAM(prior_knowledge=self.prior_knowledge.getPriorKnowledge())    
+            model = positive_direct_lingam.PositiveDirectLiNGAM(prior_knowledge=self.prior_knowledge.getPriorKnowledge())    
         else:
-            model = lingam.DirectLiNGAM()
+            model = positive_direct_lingam.PositiveDirectLiNGAM()
         full_columns_list = list(self.data.columns)
-        self.data.to_csv('pizza.csv')
         if self.data.isna().any().any():
             full_graph = nx.DiGraph()
             for column in full_columns_list:
                 full_graph.add_node(column)
-            
             nan_columns = self.data.columns[self.data.isna().any()].tolist()
-            adjacency_matrix = [[0]* len(full_columns_list)] * len(full_columns_list)
+            #adjacency_matrix = [[0]* len(full_columns_list)] * len(full_columns_list)
             for nan_column in nan_columns:
                 sub_data = self.data[~self.data[nan_column].isna()]
                 sub_data = sub_data.dropna(axis=1)
@@ -58,7 +57,7 @@ class LingamImpl(BaseCausalAlgorithm):
                 indecies_sub = [full_columns_list.index(i) for i in sub_columns_list]
                 if len(sub_data) < 100:
                     continue
-                
+
                 if self.prior_knowledge is not None:
                     prior_knowledge = self.prior_knowledge.getPriorKnowledge()
                     sub_prior_knowledge = []
@@ -71,7 +70,7 @@ class LingamImpl(BaseCausalAlgorithm):
                     sub_prior_knowledge = prior_knowledge[indecies_sub]
                     sub_prior_knowledge = sub_prior_knowledge[:, indecies_sub]
 
-                    model = lingam.DirectLiNGAM(prior_knowledge=sub_prior_knowledge)
+                    model = positive_direct_lingam.PositiveDirectLiNGAM(prior_knowledge=sub_prior_knowledge)
                 model.fit(sub_data)
                 new_adjacency_matrix = model.adjacency_matrix_
                 new_graph = nx.from_numpy_array(new_adjacency_matrix, create_using=nx.DiGraph())
