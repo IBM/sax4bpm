@@ -9,7 +9,7 @@
 
 
 <p align="center">
-<img src="https://img.shields.io/badge/sax4bpm-v1.0.0-green" />
+<img src="https://img.shields.io/badge/sax4bpm-v0.1.0-green" />
 </p>
 
 <!--🎥 Demo: Here you can see a demo UI with demonstration of the library capabilities [here](https://www.youtube.com/watch?v=EKXFqHtW3Xw&t=6s). In this demo, we use dataset from AutoTwin EU Croma partner to demonstrate library functionality
