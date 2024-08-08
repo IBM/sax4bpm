@@ -40,8 +40,9 @@ class PriorKnowledge:
             for ind2, column2 in enumerate(data.columns):
                 if column1!=column2 :
                     residuals = data[column1] - data[column2]
-                    if (residuals >= 0).all():                        
+                    if (residuals >= 0).all():   
                         prior_knowledge[ind2][ind1] = 0
+
         return prior_knowledge
     
     def getPriorKnowledge(self):

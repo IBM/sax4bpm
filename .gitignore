@@ -5,6 +5,7 @@ docs/build/**
 docs/README.txt
 main.py
 __pycache__/
+experiments/**
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
