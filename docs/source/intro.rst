@@ -8,7 +8,7 @@ picture into which activities actually affect execution of the other activities 
 of decisions made within the scope of the business processes and provide more precise view on feature dependency of those decisions.
 To bring it all together we will integrate all perspectives together using LLMs (Large Language Model) to construct single human-interpretable view into explainations of various process decision
 and outcomes.
-The current causal module implementation relies on techniques and methods described in <>
+The current causal module implementation relies on techniques and methods described in `The WHY in Business Processes: Discovery of Causal Execution Dependencies <https://arxiv.org/abs/2310.14975>`_
 
 Motivation
 **********
