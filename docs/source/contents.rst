@@ -25,6 +25,11 @@ The following page provides entry point for documentation of all available funct
 	- :doc:`LLMs Wrappers <sax.core.synthesis.llms>`
 	- :doc:`RAG retreivers <sax.core.synthesis.rag>`
 
+.. toctree::  
+   :maxdepth: 2
+   :caption: Modules
+
+   modules.rst
 
 	
 		

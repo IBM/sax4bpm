@@ -13,9 +13,9 @@
 <img src="https://img.shields.io/badge/sax4bpm-v0.1.0-green" />
 </p>
 
-<!--🎥 Demo: Here you can see a demo UI with demonstration of the library capabilities [here](https://www.youtube.com/watch?v=EKXFqHtW3Xw&t=6s). In this demo, we use dataset from AutoTwin EU Croma partner to demonstrate library functionality
+<!--🎥 Demo: Here you can see a demo UI with demonstration of the library capabilities [here](https://www.youtube.com/watch?v=EKXFqHtW3Xw&t=6s). In this demo, we use dataset from AutoTwin EU Croma partner to demonstrate library functionality -->
 
-🏁 Getting started: -->
+🏁 Getting started: [https://ibm.github.io/sax4bpm/installation.html](https://ibm.github.io/sax4bpm/installation.html)
 
 🛠️ Tutorials: [https://ibm.github.io/sax4bpm/tutorials.html](https://ibm.github.io/sax4bpm/tutorials.html)
 
@@ -23,7 +23,7 @@
 
 ## Documentation
 
-🗃️  The full documentation for this repository can be found at [GitHub Pages](https://ibm.github.io/sax4bpm/).
+🗃️  The full documentation for this repository can be found at [GitHub Pages](https://ibm.github.io/sax4bpm/index).
 
 ## Introduction
 The library provides three layers of business process analysis- process mining, causal discovery, XAI analysis, and LLM-powered blending of the analysis outcomes into human-readable process explanations functionality. 

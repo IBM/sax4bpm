@@ -1,3 +1,4 @@
+
 Introduction
 ============
 
@@ -23,3 +24,7 @@ Limitations and Acknowledgments
 - To gain the process model perspective from process event logs, we rely on `PM4PY <https://pm4py-source.readthedocs.io/en/stable/pm4py.html>`_ Python package implementation, and wrap it with additional functionality in our  :class:`sax.process_data` module.
 
 - The current package implementation includes the process discovery and causal discovery modules. In the nearest future we plan to extend it with XAI module and integrated view using LLMs.
+
+.. toctree::  
+   :maxdepth: 2
+   :caption: Contents
