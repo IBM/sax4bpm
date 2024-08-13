@@ -4,4 +4,4 @@ sax4bpm
 .. toctree::
    :maxdepth: 4
 
-   sax
+   sax.core.rst

@@ -8,6 +8,7 @@ Subpackages
    :maxdepth: 4
 
    sax.core.causal_process_discovery
+   sax.core.causal_process_discovery.prior_knowledge
    sax.core.process_data
    sax.core.process_mining
    sax.core.process_xai
