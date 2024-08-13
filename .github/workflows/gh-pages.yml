@@ -28,10 +28,9 @@ jobs:
         run: |
           cd docs
           make html  # Build documentation into HTML
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+          
+      - name: Deploy
+        uses: actions/deploy-pages@v2
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: ./docs/build/html  # Directory with built documentation
+          branch: gh-pages
+          folder: docs/build/html # Directory with built documentation
