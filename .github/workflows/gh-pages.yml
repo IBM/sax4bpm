@@ -5,7 +5,7 @@ on:
     branches:
       - main  # Trigger the workflow on push to the main branch
     paths:
-       - 'docs/**'  # Trigger only when files in the /docs directory are changed
+      - 'docs/**'  # Trigger only when files in the /docs directory are changed
 jobs:
   deploy:
     runs-on: ubuntu-latest
