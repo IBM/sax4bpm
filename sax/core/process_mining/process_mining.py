@@ -17,7 +17,7 @@ from sax.core.process_data.raw_event_data import RawEventData
 from sax.core.utils.constants import Constants
 
 
-def import_xes(eventlog,case_id: str=XESFormatter.Parameters.CASE_ID, activity_key: str=XESFormatter.Parameters.ACTIVITY, timestamp_key: str=XESFormatter.Parameters.TIMESTAMP, lifecycle_type: str= XESFormatter.Parameters.TYPE,timestamp_format: str=XESFormatter.Parameters.TIMESTAMP_FORMAT) ->RawEventData:
+def import_xes(eventlog,case_id: str=XESFormatter.Parameters.CASE_ID, activity_key: str=XESFormatter.Parameters.ACTIVITY, timestamp_key: str=XESFormatter.Parameters.TIMESTAMP, lifecycle_type: str= XESFormatter.Parameters.TYPE,timestamp_format: str=XESFormatter.Parameters.TIMESTAMP_FORMAT,lifecycleTypes=None) ->RawEventData:
         """
         Parse XES file into event log
 
@@ -49,11 +49,11 @@ def import_xes(eventlog,case_id: str=XESFormatter.Parameters.CASE_ID, activity_k
         parameters[Constants.TIMESTAMP_FORMAT_KEY] = timestamp_format  
         parameters[Constants.TYPE_KEY]=lifecycle_type        
         formatter = XESFormatter(parameters)
-        dataframe = formatter.extract_data(eventlog)
+        dataframe = formatter.extract_data(eventlog,lifecycleTypes)
         return dataframe
     
    
-def import_csv(eventlog,case_id: str=CSVFormatter.Parameters.CASE_ID, activity_key: str=CSVFormatter.Parameters.ACTIVITY, timestamp_key: str=CSVFormatter.Parameters.TIMESTAMP,lifecycle_type: str= CSVFormatter.Parameters.TYPE, timestamp_format: str=CSVFormatter.Parameters.TIMESTAMP_FORMAT, starttime_column: str=CSVFormatter.Parameters.STARTTIME_COLUMN) ->RawEventData:
+def import_csv(eventlog,case_id: str=CSVFormatter.Parameters.CASE_ID, activity_key: str=CSVFormatter.Parameters.ACTIVITY, timestamp_key: str=CSVFormatter.Parameters.TIMESTAMP,lifecycle_type: str= CSVFormatter.Parameters.TYPE, timestamp_format: str=CSVFormatter.Parameters.TIMESTAMP_FORMAT, starttime_column: str=CSVFormatter.Parameters.STARTTIME_COLUMN,lifecycleTypes=None) ->RawEventData:
         """
         Parse CSV file into event log
 
@@ -88,11 +88,11 @@ def import_csv(eventlog,case_id: str=CSVFormatter.Parameters.CASE_ID, activity_k
         parameters[Constants.TYPE_KEY]=lifecycle_type      
         parameters[Constants.STARTTIME_COLUMN]=starttime_column
         formatter = CSVFormatter(parameters)
-        dataframe = formatter.extract_data(eventlog)
+        dataframe = formatter.extract_data(eventlog,lifecycleTypes)
         return dataframe
     
    
-def create_from_dataframe(dataframe,case_id: str=CSVFormatter.Parameters.CASE_ID, activity_key: str=CSVFormatter.Parameters.ACTIVITY, timestamp_key: str=CSVFormatter.Parameters.TIMESTAMP, lifecycle_type: str= CSVFormatter.Parameters.TYPE,timestamp_format: str=CSVFormatter.Parameters.TIMESTAMP_FORMAT,starttime_column: str=CSVFormatter.Parameters.STARTTIME_COLUMN)->RawEventData:
+def create_from_dataframe(dataframe,case_id: str=CSVFormatter.Parameters.CASE_ID, activity_key: str=CSVFormatter.Parameters.ACTIVITY, timestamp_key: str=CSVFormatter.Parameters.TIMESTAMP, lifecycle_type: str= CSVFormatter.Parameters.TYPE,timestamp_format: str=CSVFormatter.Parameters.TIMESTAMP_FORMAT,starttime_column: str=CSVFormatter.Parameters.STARTTIME_COLUMN,lifecycleTypes=None)->RawEventData:
         """
         Creates event log from dataframe
         
@@ -129,11 +129,11 @@ def create_from_dataframe(dataframe,case_id: str=CSVFormatter.Parameters.CASE_ID
         parameters[Constants.TYPE_KEY]=lifecycle_type     
         parameters[Constants.STARTTIME_COLUMN]=starttime_column
         formatter = CSVFormatter(parameters)
-        extracted_log = formatter.extract_from_dataframe(dataframe)
+        extracted_log = formatter.extract_from_dataframe(dataframe,lifecycleTypes)
         return extracted_log
 
   
-def import_mxml(eventlog,case_id: str=MXMLFormatter.Parameters.CASE_ID, activity_key: str=MXMLFormatter.Parameters.ACTIVITY, timestamp_key: str=MXMLFormatter.Parameters.TIMESTAMP, lifecycle_type: str= MXMLFormatter.Parameters.TYPE,timestamp_format: str=MXMLFormatter.Parameters.TIMESTAMP_FORMAT) ->RawEventData:
+def import_mxml(eventlog,case_id: str=MXMLFormatter.Parameters.CASE_ID, activity_key: str=MXMLFormatter.Parameters.ACTIVITY, timestamp_key: str=MXMLFormatter.Parameters.TIMESTAMP, lifecycle_type: str= MXMLFormatter.Parameters.TYPE,timestamp_format: str=MXMLFormatter.Parameters.TIMESTAMP_FORMAT,lifecycleTypes=None) ->RawEventData:
         """
         Parse MXML file into event log
 
@@ -169,7 +169,7 @@ def import_mxml(eventlog,case_id: str=MXMLFormatter.Parameters.CASE_ID, activity
         parameters[Constants.TIMESTAMP_FORMAT_KEY] = timestamp_format          
         parameters[Constants.TYPE_KEY] = lifecycle_type 
         formatter = MXMLFormatter(parameters)
-        dataframe = formatter.extract_data(eventlog)
+        dataframe = formatter.extract_data(eventlog,lifecycleTypes)
         return dataframe
     
 
@@ -180,7 +180,7 @@ def import_mxml(eventlog,case_id: str=MXMLFormatter.Parameters.CASE_ID, activity
 #         return event_log
 
 
-def discover_heuristics_net(dataframe: RawEventData,lifecycleTypes = None) -> HeuristicsNet:        
+def discover_heuristics_net(dataframe: RawEventData) -> HeuristicsNet:        
         """
         Apply heuristic mining algorithm on the RawEventData event log object to discover heuristic net
 
@@ -191,10 +191,7 @@ def discover_heuristics_net(dataframe: RawEventData,lifecycleTypes = None) -> He
         :return: heuristic net
         :rtype: HeuristicsNet
         """
-        event_log = dataframe     
-        if (lifecycleTypes is not None) or (Constants.TYPE_KEY in dataframe.getMandatoryProperties()):
-                event_log= dataframe.filterLifecycleEvents(lifecycleTypes)
-                                   
+        event_log = dataframe                                               
         formatted_log = event_log.getLog()
 
         #log = log_converter.apply(formatted_log)
@@ -212,7 +209,7 @@ def view_heuristics_net(map: HeuristicsNet):
         """        
         pm4py.view_heuristics_net(map)
 
-def discover_dfg(dataframe: RawEventData,lifecycleTypes = None):        
+def discover_dfg(dataframe: RawEventData):        
         """
         Apply dfg mining algorithm on the RawEventData event log object to discover heuristic net
 
@@ -223,9 +220,7 @@ def discover_dfg(dataframe: RawEventData,lifecycleTypes = None):
         :return: dfg
         :rtype: 
         """
-        event_log = dataframe     
-        if (lifecycleTypes is not None) or (Constants.TYPE_KEY in dataframe.getMandatoryProperties()):
-                event_log= dataframe.filterLifecycleEvents(lifecycleTypes)
+        event_log = dataframe            
                                    
         formatted_log = event_log.getLog()
         dfg =  dfg_discovery.apply(formatted_log, variant=dfg_discovery.Variants.FREQUENCY)
@@ -262,7 +257,7 @@ def view_bpmn_model(bpmn_model: BPMN):
         pm4py.view_bpmn(bpmn_model)
 
     
-def discover_process_tree(dataframe: RawEventData,lifecycleTypes = None) ->ProcessTree:
+def discover_process_tree(dataframe: RawEventData) ->ProcessTree:
         """
         Perform process mining on the event log to discover process tree
 
@@ -274,9 +269,7 @@ def discover_process_tree(dataframe: RawEventData,lifecycleTypes = None) ->Proce
         :rtype: ProcessTree
         """        
         
-        event_log = dataframe     
-        if (lifecycleTypes is not None) or (Constants.TYPE_KEY in dataframe.getMandatoryProperties()):
-                event_log= dataframe.filterLifecycleEvents(lifecycleTypes)
+        event_log = dataframe             
    
         formatted_log = event_log.getLog()
 
@@ -296,7 +289,7 @@ def view_process_tree(process_tree: ProcessTree):
 
 
    
-def discover_process_map( dataframe: RawEventData,lifecycleTypes = None) -> Tuple[dict,dict,dict]:
+def discover_process_map( dataframe: RawEventData) -> Tuple[dict,dict,dict]:
         """
         Discover process map
 
@@ -307,9 +300,7 @@ def discover_process_map( dataframe: RawEventData,lifecycleTypes = None) -> Tupl
         :return: process map
         :rtype: Tuple[dict,dict,dict]
         """        
-        event_log = dataframe     
-        if (lifecycleTypes is not None) or (Constants.TYPE_KEY in dataframe.getMandatoryProperties()):
-                event_log= dataframe.filterLifecycleEvents(lifecycleTypes)
+        event_log = dataframe         
           
         formatted_log = event_log.getLog()
 
