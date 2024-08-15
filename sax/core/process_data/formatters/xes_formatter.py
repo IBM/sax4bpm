@@ -58,7 +58,7 @@ class XESFormatter(BaseFormatter):
         self.parameters[Constants.TYPE_KEY] = helper_utils.get_param_value(Constants.TYPE_KEY, parameters, XESFormatter.Parameters.TYPE)
         self.parameters[Constants.TIMESTAMP_FORMAT_KEY] = helper_utils.get_param_value(Constants.TIMESTAMP_FORMAT_KEY, parameters, XESFormatter.Parameters.TIMESTAMP_FORMAT)        
 
-    def extract_data(self,event_log_data) -> RawEventData:
+    def extract_data(self,event_log_data,lifecycleTypes=None) -> RawEventData:
         """
         Extract tabular data from the provided XES event log file, instantiate raw data object containing the tabular data.
 
@@ -79,5 +79,5 @@ class XESFormatter(BaseFormatter):
         mandatory_properties,optional_properties = self._getProperties(dataframe, self.parameters) 
         event_log = helper_utils.add_start_time(event_log, timestamp_column_name=mandatory_properties[Constants.TIMESTAMP_KEY], id_column_name=mandatory_properties[Constants.CASE_ID_KEY], start_column_name=Constants.STARTTIME_COLUMN)
         mandatory_properties[Constants.STARTTIME_COLUMN]=Constants.STARTTIME_COLUMN          
-        return RawEventData(event_log,mandatory_properties,optional_properties)
+        return RawEventData(event_log,mandatory_properties,optional_properties,lifecycleTypes)
        

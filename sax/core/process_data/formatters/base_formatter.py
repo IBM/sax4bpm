@@ -34,7 +34,7 @@ class BaseFormatter:
         self.parameters = dict(parameters)
     
     @abstractmethod
-    def extract_data(self, event_log_data) -> RawEventData:
+    def extract_data(self, event_log_data,lifecycleTypes=None) -> RawEventData:
         """
         Create RawEventData data object from the provided event log file
 

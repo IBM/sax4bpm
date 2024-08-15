@@ -52,7 +52,7 @@ class CSVFormatter(BaseFormatter):
         
     
     
-    def extract_data(self,event_log_data,separator=Constants.CSV_SEPARATOR) -> RawEventData:
+    def extract_data(self,event_log_data,lifecycleTypes=None) -> RawEventData:
         """
         Extract tabular data from the provided CSV event log file, instantiate raw data object containing the tabular data.
 
@@ -73,10 +73,11 @@ class CSVFormatter(BaseFormatter):
         ValueError
             If the event_log_data argument is not a file.
         """           
+        separator=Constants.CSV_SEPARATOR
         dataframe = pd.read_csv(event_log_data, sep=separator) #original dataframe
-        return self._format_dataframe(dataframe)
+        return self._format_dataframe(dataframe,lifecycleTypes=lifecycleTypes)
     
-    def _format_dataframe(self, dataframe : pd.DataFrame) -> RawEventData:
+    def _format_dataframe(self, dataframe : pd.DataFrame,lifecycleTypes=None) -> RawEventData:
         """
         Format the provided dataframe to represent event log: format timestamps, calculate trace start timestamps
 
@@ -108,9 +109,9 @@ class CSVFormatter(BaseFormatter):
             event_log = helper_utils.convert_timestamp_columns_in_df(original_data, timest_format=self.parameters[Constants.TIMESTAMP_FORMAT_KEY], timest_columns=[self.parameters[Constants.TIMESTAMP_KEY]])
             event_log = helper_utils.add_start_time(event_log, timestamp_column_name=mandatory_properties[Constants.TIMESTAMP_KEY], id_column_name=mandatory_properties[Constants.CASE_ID_KEY], start_column_name=Constants.STARTTIME_COLUMN)
             mandatory_properties[Constants.STARTTIME_COLUMN]=Constants.STARTTIME_COLUMN                                                                        
-        return RawEventData(event_log,mandatory_properties,optional_properties)
+        return RawEventData(event_log,mandatory_properties,optional_properties,lifecycleTypes)
     
-    def extract_from_dataframe(self,dataframe: pd.DataFrame) -> RawEventData:
+    def extract_from_dataframe(self,dataframe: pd.DataFrame,lifecycleTypes=None) -> RawEventData:
         """
         Extract event log tabular data from the provided dataframe, instantiate process raw event data object.
 
@@ -130,4 +131,4 @@ class CSVFormatter(BaseFormatter):
             If the dataframe argument is not a pandas DataFrame.
         """                  
         
-        return self._format_dataframe(dataframe)
+        return self._format_dataframe(dataframe,lifecycleTypes=lifecycleTypes)
