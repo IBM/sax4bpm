@@ -7,7 +7,12 @@ on:
     paths:
       - 'docs/**'  # Trigger only when files in the /docs directory are changed
   workflow_dispatch: # This adds the manual trigger
- 
+
+permissions:
+  id-token: write
+  contents: write
+  pages: write
+  
 jobs:
   deploy:
     runs-on: ubuntu-latest
