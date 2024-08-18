@@ -3,7 +3,7 @@
 # -----------------------------------------------------------------------------
 import os
 from langchain_openai import ChatOpenAI
-from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain_openai import OpenAIEmbeddings
 
 from sax.core.synthesis.llms.base_llm import BaseLLM
 

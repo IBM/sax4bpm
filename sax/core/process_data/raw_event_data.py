@@ -45,10 +45,11 @@ class RawEventData(BaseProcessDataObject):
             If any of the input arguments do not have the expected value.
         """         
         super().__init__(data=data,mandatory_properties=mandatory_properties,optional_properties =optional_properties) 
-        if lifecycleTypes is None:
-            lifecycleTypes = [LifecycleTypes.COMPLETE.value]
-        filtered_df = self.data[self.data[self.mandatory_properties[Constants.TYPE_KEY]].str.lower().isin(lifecycleType.lower() for lifecycleType in lifecycleTypes)]
-        self.data = filtered_df  
+        if (Constants.TYPE_KEY in mandatory_properties):
+            if lifecycleTypes is None:
+                lifecycleTypes = [LifecycleTypes.COMPLETE.value]
+            filtered_df = self.data[self.data[self.mandatory_properties[Constants.TYPE_KEY]].str.lower().isin(lifecycleType.lower() for lifecycleType in lifecycleTypes)]
+            self.data = filtered_df  
         self._initLog() 
 
 

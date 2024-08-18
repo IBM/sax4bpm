@@ -1,4 +1,6 @@
 venv/**
+.venv/**
+test/**
 .vscode/**
 .idea/**
 docs/build/**

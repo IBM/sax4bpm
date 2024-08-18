@@ -8,7 +8,7 @@ from langchain_community.document_loaders.text import TextLoader
 import os
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain.chains.retrieval_qa.base import RetrievalQA
-from langchain.vectorstores.chroma import Chroma
+from langchain_community.vectorstores import Chroma
 from sax.core.synthesis.exceptions.validation import ValidationException
 from sax.core.synthesis.llms.base_llm import BaseLLM
 from sax.core.synthesis.rag.base_retrieval import BaseRetriever
