@@ -1,47 +1,49 @@
-name: Deploy Documentation to GitHub Pages
+name: Build and Deploy gh-pages sphinx documentation
 
 on:
   push:
     branches:
-      - main  # Trigger the workflow on push to the main branch
+      - main
     paths:
-      - 'docs/**'  # Trigger only when files in the /docs directory are changed
+      - 'docs/**'
   workflow_dispatch: # This adds the manual trigger
 
-permissions:
-  id-token: write
-  contents: write
-  pages: write
-  
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.x'
+    - name: Set up Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.x'  # Use the Python version you need
+        
+    - name: Install Pandoc
+      run: sudo apt-get install pandoc
 
-      - name: Install Pandoc
-        run: sudo apt-get install pandoc
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install sphinx nbsphinx sphinx_rtd_theme
+        pip install -r requirements.txt
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install sphinx nbsphinx sphinx_rtd_theme
-          pip install -r requirements.txt
+    - name: Build documentation
+      run: |
+        sphinx-build -b html docs/source docs/build/html
 
-      - name: Build documentation
-        run: |
-          cd docs
-          make html  # Build documentation into HTML
-          
-      - name: Deploy
-        uses: actions/deploy-pages@v2
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}  # GitHub token is required
+    - name: Deploy to GitHub Pages
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        git config --global user.name 'github-actions'
+        git config --global user.email 'actions@github.com'
+        git checkout -b gh-pages
+        rm -rf *
+        cp -r docs/build/html/* .
+        git add .
+        git commit -m 'Deploy documentation'
+        git push --force origin gh-pages
 
