@@ -6,6 +6,7 @@ on:
       - main  # Trigger the workflow on push to the main branch
     paths:
       - 'docs/**'  # Trigger only when files in the /docs directory are changed
+  workflow_dispatch: # This adds the manual trigger
 jobs:
   deploy:
     runs-on: ubuntu-latest
