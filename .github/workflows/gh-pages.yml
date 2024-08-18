@@ -7,12 +7,7 @@ on:
     paths:
       - 'docs/**'  # Trigger only when files in the /docs directory are changed
   workflow_dispatch: # This adds the manual trigger
-
-permissions:
-  id-token: write
-  contents: write
-  pages: write
-  
+ 
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -43,5 +38,5 @@ jobs:
       - name: Deploy
         uses: actions/deploy-pages@v2
         with:
-          branch: gh-pages
-          folder: docs/build/html # Directory with built documentation
+          token: ${{ secrets.GITHUB_TOKEN }}  # GitHub token is required
+
