@@ -5,8 +5,8 @@
 
 Welcome to SAX4BPM's documentation!
 ===================================
-SAX4BPM is an open-source Python library catering for business-process oriented explainability of process aware systems. It includes a module for process model discovery and a module supporting
-discovery of causal-execution dependency model based on the process model. Additionally it contains XAI layer, which allows exploring different activity attributes and see how they affect chosen target variables. Finally, we allow integrate all perspectives together into single
+SAX4BPM is an open-source Python library catering for business-process oriented explainability of process aware systems. It includes a fuctionality for process model discovery and functionality supporting
+discovery of causal-execution dependency model based on the process model. Additionally it contains XAI layer, which allows exploring different activity attributes and see how they affect chosen target variables. Finally, we allow to integrate all those perspectives together into single
 higher-level human-understandable LLM-supported view, allowing  the user to query LLM and ask for explanation of process behavious based on those perspectives.  
 
 .. toctree::  
