@@ -39,7 +39,7 @@ jobs:
         name: docs-build
         path: docs/build/html
 
-  deploy:
+  deploy:      
     runs-on: ubuntu-latest
     needs: build
     steps:
@@ -48,21 +48,23 @@ jobs:
       with:
         ref: gh-pages
 
+    - name: Clean the root directory
+      run: |
+        rm -rf *
+
     - name: Download documentation artifact
       uses: actions/download-artifact@v3
       with:
         name: docs-build
+        path: docs-build 
 
     - name: Deploy to GitHub Pages
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        # Clean and copy the build artifacts
-        mv docs-build ../docs-build-temp
-        # Clean the root directory
-        rm -rf *
-        # Move the artifact back and copy its contents to the root
-        mv ../docs-build-temp/* .
+        ls -R
+        cp -r docs-build/* .
+        rm -rf docs-build  # Remove the directory after copying its content
         git add .
         git commit -m 'Deploy documentation'
         git push --force origin gh-pages
