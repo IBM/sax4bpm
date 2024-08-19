@@ -1,22 +1,24 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="Python" >
+<html class="writer-html5" lang="Python" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Process mining and causal discovery example &mdash; SAX4BPM 0.0.1 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="_static/nbsphinx-code-cells.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/nbsphinx-code-cells.css?v=2aa19091" />
+
+  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="_static/jquery.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=0ea5f55c"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
         <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
         <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -84,21 +86,21 @@
            <div itemprop="articleBody">
              
   <section id="Process-mining-and-causal-discovery-example">
-<h1>Process mining and causal discovery example<a class="headerlink" href="#Process-mining-and-causal-discovery-example" title="Permalink to this heading"></a></h1>
+<h1>Process mining and causal discovery example<a class="headerlink" href="#Process-mining-and-causal-discovery-example" title="Link to this heading"></a></h1>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="c1"># Get the current directory (where the notebook is located)</span>
-<span class="n">notebook_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
-<span class="c1"># Get the parent directory</span>
-<span class="n">parent_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">notebook_dir</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">pardir</span><span class="p">))</span>
-<span class="c1"># Get two directories up</span>
-<span class="n">two_dirs_up</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parent_dir</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">pardir</span><span class="p">))</span>
-<span class="c1"># Add the project directory to the Python path</span>
-<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">two_dirs_up</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import sys
+import os
+# Get the current directory (where the notebook is located)
+notebook_dir = os.getcwd()
+# Get the parent directory
+parent_dir = os.path.abspath(os.path.join(notebook_dir, os.pardir))
+# Get two directories up
+two_dirs_up = os.path.abspath(os.path.join(parent_dir, os.pardir))
+# Add the project directory to the Python path
+sys.path.append(two_dirs_up)
 </pre></div>
 </div>
 </div>
@@ -106,9 +108,9 @@
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
-<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">RuntimeWarning</span><span class="p">)</span>
-<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import warnings
+warnings.filterwarnings(&#39;ignore&#39;, category=RuntimeWarning)
+warnings.filterwarnings(&#39;ignore&#39;, category=UserWarning)
 </pre></div>
 </div>
 </div>
@@ -116,14 +118,14 @@
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sax</span>
-<span class="kn">from</span> <span class="nn">sax.process_data.formatters.xes_formatter</span> <span class="kn">import</span> <span class="n">XESFormatter</span>
-<span class="kn">from</span> <span class="nn">sax.process_data.formatters.csv_formatter</span> <span class="kn">import</span> <span class="n">CSVFormatter</span>
-<span class="kn">from</span> <span class="nn">sax.utils.constants</span> <span class="kn">import</span> <span class="n">Constants</span>
-<span class="kn">from</span> <span class="nn">lingam.utils</span> <span class="kn">import</span> <span class="n">make_dot</span>
-<span class="kn">from</span> <span class="nn">sax.process_data.tabular_data</span> <span class="kn">import</span> <span class="n">TabularEventData</span>
-<span class="kn">from</span> <span class="nn">pm4py.objects.conversion.log</span> <span class="kn">import</span> <span class="n">converter</span> <span class="k">as</span> <span class="n">log_converter</span>
-<span class="kn">import</span> <span class="nn">sax.process_mining.process_mining</span> <span class="k">as</span> <span class="nn">pm</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import sax
+from sax.process_data.formatters.xes_formatter import XESFormatter
+from sax.process_data.formatters.csv_formatter import CSVFormatter
+from sax.utils.constants import Constants
+from lingam.utils import make_dot
+from sax.process_data.tabular_data import TabularEventData
+from pm4py.objects.conversion.log import converter as log_converter
+import sax.process_mining.process_mining as pm
 </pre></div>
 </div>
 </div>
@@ -131,8 +133,8 @@
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><br/><br/><span></span><span class="n">fileName</span> <span class="o">=</span> <span class="s2">&quot;C:\Data\Automation\SAX\Data\collider expirementation\collider non-overlapping runs U[5,7], U[9,11]\simulated_run_non_overlapping_gen.csv&quot;</span>
-<span class="n">dataframe</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">import_csv</span><span class="p">(</span><span class="n">fileName</span><span class="p">,</span><span class="n">timestamp_format</span><span class="o">=</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S.</span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><br/><br/><span></span>fileName = &quot;C:\Data\Automation\SAX\Data\collider expirementation\collider non-overlapping runs U[5,7], U[9,11]\simulated_run_non_overlapping_gen.csv&quot;
+dataframe = pm.import_csv(fileName,timestamp_format=&quot;%Y-%m-%d %H:%M:%S.%f&quot;)
 <br/></pre></div>
 </div>
 </div>
@@ -140,7 +142,7 @@
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dataframe</span><span class="o">.</span><span class="n">getData</span><span class="p">()</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>dataframe.getData()
 </pre></div>
 </div>
 </div>
@@ -284,8 +286,8 @@
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Mandatory Properties of the parsed event log: </span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span><span class="n">dataframe</span><span class="o">.</span><span class="n">getMandatoryProperties</span><span class="p">())</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Optional properties of the parsed event log: </span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span><span class="n">dataframe</span><span class="o">.</span><span class="n">getOptionalProperties</span><span class="p">())</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(&#39;Mandatory Properties of the parsed event log: \n&#39;,dataframe.getMandatoryProperties())
+print(&#39;Optional properties of the parsed event log: \n&#39;,dataframe.getOptionalProperties())
 <br/></pre></div>
 </div>
 </div>
@@ -304,8 +306,8 @@ Optional properties of the parsed event log:
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><br/><span></span><span class="n">event_log</span> <span class="o">=</span> <span class="n">dataframe</span><span class="o">.</span><span class="n">filterLifecycleEvents</span><span class="p">([</span><span class="s1">&#39;complete&#39;</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">event_log</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><br/><span></span>event_log = dataframe.filterLifecycleEvents([&#39;complete&#39;])
+print(event_log)
 <br/></pre></div>
 </div>
 </div>
@@ -349,9 +351,9 @@ Data:           Id             Source      Type                        Timestamp
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sax.process_mining.process_mining</span> <span class="k">as</span> <span class="nn">pm</span>
-<span class="n">net</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">discover_heuristics_net</span><span class="p">(</span><span class="n">dataframe</span><span class="p">)</span>
-<span class="n">pm</span><span class="o">.</span><span class="n">view_heuristics_net</span><span class="p">(</span><span class="n">net</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import sax.process_mining.process_mining as pm
+net = pm.discover_heuristics_net(dataframe)
+pm.view_heuristics_net(net)
 <br/></pre></div>
 </div>
 </div>
@@ -366,9 +368,9 @@ Data:           Id             Source      Type                        Timestamp
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#transform the RawEventData to tabular representation</span>
-<span class="n">transposed_df</span> <span class="o">=</span> <span class="n">dataframe</span><span class="o">.</span><span class="n">transposeToTabular</span><span class="p">()</span>
-<span class="n">transposed_df</span><span class="o">.</span><span class="n">getData</span><span class="p">()</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>#transform the RawEventData to tabular representation
+transposed_df = dataframe.transposeToTabular()
+transposed_df.getData()
 </pre></div>
 </div>
 </div>
@@ -632,8 +634,8 @@ Data:           Id             Source      Type                        Timestamp
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">activity_attr</span><span class="o">=</span> <span class="n">transposed_df</span><span class="o">.</span><span class="n">getActivityAttributesData</span><span class="p">(</span><span class="s1">&#39;Email&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">activity_attr</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>activity_attr= transposed_df.getActivityAttributesData(&#39;Email&#39;)
+print(activity_attr)
 </pre></div>
 </div>
 </div>
@@ -662,9 +664,9 @@ Data:           Id             Source      Type                        Timestamp
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sax.causal_process_discovery.causal_discovery</span> <span class="k">as</span> <span class="nn">cd</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">cd</span><span class="o">.</span><span class="n">discover_causal_dependencies</span><span class="p">(</span><span class="n">dataframe</span><span class="p">)</span>
-<span class="n">cd</span><span class="o">.</span><span class="n">view_causal_dependencies</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import sax.causal_process_discovery.causal_discovery as cd
+result = cd.discover_causal_dependencies(dataframe)
+cd.view_causal_dependencies(result)
 <br/></pre></div>
 </div>
 </div>
@@ -673,7 +675,8 @@ Data:           Id             Source      Type                        Timestamp
 </pre></div>
 </div>
 <div class="output_area docutils container">
-<img alt="_images/PM_Causal_Discovery_11_0.svg" src="_images/PM_Causal_Discovery_11_0.svg" /></div>
+<img alt="_images/PM_Causal_Discovery_11_0.svg" src="_images/PM_Causal_Discovery_11_0.svg" />
+</div>
 </div>
 </section>
 

@@ -1,21 +1,23 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="Python" >
+<html class="writer-html5" lang="Python" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Introduction &mdash; SAX4BPM 0.0.1 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="_static/jquery.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=0ea5f55c"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -82,23 +84,23 @@
            <div itemprop="articleBody">
              
   <section id="introduction">
-<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h1>
+<h1>Introduction<a class="headerlink" href="#introduction" title="Link to this heading"></a></h1>
 <p><code class="docutils literal notranslate"><span class="pre">SAX4BPM</span></code> is a high-level OO Python package which aims to provide an easy and intuitive way of exploring various perspectives into your business-process,such as mining process event
 logs and discovering process model, which in turns drives causal-execution dependency discovery of causal relationships between process activities. This can provide the user more elaborate
 picture into which activities actually affect execution of the other activities in the process. Additionally the causal execution dependency model can drive the explainability of various outcomes
 of decisions made within the scope of the business processes and provide more precise view on feature dependency of those decisions.
 To bring it all together we will integrate all perspectives together using LLMs (Large Language Model) to construct single human-interpretable view into explainations of various process decision
 and outcomes.
-The current causal module implementation relies on techniques and methods described in &lt;&gt;</p>
+The current causal module implementation relies on techniques and methods described in <a class="reference external" href="https://arxiv.org/abs/2310.14975">The WHY in Business Processes: Discovery of Causal Execution Dependencies</a></p>
 <section id="motivation">
-<h2>Motivation<a class="headerlink" href="#motivation" title="Permalink to this heading"></a></h2>
+<h2>Motivation<a class="headerlink" href="#motivation" title="Link to this heading"></a></h2>
 <p>A crucial element in analyzing the business process outcomes, making informed decisions on process adaptations and improvements is the genuine understanding of current state of affairs - getting sound and true explanations on the factors driving the current process outcomes and decisions made at various points of the
 business process execution. This entails understanding the true relationships between the execution of process activities, understanding how those relationships are affected by and affect various features of the business process,
 and how those are integrated together to provide clear and sound explanations.</p>
 <p>This package is intended to provide a one-place for gaining various perspectives into your business process activities relationship and explainability and such an integrated higher-level synthesis explainability view.</p>
 </section>
 <section id="limitations-and-acknowledgments">
-<h2>Limitations and Acknowledgments<a class="headerlink" href="#limitations-and-acknowledgments" title="Permalink to this heading"></a></h2>
+<h2>Limitations and Acknowledgments<a class="headerlink" href="#limitations-and-acknowledgments" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p>To gain the process model perspective from process event logs, we rely on <a class="reference external" href="https://pm4py-source.readthedocs.io/en/stable/pm4py.html">PM4PY</a> Python package implementation, and wrap it with additional functionality in our  <code class="xref py py-class docutils literal notranslate"><span class="pre">sax.process_data</span></code> module.</p></li>
 <li><p>The current package implementation includes the process discovery and causal discovery modules. In the nearest future we plan to extend it with XAI module and integrated view using LLMs.</p></li>

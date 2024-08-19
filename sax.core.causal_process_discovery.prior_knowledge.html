@@ -1,21 +1,23 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="Python" >
+<html class="writer-html5" lang="Python" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Prior Knowledge &mdash; SAX4BPM 0.0.1 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="_static/jquery.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=0ea5f55c"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -89,23 +91,23 @@
            <div itemprop="articleBody">
              
   <section id="prior-knowledge">
-<h1>Prior Knowledge<a class="headerlink" href="#prior-knowledge" title="Permalink to this heading"></a></h1>
+<h1>Prior Knowledge<a class="headerlink" href="#prior-knowledge" title="Link to this heading"></a></h1>
 <p>This module contains implementation of a <a class="reference internal" href="#sax.core.causal_process_discovery.prior_knowledge.PriorKnowledge" title="sax.core.causal_process_discovery.prior_knowledge.PriorKnowledge"><code class="xref py py-class docutils literal notranslate"><span class="pre">sax.core.causal_process_discovery.prior_knowledge.PriorKnowledge</span></code></a> class. This class should be instantiated with the event log data
 passed to causal discovery algorithm in case we want this algorithm to take into account specific business-process constraints (such as known time precedence between activities in the process)</p>
 <section id="module-sax.core.causal_process_discovery.prior_knowledge">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-sax.core.causal_process_discovery.prior_knowledge" title="Permalink to this heading"></a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-sax.core.causal_process_discovery.prior_knowledge" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="sax.core.causal_process_discovery.prior_knowledge.PriorKnowledge">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sax.core.causal_process_discovery.prior_knowledge.</span></span><span class="sig-name descname"><span class="pre">PriorKnowledge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sax.core.causal_process_discovery.prior_knowledge.PriorKnowledge" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sax.core.causal_process_discovery.prior_knowledge.</span></span><span class="sig-name descname"><span class="pre">PriorKnowledge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sax.core.causal_process_discovery.prior_knowledge.PriorKnowledge" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Prior knowledge representation for a particular event log. This object should be created and passed to the causal dependency discovery algorithm in case the user intends
 to run the algorithm with prior knowledge. The rules for creation of prior knowledge matrix are described here <a class="reference external" href="https://lingam.readthedocs.io/en/stable/tutorial/pk_direct.html">https://lingam.readthedocs.io/en/stable/tutorial/pk_direct.html</a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="sax.core.causal_process_discovery.prior_knowledge.PriorKnowledge.getPriorKnowledge">
-<span class="sig-name descname"><span class="pre">getPriorKnowledge</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sax.core.causal_process_discovery.prior_knowledge.PriorKnowledge.getPriorKnowledge" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">getPriorKnowledge</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sax.core.causal_process_discovery.prior_knowledge.PriorKnowledge.getPriorKnowledge" title="Link to this definition"></a></dt>
 <dd><p>Get the prior knowledge matrix embedded in this object</p>
 <section id="returns">
-<h3>Returns<a class="headerlink" href="#returns" title="Permalink to this heading"></a></h3>
+<h3>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>np.ndarray</dt><dd><p>Prior knowledge matrix</p>
 </dd>
@@ -115,16 +117,16 @@ to run the algorithm with prior knowledge. The rules for creation of prior knowl
 
 <dl class="py method">
 <dt class="sig sig-object py" id="sax.core.causal_process_discovery.prior_knowledge.PriorKnowledge.make_prior_knowledge_graph">
-<span class="sig-name descname"><span class="pre">make_prior_knowledge_graph</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sax.core.causal_process_discovery.prior_knowledge.PriorKnowledge.make_prior_knowledge_graph" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">make_prior_knowledge_graph</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sax.core.causal_process_discovery.prior_knowledge.PriorKnowledge.make_prior_knowledge_graph" title="Link to this definition"></a></dt>
 <dd><p># Assisted by WCA for GP
 # Latest GenAI contribution: granite-20B-code-instruct-v2 model
 Creates a graphviz.Digraph object representing the prior knowledge embedded in this object.</p>
 <section id="parameters">
-<h3>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h3>
+<h3>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h3>
 <p>None</p>
 </section>
 <section id="id1">
-<h3>Returns<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h3>
+<h3>Returns<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>graphviz.Digraph</dt><dd><p>Graphviz Digraph object representing the prior knowledge</p>
 </dd>
