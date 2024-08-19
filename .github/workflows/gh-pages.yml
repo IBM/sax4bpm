@@ -57,6 +57,11 @@ jobs:
       with:
         name: docs-build
         path: docs-build 
+        
+    - name: Set up Git author information
+      run: |
+        git config user.name "GitHub Actions"
+        git config user.email "actions@github.com"
 
     - name: Deploy to GitHub Pages
       env:
