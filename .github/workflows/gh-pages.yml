@@ -9,9 +9,8 @@ on:
   workflow_dispatch: # This adds the manual trigger
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -20,7 +19,7 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: '3.x'  # Use the Python version you need
-        
+
     - name: Install Pandoc
       run: sudo apt-get install pandoc
 
@@ -29,21 +28,44 @@ jobs:
         python -m pip install --upgrade pip
         pip install sphinx nbsphinx sphinx_rtd_theme
         pip install -r requirements.txt
-
+        
     - name: Build documentation
       run: |
         sphinx-build -b html docs/source docs/build/html
+
+    - name: Upload documentation artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: docs-build
+        path: docs/build/html
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - name: Checkout gh-pages branch
+      uses: actions/checkout@v3
+      with:
+        ref: gh-pages
+
+    - name: Download documentation artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: docs-build
 
     - name: Deploy to GitHub Pages
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        git config --global user.name 'github-actions'
-        git config --global user.email 'actions@github.com'
-        git checkout -b gh-pages
+        # Clean and copy the build artifacts
+        mv docs-build ../docs-build-temp
+        # Clean the root directory
         rm -rf *
-        cp -r docs/build/html/* .
+        # Move the artifact back and copy its contents to the root
+        mv ../docs-build-temp/* .
         git add .
         git commit -m 'Deploy documentation'
         git push --force origin gh-pages
 
+
+    
