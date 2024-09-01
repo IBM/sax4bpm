@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 
 from sax.core.utils.constants import Constants
-from ...causal_process_discovery.algorithms.positive_lingam.positive_direct_lingam import PositiveDirectLiNGAM
+from ...causal_process_discovery.algorithms.positive_lingam import PositiveLingamImpl
 from ...causal_process_discovery.algorithms.base_causal_alg import CausalResultInfo
 from ...causal_process_discovery.algorithms.lingam import LingamImpl
 from ...causal_process_discovery.algorithms.rcd import RcdImpl

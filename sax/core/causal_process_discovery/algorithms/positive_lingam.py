@@ -10,7 +10,7 @@ from sax.core.causal_process_discovery.algorithms.base_causal_alg import BaseCau
 from sax.core.causal_process_discovery.prior_knowledge import PriorKnowledge
 import networkx as nx
 
-from sax.core.causal_process_discovery.algorithms.positive_lingam import positive_direct_lingam
+from sax.core.causal_process_discovery.algorithms.positive_lingam_impl import positive_direct_lingam
 
 class PositiveLingamImpl(BaseCausalAlgorithm):
     """DirectLINGAM causal discovery algorithm wrapper for process execution causal discovery. Make use of `DirectLINGAM algorithm <https://lingam.readthedocs.io/en/latest/reference/direct_lingam.html>`_

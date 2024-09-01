@@ -2,7 +2,7 @@ import numpy as np
 from sklearn.preprocessing import scale
 from sklearn.utils import check_array
 
-from sax.core.causal_process_discovery.algorithms.positive_lingam.base_positive_lingam import _PositiveBaseLiNGAM
+from sax.core.causal_process_discovery.algorithms.positive_lingam_impl.base_positive_lingam import _PositiveBaseLiNGAM
 
 
 class PositiveDirectLiNGAM(_PositiveBaseLiNGAM):

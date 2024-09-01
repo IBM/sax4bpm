@@ -1,9 +1,14 @@
 # -----------------------------------------------------------------------------
 # Copyright contributors to the SAX4BPM project
 # -----------------------------------------------------------------------------
+import pandas as pd
+from typing import Dict
+from typing import List
 from typing import Optional
 
+
 import graphviz
+import networkx as nx
 import numpy as np
 from lingam.utils import make_dot
 
@@ -11,10 +16,34 @@ from sax.core.causal_process_discovery.algorithms.base_causal_alg import CausalR
 from sax.core.causal_process_discovery.causal_constants import DEFAULT_MODALITY, DEFAULT_VARIANT, Algorithm, Modality
 from sax.core.causal_process_discovery.modalities.chain_anchor import ChainAnchorTransformer
 from sax.core.causal_process_discovery.modalities.parent_anchor import ParentAnchorTransformer
+
+from sax.core.utils.constants import Constants
 from sax.core.process_data.raw_event_data import RawEventData
+import sax.core.process_mining.process_mining as pm
+
+def discover_causal_dependencies_unification(dataObject:RawEventData,algorithm: Optional[Algorithm] = DEFAULT_VARIANT, modality: Optional[Modality] = DEFAULT_MODALITY,prior_knowledge: Optional[bool]=True, depth: int =1) -> CausalResultInfo:
+    variants_dict = __get_variants_dict__(rawEventData=dataObject)
+    results_per_variant =  __results_per_variants__(rawEventData=dataObject, variants_dict=variants_dict,modality=modality ,prior_knowledge=prior_knowledge, algorithm=algorithm)
+    general_graph = __unification_of_results__(results=results_per_variant)
 
 
-def discover_causal_dependencies(dataObject:RawEventData,variant: Optional[Algorithm] = DEFAULT_VARIANT, modality: Optional[Modality] = DEFAULT_MODALITY,prior_knowledge: Optional[bool]=False, depth: int =1) -> CausalResultInfo:
+    return CausalResultInfo((nx.to_numpy_array(general_graph)).T, list(general_graph.nodes()))
+
+
+def discover_causal_dependencies_unification_variant_specific(dataObject:RawEventData, variant:List[str],algorithm: Optional[Algorithm] = DEFAULT_VARIANT, modality: Optional[Modality] = DEFAULT_MODALITY,prior_knowledge: Optional[bool]=True, depth: int =1) -> CausalResultInfo:
+    variant_sorted = sorted(variant)
+    variant_set_str = str(variant_sorted)
+    variants_dict = __get_variants_dict__(rawEventData=dataObject)
+    variant_specific_dict = {}
+    variant_specific_dict[variant_set_str] = variants_dict[variant_set_str]
+    results_per_variant =  __results_per_variants__(rawEventData=dataObject, variants_dict=variant_specific_dict,modality=modality ,prior_knowledge=prior_knowledge, algorithm=algorithm)
+    general_graph = __unification_of_results__(results=results_per_variant)
+
+
+    return CausalResultInfo((nx.to_numpy_array(general_graph)).T, list(general_graph.nodes()))
+
+
+def discover_causal_dependencies(dataObject:RawEventData,variant: Optional[Algorithm] = DEFAULT_VARIANT, modality: Optional[Modality] = DEFAULT_MODALITY,prior_knowledge: Optional[bool]=True, depth: int =1) -> CausalResultInfo:
     """
     Create causal execution dependency model for the given event log
 
@@ -102,3 +131,178 @@ def view_causal_dependencies(dependencies: CausalResultInfo, p_value_threshold: 
         np_matrix[mask] = 0
         
     return make_dot(np_matrix, labels = dependencies.getColumns())    
+
+
+def __get_variants_dict__(rawEventData:RawEventData) -> Dict[str,List[str]]:
+    variants_dict = {}
+
+    for sub_variant in rawEventData.getVariants():
+        variant_list = sub_variant.split(',')
+        variant_sorted = sorted(variant_list)
+        variant_set_str = str(variant_sorted)
+        if not variant_set_str in variants_dict.keys():
+            variants_dict[variant_set_str] = [variant_list]
+        else:
+            variants_dict[variant_set_str].append(variant_list)
+
+    return variants_dict
+
+
+def __create_graph__(result, strength=0.48):
+    mapping_index = {}
+    for i, column in enumerate(result.getColumns()):
+        mapping_index[i] = column
+
+    np_matrix = np.array(result.getAdjacencyMatrix()).T
+
+        # Create a boolean mask where True indicates that the value is below the p-value threshold
+    mask = np_matrix < strength
+
+    # Replace values below the p-value threshold with zeros
+    np_matrix[mask] = 0
+    #np_matrix = np.transpose(np_matrix)
+    
+    new_graph = nx.from_numpy_array(np_matrix, create_using=nx.DiGraph())
+    new_graph = nx.relabel_nodes(new_graph, mapping_index)
+
+    return new_graph
+
+
+def __results_per_variants__(rawEventData : RawEventData, variants_dict: Dict[str, List[str]], modality:Optional[Modality] = Modality.CHAIN, prior_knowledge:Optional[bool]=True,algorithm: Optional[Algorithm] = DEFAULT_VARIANT)-> List[CausalResultInfo]:
+    results = []
+    current_mapping = rawEventData.getMandatoryProperties()
+    for variant in variants_dict:
+        variants_combined = []
+        #find activities from other 
+        for second_variant in variants_dict: 
+            if set(variants_dict[variant][0]) <= set(variants_dict[second_variant][0]):
+                for sub_variant in variants_dict[second_variant]:
+                    sub_variant_str = ','.join(sub_variant)
+                    #variant = ','.join(variant)
+                    
+                    or_variant = rawEventData.getVariant(sub_variant_str)
+                    
+                    variant_df = or_variant.getData()
+                    columns = variants_dict[variant][0]
+                    if 'EVENT 6 THROW' in columns:
+                        columns.remove('EVENT 6 THROW')
+                    if 'EVENT 6 THROW0' in columns:
+                        columns.remove('EVENT 6 THROW0')
+                    variant_df = variant_df.reset_index()
+                    #print(variant_df.columns)
+                    variant_df = variant_df[variant_df[current_mapping[Constants.ACTIVITY_KEY]].isin(columns)][[current_mapping[Constants.CASE_ID_KEY], current_mapping[Constants.ACTIVITY_KEY], \
+                                                                                                                current_mapping[Constants.TIMESTAMP_KEY], current_mapping[Constants.STARTTIME_COLUMN]]]
+                    variants_combined.append(variant_df)
+        combined_df = pd.concat(variants_combined, ignore_index=True)
+        combined_df.columns = [Constants.CASE_ID_KEY, Constants.ACTIVITY_KEY, Constants.TIMESTAMP_KEY, Constants.START_BASE_COLUMN]
+        combined_event = pm.create_from_dataframe(combined_df,case_id=Constants.CASE_ID_KEY, activity_key=Constants.ACTIVITY_KEY, timestamp_key=Constants.TIMESTAMP_KEY, starttime_column=Constants.START_BASE_COLUMN)
+        result_single = discover_causal_dependencies(combined_event, modality=modality, prior_knowledge=prior_knowledge, variant=algorithm)
+        results.append(result_single)
+
+    return results
+
+
+def __unification_of_results__(results: List[CausalResultInfo]):
+    all_columns = []
+    for result in results:
+        all_columns = all_columns + result.columns
+    all_columns = list(set(all_columns))
+
+    G = nx.DiGraph()
+    label = ''
+    and_counter = 0
+    xor_counter = 0
+    or_counter = 0
+    G.add_nodes_from(all_columns)
+    
+    for node in all_columns:
+        current_sons = []
+        label = ''
+        mapper_inside_gates = {}
+
+        for result in results:
+            current_graph = __create_graph__(result, 0.4)
+            if node in current_graph.nodes():
+                sons_node = list(current_graph.successors(node))
+                if sons_node in current_sons or len(sons_node)==0:
+                        continue     
+                else:
+                    sons_node.sort()
+
+                    current_sons.append(sons_node)
+                    
+    
+        if len(current_sons) == 1:
+            label = 'and'
+        else:
+            label = 'xor'
+            for i, son_list in enumerate(current_sons[:-1]):
+                for current_son in current_sons[(i+1):]:
+                    if set(son_list)<= set(current_son):
+                        res = set(current_son) - set(son_list)
+                        remove_func = False
+                        for sub_set in current_sons[(i+1):]:
+                            if set(sub_set) == res:
+                                remove_func = True
+                        if remove_func:
+                            label = 'or'
+                            current_sons.remove(current_son)
+                            break
+                    elif set(son_list) >= set(current_son):
+                        res = set(son_list) - set(current_son)
+                        remove_func = False
+                        for sub_set in current_sons[(i+1):]:
+                            if set(sub_set) == res:
+                                remove_func = True
+                        if remove_func:
+                            label = 'or'
+                            current_sons.remove(son_list)
+                            break
+
+        for sons_node in current_sons:
+            if len(sons_node) >= 2:
+                new_node = f'and_{and_counter}'
+                G.add_node(new_node)
+                and_counter+=1
+                for son_node in sons_node:
+                    G.add_edge(new_node, son_node, label=label)
+                G.add_edge(node, new_node, label=label)
+                sons_node.sort()
+                mapper_inside_gates[str(sons_node)] = new_node            
+                            
+        connected_nodes = []
+        to_remove = []
+        for son_list in current_sons:
+            should_add = True
+
+            for insider in mapper_inside_gates.keys():
+                son_list.sort()
+                if insider == str(son_list):
+                    should_add = False
+                    connected_nodes.append(mapper_inside_gates[str(son_list)])
+                    to_remove.append(mapper_inside_gates[str(son_list)])
+            if should_add:
+                connected_nodes = connected_nodes + son_list
+        
+        if len(connected_nodes) >=2 :
+            if label == 'and':
+                G.add_node(f'{label}_{and_counter}')
+                new_node = f'{label}_{and_counter}'
+                and_counter+=1
+            if label == 'or':
+                G.add_node(f'{label}_{or_counter}')
+                new_node = f'{label}_{or_counter}'
+                or_counter+=1
+            if label == 'xor':
+                G.add_node(f'{label}_{xor_counter}')
+                new_node = f'{label}_{xor_counter}'
+                xor_counter+=1
+            G.add_edge(node, new_node, label=label)
+            for parent in connected_nodes:
+                G.add_edge(new_node, parent, label=label)
+            for remove_node in to_remove:
+                G.remove_edge(node, remove_node)
+        elif len(connected_nodes) == 1:
+            G.add_edge(node, connected_nodes[0])
+
+    return G
