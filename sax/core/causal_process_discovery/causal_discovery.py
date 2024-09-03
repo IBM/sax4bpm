@@ -184,10 +184,6 @@ def __results_per_variants__(rawEventData : RawEventData, variants_dict: Dict[st
                     
                     variant_df = or_variant.getData()
                     columns = variants_dict[variant][0]
-                    if 'EVENT 6 THROW' in columns:
-                        columns.remove('EVENT 6 THROW')
-                    if 'EVENT 6 THROW0' in columns:
-                        columns.remove('EVENT 6 THROW0')
                     variant_df = variant_df.reset_index()
                     #print(variant_df.columns)
                     variant_df = variant_df[variant_df[current_mapping[Constants.ACTIVITY_KEY]].isin(columns)][[current_mapping[Constants.CASE_ID_KEY], current_mapping[Constants.ACTIVITY_KEY], \
@@ -236,6 +232,15 @@ def __unification_of_results__(results: List[CausalResultInfo]):
             label = 'and'
         else:
             label = 'xor'
+            #find largest group of sons
+            num_largest_group = 0
+            largest_group = []
+            for son_list in current_sons:
+                if len(son_list) > num_largest_group:
+                    num_largest_group = len(son_list)
+                    largest_group = son_list
+            
+
             for i, son_list in enumerate(current_sons[:-1]):
                 for current_son in current_sons[(i+1):]:
                     if set(son_list)<= set(current_son):
