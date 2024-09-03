@@ -89,7 +89,7 @@ class MXMLFormatter(BaseFormatter):
         self.parameters[Constants.TIMESTAMP_FORMAT_KEY] = helper_utils.get_param_value(Constants.TIMESTAMP_FORMAT_KEY, parameters, MXMLFormatter.Parameters.TIMESTAMP_FORMAT)        
         self.parameters[Constants.RESOURCE_KEY] = helper_utils.get_param_value(Constants.RESOURCE_KEY, parameters, MXMLFormatter.Parameters.RESOURCE_ID)        
 
-    def extract_data(self,event_log_data) -> BaseProcessDataObject:
+    def extract_data(self,event_log_data, kloop_unroling: bool=True) -> BaseProcessDataObject:
         """
         Extract tabular data from the provided MXML event log file, instantiate raw data object containing the tabular data.
 
@@ -107,7 +107,7 @@ class MXMLFormatter(BaseFormatter):
         ------
         :raises ValueError: If the event log data is not in MXML format.
         """ 
-        df = self._parse_xml(event_log_data)        
+        df = self._parse_xml(event_log_data, kloop_unroling)        
         original_data = pd.DataFrame(df)       
         event_log = helper_utils.convert_timestamp_columns_in_df(original_data, timest_format=self.parameters[Constants.TIMESTAMP_FORMAT_KEY], timest_columns=self.parameters[Constants.TIMESTAMP_KEY])
         mandatory_properties,optional_properties = self._getProperties(event_log, self.parameters)
@@ -118,7 +118,7 @@ class MXMLFormatter(BaseFormatter):
         
     
 
-    def  _parse_xml(self,event_log_data) -> pd.DataFrame:
+    def  _parse_xml(self,event_log_data, kloop_unroling: bool=True) -> pd.DataFrame:
         """
         Parse the XML event log data into a Pandas DataFrame.
 
@@ -141,15 +141,37 @@ class MXMLFormatter(BaseFormatter):
         rows = []       
         for process_instance in root.findall(MXMLConstants.PROCESS_INSTANCE):
             process_instance_id = process_instance.get(MXMLConstants.ID_ATTRIBUTE)
+            activities = []
             for audit_entry in process_instance.findall(MXMLConstants.TRACE_INSTANCE):
                 data_dict = {}
                 resource_element = None
+                not_start = False
                 for child_element in audit_entry:
                     tag_name_lower = child_element.tag.lower()
                     if tag_name_lower == MXMLConstants.ACTIVITY.lower():
                         activity = child_element.text
+                        if kloop_unroling:
+                            if not activity in activities:
+                                activity = child_element.text
+                                activities.append(activity)
+                            else:
+                                added = False
+                                counter = 0
+                                while not added:
+                                    if not activity+str(counter) in activities:
+                                        activity = activity+str(counter)
+                                        activities.append(activity)
+                                        added = True
+                                    else:
+                                        counter = counter+1
+                            
                     elif tag_name_lower == MXMLConstants.EVENT_TYPE.lower():
                         event_type = child_element.text
+                        if kloop_unroling:
+                            if event_type != 'complete':
+                                not_start = True
+                                activities.remove(activity)
+                                break
                     elif tag_name_lower == MXMLConstants.TIMESTAMP.lower():
                         timestamp = child_element.text
                     elif tag_name_lower == MXMLConstants.RESOURCE.lower():
@@ -164,9 +186,10 @@ class MXMLFormatter(BaseFormatter):
                                 attr_value = attr.text
                                 new_attr_name = f"Attr_{attr_name}"  # Add a prefix to avoid name collision
                                 data_dict[new_attr_name] = attr_value   
-                                       
+                                        
                 resource = resource_element.text if resource_element is not None else None
-
+                if not_start:
+                    continue
                 row = {
                             self.parameters[Constants.CASE_ID_KEY]: process_instance_id,
                             self.parameters[Constants.ACTIVITY_KEY]: activity,
@@ -175,6 +198,7 @@ class MXMLFormatter(BaseFormatter):
                             self.parameters[Constants.RESOURCE_KEY]: resource,
                             **data_dict
                         }
-                rows.append(row)
+                if kloop_unroling and not not_start:
+                    rows.append(row)
         df = pd.DataFrame(rows)
         return df

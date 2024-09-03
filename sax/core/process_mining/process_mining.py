@@ -133,7 +133,7 @@ def create_from_dataframe(dataframe,case_id: str=CSVFormatter.Parameters.CASE_ID
         return extracted_log
 
   
-def import_mxml(eventlog,case_id: str=MXMLFormatter.Parameters.CASE_ID, activity_key: str=MXMLFormatter.Parameters.ACTIVITY, timestamp_key: str=MXMLFormatter.Parameters.TIMESTAMP, lifecycle_type: str= MXMLFormatter.Parameters.TYPE,timestamp_format: str=MXMLFormatter.Parameters.TIMESTAMP_FORMAT) ->RawEventData:
+def import_mxml(eventlog, kloop_unroling: bool=True, case_id: str=MXMLFormatter.Parameters.CASE_ID, activity_key: str=MXMLFormatter.Parameters.ACTIVITY, timestamp_key: str=MXMLFormatter.Parameters.TIMESTAMP, lifecycle_type: str= MXMLFormatter.Parameters.TYPE,timestamp_format: str=MXMLFormatter.Parameters.TIMESTAMP_FORMAT) ->RawEventData:
         """
         Parse MXML file into event log
 
@@ -169,7 +169,7 @@ def import_mxml(eventlog,case_id: str=MXMLFormatter.Parameters.CASE_ID, activity
         parameters[Constants.TIMESTAMP_FORMAT_KEY] = timestamp_format          
         parameters[Constants.TYPE_KEY] = lifecycle_type 
         formatter = MXMLFormatter(parameters)
-        dataframe = formatter.extract_data(eventlog)
+        dataframe = formatter.extract_data(eventlog, kloop_unroling)
         return dataframe
     
 
@@ -196,9 +196,8 @@ def discover_heuristics_net(dataframe: RawEventData,lifecycleTypes = None) -> He
                 event_log= dataframe.filterLifecycleEvents(lifecycleTypes)
                                    
         formatted_log = event_log.getLog()
-
-        #log = log_converter.apply(formatted_log)
         map =  pm4py.discover_heuristics_net(formatted_log)
+
         return map
 
       
