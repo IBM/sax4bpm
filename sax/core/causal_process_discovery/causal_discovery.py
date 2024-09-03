@@ -287,6 +287,15 @@ def __unification_of_results__(results: List[CausalResultInfo]):
 
             #check if the gate should be or 
             label = 'xor'
+            #find largest group of sons
+            num_largest_group = 0
+            largest_group = []
+            for son_list in current_sons:
+                if len(son_list) > num_largest_group:
+                    num_largest_group = len(son_list)
+                    largest_group = son_list
+            
+
             for i, son_list in enumerate(current_sons[:-1]):
                 for current_son in current_sons[(i+1):]:
                     if set(son_list)<= set(current_son):
