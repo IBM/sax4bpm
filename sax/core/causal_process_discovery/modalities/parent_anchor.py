@@ -10,7 +10,6 @@ from sax.core.utils.constants import Constants
 from ...causal_process_discovery.algorithms.positive_lingam import PositiveLingamImpl
 from ...causal_process_discovery.algorithms.base_causal_alg import CausalResultInfo
 from ...causal_process_discovery.algorithms.lingam import LingamImpl
-from ...causal_process_discovery.algorithms.rcd import RcdImpl
 from ...causal_process_discovery.causal_constants import DEFAULT_VARIANT, Algorithm
 from ...causal_process_discovery.modalities.base_anchor import BaseAnchor
 from ...causal_process_discovery.prior_knowledge import PriorKnowledge
