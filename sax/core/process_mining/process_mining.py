@@ -3,6 +3,7 @@
 # -----------------------------------------------------------------------------
 from typing import Tuple
 
+import pandas as pd
 import pm4py
 from pm4py.algo.discovery.dfg import algorithm as dfg_discovery
 from pm4py.objects.bpmn.obj import BPMN
@@ -17,7 +18,7 @@ from sax.core.process_data.raw_event_data import RawEventData
 from sax.core.utils.constants import Constants
 
 
-def import_xes(eventlog,case_id: str=XESFormatter.Parameters.CASE_ID, activity_key: str=XESFormatter.Parameters.ACTIVITY, timestamp_key: str=XESFormatter.Parameters.TIMESTAMP, lifecycle_type: str= XESFormatter.Parameters.TYPE,timestamp_format: str=XESFormatter.Parameters.TIMESTAMP_FORMAT) ->RawEventData:
+def import_xes(eventlog, kloop_unroling: bool=True, case_id: str=XESFormatter.Parameters.CASE_ID, activity_key: str=XESFormatter.Parameters.ACTIVITY, timestamp_key: str=XESFormatter.Parameters.TIMESTAMP, lifecycle_type: str= XESFormatter.Parameters.TYPE,timestamp_format: str=XESFormatter.Parameters.TIMESTAMP_FORMAT) ->RawEventData:
         """
         Parse XES file into event log
 
@@ -50,10 +51,16 @@ def import_xes(eventlog,case_id: str=XESFormatter.Parameters.CASE_ID, activity_k
         parameters[Constants.TYPE_KEY]=lifecycle_type        
         formatter = XESFormatter(parameters)
         dataframe = formatter.extract_data(eventlog)
+        data = dataframe.getData()
+        
+        if kloop_unroling:
+                data = _extract_dataframe_from_dataframe(data)
+                dataframe = RawEventData(data=data, mandatory_properties=dataframe.getMandatoryProperties(), optional_properties=dataframe.getOptionalProperties())
+        
         return dataframe
     
    
-def import_csv(eventlog,case_id: str=CSVFormatter.Parameters.CASE_ID, activity_key: str=CSVFormatter.Parameters.ACTIVITY, timestamp_key: str=CSVFormatter.Parameters.TIMESTAMP,lifecycle_type: str= CSVFormatter.Parameters.TYPE, timestamp_format: str=CSVFormatter.Parameters.TIMESTAMP_FORMAT, starttime_column: str=CSVFormatter.Parameters.STARTTIME_COLUMN) ->RawEventData:
+def import_csv(eventlog, kloop_unroling: bool=True, case_id: str=CSVFormatter.Parameters.CASE_ID, activity_key: str=CSVFormatter.Parameters.ACTIVITY, timestamp_key: str=CSVFormatter.Parameters.TIMESTAMP,lifecycle_type: str= CSVFormatter.Parameters.TYPE, timestamp_format: str=CSVFormatter.Parameters.TIMESTAMP_FORMAT, starttime_column: str=CSVFormatter.Parameters.STARTTIME_COLUMN) ->RawEventData:
         """
         Parse CSV file into event log
 
@@ -89,10 +96,16 @@ def import_csv(eventlog,case_id: str=CSVFormatter.Parameters.CASE_ID, activity_k
         parameters[Constants.STARTTIME_COLUMN]=starttime_column
         formatter = CSVFormatter(parameters)
         dataframe = formatter.extract_data(eventlog)
+        data = dataframe.getData()
+        
+        if kloop_unroling:
+                data = _extract_dataframe_from_dataframe(data)
+                dataframe = RawEventData(data=data, mandatory_properties=dataframe.getMandatoryProperties(), optional_properties=dataframe.getOptionalProperties())
+        
         return dataframe
     
    
-def create_from_dataframe(dataframe,case_id: str=CSVFormatter.Parameters.CASE_ID, activity_key: str=CSVFormatter.Parameters.ACTIVITY, timestamp_key: str=CSVFormatter.Parameters.TIMESTAMP, lifecycle_type: str= CSVFormatter.Parameters.TYPE,timestamp_format: str=CSVFormatter.Parameters.TIMESTAMP_FORMAT,starttime_column: str=CSVFormatter.Parameters.STARTTIME_COLUMN)->RawEventData:
+def create_from_dataframe(dataframe, kloop_unroling: bool=True, case_id: str=CSVFormatter.Parameters.CASE_ID, activity_key: str=CSVFormatter.Parameters.ACTIVITY, timestamp_key: str=CSVFormatter.Parameters.TIMESTAMP, lifecycle_type: str= CSVFormatter.Parameters.TYPE,timestamp_format: str=CSVFormatter.Parameters.TIMESTAMP_FORMAT,starttime_column: str=CSVFormatter.Parameters.STARTTIME_COLUMN)->RawEventData:
         """
         Creates event log from dataframe
         
@@ -130,6 +143,12 @@ def create_from_dataframe(dataframe,case_id: str=CSVFormatter.Parameters.CASE_ID
         parameters[Constants.STARTTIME_COLUMN]=starttime_column
         formatter = CSVFormatter(parameters)
         extracted_log = formatter.extract_from_dataframe(dataframe)
+        data = extracted_log.getData()
+
+        if kloop_unroling:
+                data = _extract_dataframe_from_dataframe(data)
+                extracted_log = RawEventData(data=data, mandatory_properties=extracted_log.getMandatoryProperties(), optional_properties=extracted_log.getOptionalProperties())
+        
         return extracted_log
 
   
@@ -386,7 +405,7 @@ def getDataProcessRepresentation(dataframe: RawEventData):
         :return: A dictionary representing the process model, where each key is a tuple representing a transition between two activities, and the value is the strength of that transition as determined by the frequency with which it occurs in the event log.
         :rtype: dict
         """        
-        dfg,event_log = discover_dfg(dataframe)
+        dfg, _ = discover_dfg(dataframe)
         processRepresentation = getModelProcessRepresentation(dfg)
         return processRepresentation
 
@@ -398,3 +417,57 @@ def getModelProcessRepresentation(model):
                 return result_dict        
         processRepresentation = _getPairsProcess(model)
         return processRepresentation
+
+
+def _extract_dataframe_per_lifecycle(cycle_dataframe):
+        new_rows = []
+        activities = [] 
+        counter=0
+        previous_case_id = None
+        columns = list(cycle_dataframe.columns)
+        index_of_activity = columns.index(Constants.ACTIVITY_KEY)
+        cycle_dataframe = cycle_dataframe.sort_values(by=[Constants.CASE_ID_KEY])
+        for _, row in cycle_dataframe.iterrows():
+                activity = row[Constants.ACTIVITY_KEY]
+                case_id = row[Constants.CASE_ID_KEY]
+                if case_id != previous_case_id:
+                        previous_case_id = case_id
+                        activities = []
+                row_values = row.values.tolist()
+                if activity in activities:
+                        added = False
+                        counter = 0
+                        while not added:
+                                if not activity+str(counter) in activities:
+                                        activity = activity+str(counter)
+                                        activities.append(activity)
+                                        added = True
+                                        row_values[index_of_activity] = activity
+                                else:
+                                        counter = counter+1
+                else:
+                        activities.append(row[Constants.ACTIVITY_KEY])
+                new_rows.append(row_values)
+
+        df = pd.DataFrame(new_rows)
+        df.columns = columns
+        return df
+
+
+def _extract_dataframe_from_dataframe(activities_dataframe):
+        columns = list(activities_dataframe.columns)
+        all_life_cycles = []
+        if Constants.TYPE_KEY in columns:
+                unique_type_list = activities_dataframe[Constants.TYPE_KEY].unique().tolist()
+                for cycle_type in unique_type_list:
+                        current_type = activities_dataframe[activities_dataframe[Constants.TYPE_KEY] == cycle_type]
+                        current_type = current_type.drop(columns = [Constants.TYPE_KEY])
+                        new_df = _extract_dataframe_per_lifecycle(current_type)
+                        new_df[Constants.TYPE_KEY] = cycle_type
+                        all_life_cycles.append(new_df)
+                return pd.concat(all_life_cycles)
+
+
+
+        else:
+                return _extract_dataframe_per_lifecycle(activities_dataframe)

@@ -369,7 +369,7 @@ class RawEventData(BaseProcessDataObject):
                     new_data[case_id][new_column_name] = row[column]
         
         new_df = pd.DataFrame.from_dict(new_data, orient='index').reset_index().rename(columns={'index': mandatory_properties[Constants.CASE_ID_KEY]})
-        print(new_df)
+
         return new_df
 
     def _flat_sources_updated(self,x,columns,mandatory_propreties) -> DataFrame:
