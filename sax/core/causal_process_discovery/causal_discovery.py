@@ -188,8 +188,6 @@ def __results_per_variants__(rawEventData : RawEventData, variants_dict: Dict[st
                     variants_combined.append(variant_df)
         combined_df = pd.concat(variants_combined, ignore_index=True)
         combined_df.columns = [Constants.CASE_ID_KEY, Constants.ACTIVITY_KEY, Constants.TIMESTAMP_KEY, Constants.START_BASE_COLUMN]
-        combined_df = combined_df[combined_df[Constants.ACTIVITY_KEY]!= 'EVENT 6 THROW0']
-        combined_df = combined_df[combined_df[Constants.ACTIVITY_KEY]!= 'EVENT 6 THROW']
         combined_event = pm.create_from_dataframe(combined_df,False,case_id=Constants.CASE_ID_KEY, activity_key=Constants.ACTIVITY_KEY, timestamp_key=Constants.TIMESTAMP_KEY, starttime_column=Constants.START_BASE_COLUMN)
         result_single = discover_causal_dependencies(combined_event, modality=modality, prior_knowledge=prior_knowledge, variant=algorithm)
         results.append(result_single)
@@ -202,8 +200,6 @@ def __unification_of_results__(results: List[CausalResultInfo]):
     for result in results:
         all_columns = all_columns + result.columns
     all_columns = list(set(all_columns))
-    #all_columns.remove('EVENT 6 THROW0')
-    #all_columns.remove('EVENT 6 THROW')
 
     G = nx.DiGraph()
     label = ''
