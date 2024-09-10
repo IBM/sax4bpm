@@ -184,7 +184,7 @@ def __results_per_variants__(rawEventData : RawEventData, variants_dict: Dict[st
                     columns = variants_dict[variant][0]
                     variant_df = variant_df.reset_index()
                     variant_df = variant_df[variant_df[current_mapping[Constants.ACTIVITY_KEY]].isin(columns)][[current_mapping[Constants.CASE_ID_KEY], current_mapping[Constants.ACTIVITY_KEY], \
-                                                                                                                current_mapping[Constants.TIMESTAMP_KEY], current_mapping[Constants.STARTTIME_COLUMN]]]
+                                                                                                                current_mapping[Constants.TIMESTAMP_KEY], current_mapping[Constants.TIMESTAMP_KEY]]]
                     variants_combined.append(variant_df)
         combined_df = pd.concat(variants_combined, ignore_index=True)
         combined_df.columns = [Constants.CASE_ID_KEY, Constants.ACTIVITY_KEY, Constants.TIMESTAMP_KEY, Constants.START_BASE_COLUMN]

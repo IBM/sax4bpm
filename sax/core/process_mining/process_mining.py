@@ -54,7 +54,7 @@ def import_xes(eventlog, kloop_unroling: bool=True, case_id: str=XESFormatter.Pa
         data = dataframe.getData()
         
         if kloop_unroling:
-                data = _extract_dataframe_from_dataframe(data)
+                data = _extract_dataframe_from_dataframe(data, parameters=parameters)
                 dataframe = RawEventData(data=data, mandatory_properties=dataframe.getMandatoryProperties(), optional_properties=dataframe.getOptionalProperties())
         
         return dataframe
@@ -146,7 +146,7 @@ def create_from_dataframe(dataframe, kloop_unroling: bool=True, case_id: str=CSV
         data = extracted_log.getData()
 
         if kloop_unroling:
-                data = _extract_dataframe_from_dataframe(data)
+                data = _extract_dataframe_from_dataframe(dataframe, parameters=parameters)
                 extracted_log = RawEventData(data=data, mandatory_properties=extracted_log.getMandatoryProperties(), optional_properties=extracted_log.getOptionalProperties())
         
         return extracted_log
@@ -419,17 +419,17 @@ def getModelProcessRepresentation(model):
         return processRepresentation
 
 
-def _extract_dataframe_per_lifecycle(cycle_dataframe):
+def _extract_dataframe_per_lifecycle(cycle_dataframe, parameters):
         new_rows = []
         activities = [] 
         counter=0
         previous_case_id = None
         columns = list(cycle_dataframe.columns)
-        index_of_activity = columns.index(Constants.ACTIVITY_KEY)
-        cycle_dataframe = cycle_dataframe.sort_values(by=[Constants.CASE_ID_KEY])
+        index_of_activity = columns.index(parameters[Constants.ACTIVITY_KEY])
+        cycle_dataframe = cycle_dataframe.sort_values(by=[parameters[Constants.CASE_ID_KEY]])
         for _, row in cycle_dataframe.iterrows():
-                activity = row[Constants.ACTIVITY_KEY]
-                case_id = row[Constants.CASE_ID_KEY]
+                activity = row[parameters[Constants.ACTIVITY_KEY]]
+                case_id = row[parameters[Constants.CASE_ID_KEY]]
                 if case_id != previous_case_id:
                         previous_case_id = case_id
                         activities = []
@@ -446,28 +446,29 @@ def _extract_dataframe_per_lifecycle(cycle_dataframe):
                                 else:
                                         counter = counter+1
                 else:
-                        activities.append(row[Constants.ACTIVITY_KEY])
+                        activities.append(row[parameters[Constants.ACTIVITY_KEY]])
                 new_rows.append(row_values)
 
         df = pd.DataFrame(new_rows)
         df.columns = columns
+
         return df
 
 
-def _extract_dataframe_from_dataframe(activities_dataframe):
+def _extract_dataframe_from_dataframe(activities_dataframe, parameters):
         columns = list(activities_dataframe.columns)
         all_life_cycles = []
         if Constants.TYPE_KEY in columns:
-                unique_type_list = activities_dataframe[Constants.TYPE_KEY].unique().tolist()
+                unique_type_list = activities_dataframe[parameters[Constants.TYPE_KEY]].unique().tolist()
                 for cycle_type in unique_type_list:
-                        current_type = activities_dataframe[activities_dataframe[Constants.TYPE_KEY] == cycle_type]
-                        current_type = current_type.drop(columns = [Constants.TYPE_KEY])
-                        new_df = _extract_dataframe_per_lifecycle(current_type)
-                        new_df[Constants.TYPE_KEY] = cycle_type
+                        current_type = activities_dataframe[activities_dataframe[parameters[Constants.TYPE_KEY]] == cycle_type]
+                        current_type = current_type.drop(columns = [parameters[Constants.TYPE_KEY]])
+                        new_df = _extract_dataframe_per_lifecycle(current_type, parameters=parameters)
+                        new_df[parameters[Constants.TYPE_KEY]] = cycle_type
                         all_life_cycles.append(new_df)
-                return pd.concat(all_life_cycles)
+                return pd.concat(all_life_cycles).sort_values(by = [parameters[Constants.CASE_ID_KEY],parameters[Constants.TIMESTAMP_KEY]])
 
 
 
-        else:
-                return _extract_dataframe_per_lifecycle(activities_dataframe)
+        else:                
+                return _extract_dataframe_per_lifecycle(activities_dataframe, parameters).sort_values(by = [parameters[Constants.CASE_ID_KEY],parameters[Constants.TIMESTAMP_KEY]])
