@@ -205,8 +205,6 @@ def __unification_of_results__(results: List[CausalResultInfo]):
     for result in results:
         all_columns = all_columns + result.columns
     all_columns = list(set(all_columns))
-    #all_columns.remove('EVENT 6 THROW0')
-    #all_columns.remove('EVENT 6 THROW')
 
     G = nx.DiGraph()
     label = ''
