@@ -11,7 +11,6 @@ class Algorithm(Enum):
     - LINGAM: DirectLINGAM algorithm
     """ 
     LINGAM = "Lingam"
-    RCD = "Rcd"
     POSITIVE_LINGAM = "positive_lingam"
 
 
