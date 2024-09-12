@@ -6,6 +6,8 @@ from typing import Optional
 import pandas as pd
 
 from sax.core.utils.constants import Constants
+from sax.core.causal_process_discovery.algorithms.positive_lingam import PositiveLingamImpl
+from ...causal_process_discovery.algorithms.positive_lingam_impl.positive_direct_lingam import PositiveDirectLiNGAM
 from .base_anchor import BaseAnchor
 from ...causal_process_discovery.algorithms.base_causal_alg import CausalResultInfo
 from ...causal_process_discovery.algorithms.lingam import LingamImpl
@@ -52,15 +54,16 @@ class ChainAnchorTransformer(BaseAnchor):
         activities_df = activities_df.apply(pd.to_datetime, utc=True)     
         start_times = activities_df[start_time_column_name].copy()     
         activities_df= activities_df.drop(start_time_column_name,axis=1)
-                         
-        first_activity_time = start_times                  
-        
+
+        first_activity_time = start_times.dt.to_period('Y').dt.to_timestamp()#.tz_localize(None)#.dt.floor(freq = 'MS')  
+        first_activity_time = pd.to_datetime(first_activity_time, utc=True)                 
+
         # Create a new DataFrame for storing time differences
         time_difference_df = activities_df.copy()
         for col in activities_df.columns:
-             time_difference_df[col] = (activities_df[col] - first_activity_time).dt.total_seconds()*1000
+             time_difference_df[col] = (activities_df[col] - first_activity_time).dt.total_seconds()
                      
-       
+        #time_difference_df = time_difference_df.sub(time_difference_df.min(axis=1), axis=0)
         #create and run the algorithm        
         args = {"data": time_difference_df}
         if prior_knowledge:
@@ -68,6 +71,8 @@ class ChainAnchorTransformer(BaseAnchor):
         
         if variant == Algorithm.LINGAM:
             algorithm = LingamImpl(**args)
+        elif variant == Algorithm.POSITIVE_LINGAM:
+            algorithm = PositiveLingamImpl(**args)
         result  = algorithm.run()       
 
         return result  
