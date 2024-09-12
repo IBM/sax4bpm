@@ -77,6 +77,7 @@ class BaseFormatter:
         if type(dataframe) not in [DataFrame]: raise TypeError("the method can be applied only to a dataframe!")              
         mandatory_dict={}
         optional_dict={}
+
         for keyword, column_name in parameters.items():
             if column_name in dataframe.columns:
                 mandatory_dict[keyword] = column_name
