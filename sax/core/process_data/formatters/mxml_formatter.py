@@ -136,8 +136,7 @@ class MXMLFormatter(BaseFormatter):
         ------
         :raises ValueError: If the event log data is not in MXML format.
         """
-        tree = Xet.parse(event_log_data)
-        root = tree.getroot()
+        root = event_log_data.getroot()
         rows = []       
         for process_instance in root.findall(MXMLConstants.PROCESS_INSTANCE):
             process_instance_id = process_instance.get(MXMLConstants.ID_ATTRIBUTE)
@@ -164,7 +163,7 @@ class MXMLFormatter(BaseFormatter):
                                 attr_value = attr.text
                                 new_attr_name = f"Attr_{attr_name}"  # Add a prefix to avoid name collision
                                 data_dict[new_attr_name] = attr_value   
-                                       
+                                        
                 resource = resource_element.text if resource_element is not None else None
 
                 row = {

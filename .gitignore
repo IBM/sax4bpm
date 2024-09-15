@@ -5,6 +5,7 @@ venv/**
 docs/build/**
 docs/README.txt
 main.py
+experiments/**
 __pycache__/
 # Byte-compiled / optimized / DLL files
 __pycache__/

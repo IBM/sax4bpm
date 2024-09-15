@@ -11,6 +11,7 @@ class Algorithm(Enum):
     - LINGAM: DirectLINGAM algorithm
     """ 
     LINGAM = "Lingam"
+    POSITIVE_LINGAM = "positive_lingam"
 
 
 class Modality(Enum):
@@ -30,5 +31,5 @@ class Modality(Enum):
                 return modality
         raise ValueError(f"No such modality: {value}")
 
-DEFAULT_VARIANT = Algorithm.LINGAM
+DEFAULT_VARIANT = Algorithm.POSITIVE_LINGAM
 DEFAULT_MODALITY = Modality.CHAIN

@@ -24,5 +24,6 @@ class Constants(metaclass=ConstantsMeta):
     TIMESTAMP_FORMAT_KEY = "TimestampFormat"
     RESOURCE_KEY = "org:resource"
     STARTTIME_COLUMN="start:timestamp"
+    START_BASE_COLUMN="start"
 
     CSV_SEPARATOR=","    
