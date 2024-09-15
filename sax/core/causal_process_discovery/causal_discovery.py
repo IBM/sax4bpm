@@ -31,15 +31,20 @@ def discover_causal_dependencies_unification(dataObject:RawEventData,algorithm: 
     return CausalResultInfo((nx.to_numpy_array(general_graph)).T, list(general_graph.nodes()))
 
 
-def discover_causal_dependencies_unification_variant_specific(dataObject:RawEventData, variant:List[str],algorithm: Optional[Algorithm] = DEFAULT_VARIANT, modality: Optional[Modality] = DEFAULT_MODALITY,prior_knowledge: Optional[bool]=True, depth: int =1) -> CausalResultInfo:
-    variant_sorted = sorted(variant)
-    variant_set_str = str(variant_sorted)
-    variants_dict = __get_variants_dict__(rawEventData=dataObject)
-    variant_specific_dict = {}
-    variant_specific_dict[variant_set_str] = variants_dict[variant_set_str]
-    results_per_variant =  __results_per_variants__(rawEventData=dataObject, variants_dict=variant_specific_dict,modality=modality ,prior_knowledge=prior_knowledge, algorithm=algorithm)
-    general_graph = __unification_of_results__(results=results_per_variant)
+def discover_causal_dependencies_unification_variant_specific(dataObject:RawEventData, variants:List[List[str]],algorithm: Optional[Algorithm] = DEFAULT_VARIANT, modality: Optional[Modality] = DEFAULT_MODALITY,prior_knowledge: Optional[bool]=True, depth: int =1) -> CausalResultInfo:
+    results_per_variants = []
+    for variant in variants:
+        variant_sorted = sorted(variant)
+        variant_set_str = str(variant_sorted)
+        variants_dict = __get_variants_dict__(rawEventData=dataObject)
+        variant_specific_dict = {}
+        variant_specific_dict[variant_set_str] = variants_dict[variant_set_str]
+        results_per_variant =  __results_per_variants__(rawEventData=dataObject, variants_dict=variant_specific_dict,modality=modality ,prior_knowledge=prior_knowledge, algorithm=algorithm)
+        general_graph = __unification_of_results__(results=results_per_variant)
+        results_per_variants.append(CausalResultInfo((nx.to_numpy_array(general_graph)).T, list(general_graph.nodes())))
 
+    if len(results_per_variants)>1:
+        general_graph = __unification_of_results__(results=results_per_variants)
 
     return CausalResultInfo((nx.to_numpy_array(general_graph)).T, list(general_graph.nodes()))
 
