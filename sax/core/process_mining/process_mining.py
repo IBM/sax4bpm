@@ -1,7 +1,7 @@
 # -----------------------------------------------------------------------------
 # Copyright contributors to the SAX4BPM project
 # -----------------------------------------------------------------------------
-from typing import Tuple
+from typing import List, Optional, Tuple
 
 import pandas as pd
 import pm4py
@@ -101,7 +101,7 @@ def import_csv(eventlog, kloop_unroling: bool=True, case_id: str=CSVFormatter.Pa
         data = dataframe.getData()
         
         if kloop_unroling:
-                data = _extract_dataframe_from_dataframe(data)
+                data = _extract_dataframe_from_dataframe(data,parameters=parameters)
                 dataframe = RawEventData(data=data, mandatory_properties=dataframe.getMandatoryProperties(), optional_properties=dataframe.getOptionalProperties())
         
         return dataframe
@@ -204,7 +204,7 @@ def import_mxml(eventlog, kloop_unroling: bool=True, case_id: str=MXMLFormatter.
 #         return event_log
 
 
-def discover_heuristics_net(dataframe: RawEventData,lifecycleTypes = None) -> HeuristicsNet:        
+def discover_heuristics_net(dataframe: RawEventData,variants: Optional[List[str]] = None,lifecycleTypes = None) -> HeuristicsNet:        
         """
         Apply heuristic mining algorithm on the RawEventData event log object to discover heuristic net
 
@@ -215,7 +215,10 @@ def discover_heuristics_net(dataframe: RawEventData,lifecycleTypes = None) -> He
         :return: heuristic net
         :rtype: HeuristicsNet
         """
-        event_log = dataframe     
+        if variants is not None:
+           event_log = dataframe.filterVariants(variants)    
+        else:
+           event_log = dataframe     
         if (lifecycleTypes is not None) or (Constants.TYPE_KEY in dataframe.getMandatoryProperties()):
                 event_log= dataframe.filterLifecycleEvents(lifecycleTypes)
                                    
@@ -235,7 +238,7 @@ def view_heuristics_net(map: HeuristicsNet):
         """        
         pm4py.view_heuristics_net(map)
 
-def discover_dfg(dataframe: RawEventData,lifecycleTypes = None):        
+def discover_dfg(dataframe: RawEventData,variants: Optional[List[str]] = None,lifecycleTypes = None):        
         """
         Apply dfg mining algorithm on the RawEventData event log object to discover heuristic net
 
@@ -246,7 +249,10 @@ def discover_dfg(dataframe: RawEventData,lifecycleTypes = None):
         :return: dfg
         :rtype: 
         """
-        event_log = dataframe     
+        if variants is not None:
+           event_log = dataframe.filterVariants(variants)    
+        else:
+           event_log = dataframe    
         if (lifecycleTypes is not None) or (Constants.TYPE_KEY in dataframe.getMandatoryProperties()):
                 event_log= dataframe.filterLifecycleEvents(lifecycleTypes)
                                    
@@ -262,7 +268,7 @@ def view_dfg(dfg: dict, formatted_log):
         dfg_visualization.view(gviz)
 
     
-def discover_bpmn_model( dataframe: RawEventData) -> BPMN:    
+def discover_bpmn_model( dataframe: RawEventData,variants: Optional[List[str]] = None) -> BPMN:    
         """
         Performs process mining on the event log data to discover bpmn model
 
@@ -271,7 +277,7 @@ def discover_bpmn_model( dataframe: RawEventData) -> BPMN:
         :return: BPMN
         :rtype: BPMN
         """            
-        process_tree = discover_process_tree(dataframe)
+        process_tree = discover_process_tree(dataframe,variants)
         bpmn_model = pm4py.convert_to_bpmn(process_tree)
         return bpmn_model
 
@@ -285,7 +291,7 @@ def view_bpmn_model(bpmn_model: BPMN):
         pm4py.view_bpmn(bpmn_model)
 
     
-def discover_process_tree(dataframe: RawEventData,lifecycleTypes = None) ->ProcessTree:
+def discover_process_tree(dataframe: RawEventData,variants: Optional[List[str]] = None,lifecycleTypes = None) ->ProcessTree:
         """
         Perform process mining on the event log to discover process tree
 
@@ -297,7 +303,10 @@ def discover_process_tree(dataframe: RawEventData,lifecycleTypes = None) ->Proce
         :rtype: ProcessTree
         """        
         
-        event_log = dataframe     
+        if variants is not None:
+           event_log = dataframe.filterVariants(variants)    
+        else:
+           event_log = dataframe     
         if (lifecycleTypes is not None) or (Constants.TYPE_KEY in dataframe.getMandatoryProperties()):
                 event_log= dataframe.filterLifecycleEvents(lifecycleTypes)
    
@@ -319,7 +328,7 @@ def view_process_tree(process_tree: ProcessTree):
 
 
    
-def discover_process_map( dataframe: RawEventData,lifecycleTypes = None) -> Tuple[dict,dict,dict]:
+def discover_process_map( dataframe: RawEventData,variants: Optional[List[str]] = None,lifecycleTypes = None) -> Tuple[dict,dict,dict]:
         """
         Discover process map
 
@@ -330,7 +339,10 @@ def discover_process_map( dataframe: RawEventData,lifecycleTypes = None) -> Tupl
         :return: process map
         :rtype: Tuple[dict,dict,dict]
         """        
-        event_log = dataframe     
+        if variants is not None:
+           event_log = dataframe.filterVariants(variants)    
+        else:
+           event_log = dataframe        
         if (lifecycleTypes is not None) or (Constants.TYPE_KEY in dataframe.getMandatoryProperties()):
                 event_log= dataframe.filterLifecycleEvents(lifecycleTypes)
           
@@ -356,7 +368,7 @@ def view_process_map(dfg, start_activities, end_activities):
         pm4py.view_dfg(dfg, start_activities, end_activities)
           
 
-def filter_start_activities(dataframe: RawEventData, activities, retain=True):
+def filter_start_activities(dataframe: RawEventData, activities,variants: Optional[List[str]] = None, retain=True):
         """
         Filter cases having a start activity in the provided list
 
@@ -367,10 +379,14 @@ def filter_start_activities(dataframe: RawEventData, activities, retain=True):
         :return: filtered dataframe
         :rtype: Union[EventLog, pd.DataFrame]
         """        
-        filtered = pm4py.filter_start_activities(dataframe.getLog(), activities,retain)
+        if variants is not None:
+                df=dataframe.filterVariants(variants)
+        else:
+               df=dataframe
+        filtered = pm4py.filter_start_activities(df.getLog(), activities,retain)
         return filtered
     
-def filter_end_activities(dataframe: RawEventData, activities, retain=True):
+def filter_end_activities(dataframe: RawEventData, activities, variants: Optional[List[str]] = None,retain=True):
         """
         Filter cases having an end activity in the provided list
 
@@ -381,28 +397,40 @@ def filter_end_activities(dataframe: RawEventData, activities, retain=True):
         :return: filtered dataframe
         :rtype: Union[EventLog, pd.DataFrame]
         """        
-        filtered = pm4py.filter_end_activities(dataframe.getLog(), activities,retain)
+        if variants is not None:
+                df=dataframe.filterVariants(variants)
+        else:
+               df=dataframe
+        filtered = pm4py.filter_end_activities(df.getLog(), activities,retain)
         return filtered
     
-def getStartActivities(dataframe: RawEventData):
+def getStartActivities(dataframe: RawEventData,variants: Optional[List[str]] = None):
         """
         Returns the start activities from a log object
 
         :return: Dictionary of start activities along with their count
         :rtype: dict
         """        
-        return pm4py.get_start_activities(dataframe.getLog())
+        if variants is not None:
+                df=dataframe.filterVariants(variants)
+        else:
+               df=dataframe
+        return pm4py.get_start_activities(df.getLog())
     
-def getEndActivities(dataframe: RawEventData):       
+def getEndActivities(dataframe: RawEventData,variants: Optional[List[str]] = None):       
         """
         Returns the end activities from a log object
 
         :return: Dictionary of end activities along with their count
         :rtype: dict
         """      
-        return pm4py.get_end_activities(dataframe.getLog())
+        if variants is not None:
+                df=dataframe.filterVariants(variants)
+        else:
+               df=dataframe
+        return pm4py.get_end_activities(df.getLog())
 
-def getDataProcessRepresentation(dataframe: RawEventData):
+def getDataProcessRepresentation(dataframe: RawEventData,variants: Optional[List[str]] = None):
         """
         The purpose of this function is to take a raw event log as input and output a dictionary representation of the process model discovered when mining this event log.
         :param dataframe: A pandas dataframe containing the raw event log data.
@@ -410,7 +438,7 @@ def getDataProcessRepresentation(dataframe: RawEventData):
         :return: A dictionary representing the process model, where each key is a tuple representing a transition between two activities, and the value is the strength of that transition as determined by the frequency with which it occurs in the event log.
         :rtype: dict
         """        
-        dfg, _ = discover_dfg(dataframe)
+        dfg, _ = discover_dfg(dataframe,variants)
         processRepresentation = getModelProcessRepresentation(dfg)
         return processRepresentation
 

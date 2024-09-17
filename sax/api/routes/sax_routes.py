@@ -48,52 +48,40 @@ def get_variants():
          raise ValidationException("ValidationError: No data imported yet. Call importEventLogFile first","No data imported yet. Call importEventLogFile first")        
     return imported_data.getVariants()
 
-def get_process_model(variant_name, model_type):
+def get_process_model(variant_names, model_type):
     imported_data = current_app.state.get_state_copy()   
     if not imported_data:
          raise ValidationException("ValidationError: No data imported yet. Call importEventLogFile first","No data imported yet. Call importEventLogFile first")
-    
-    if variant_name != 'ALL':
-        variant = imported_data.getVariant(variant_name)        
-    else:
-        variant = imported_data
-    
+     
     dfg = None
     if model_type == 'DFG':
-        dfg,event_log = pm.discover_dfg(variant)        
+        dfg,event_log = pm.discover_dfg(dataframe=imported_data,variants=variant_names)        
     elif model_type == 'HEURISTIC':
-        heuristic_net= pm.discover_heuristics_net(variant)       
+        heuristic_net= pm.discover_heuristics_net(dataframe=imported_data,variants=variant_names)       
         dfg = heuristic_net.dfg               
     else:
         raise ValidationException("ValidationError: Unsupported process model for discovery, use DFG or HEURISTIC"," Unsupported process model for discovery, use DFG or HEURISTIC")
     result_list =  [{"from": pair[0], "to": pair[1], "items": count} for pair, count in dfg.items()]
     return result_list
 
-def get_causal_graph(variant_name, modality, prior_knowledge = False, p_value_threshold = None):
+def get_causal_graph(variant_names, modality, prior_knowledge = False, p_value_threshold = None):
     imported_data = current_app.state.get_state_copy()   
     if not imported_data:
          raise ValidationException("ValidationError: No data imported yet. Call importEventLogFile first","No data imported yet. Call importEventLogFile first")
     
-    if variant_name != 'ALL':
-        variant = imported_data.getVariant(variant_name)        
-    else:
-        variant = imported_data   
     modality = Modality.from_string(modality)     
 
-    causal_graph = cd.getDataCausalRepresentation(variant,modality,prior_knowledge,p_value_threshold)
+    causal_graph = cd.getDataCausalRepresentation(dataframe=imported_data,modality=modality,prior_knowledge=prior_knowledge,p_value_threshold=p_value_threshold,variants=variant_names)
     result_list =  [{"from": pair[0], "to": pair[1], "items": count} for pair, count in causal_graph.items()]
     return result_list
 
-def get_explanations(variant_name,modality,prior_knowledge,p_threshold=None):   
+def get_explanations(variant_names,modality,prior_knowledge,p_threshold=None):   
     imported_data = current_app.state.get_state_copy()   
     if not imported_data:
          raise ValidationException("ValidationError: No data imported yet. Call importEventLogFile first","No data imported yet. Call importEventLogFile first")
-    if variant_name != 'ALL':
-        variant = imported_data.getVariant(variant_name)        
-    else:
-        variant = imported_data   
+       
     modality = Modality.from_string(modality)     
-    return sx.getExplanations(variant,modality=modality,prior_knowledge=prior_knowledge,p_value_threshold=p_threshold)
+    return sx.getExplanations(data=imported_data,modality=modality,variants=variant_names,prior_knowledge=prior_knowledge,p_value_threshold=p_threshold)
 
 @sax_routes.route("/test_response")
 def test_repsonse():
@@ -207,15 +195,17 @@ def get_variants_route():
 @sax_routes.route('/processModel', methods=['GET'])
 def get_process_model_route():
     """
-    Endpoint to get the process model for a given variant.
+    Endpoint to get the process model for a given variant. To invoke for all variants, use 'GET /processModel?variant_names=ALL&model_type=DFG'. To invoke for one or more particular variant, use 'GET /processModel?variant_names=A,B,C,D&variant_names=C,E,D,F&variant_names=M,A,B,D,L&model_type=DFG'
+
+
 
     ---
     parameters:
-      - name: variant_name
+      - name: variant_names
         in: query
         type: string
         required: true
-        description: The name of the variant (or ALL for all the variants)
+        description: The names of the variants (or ALL for all the variants)
       - name: model_type
         in: query
         type: string
@@ -242,12 +232,19 @@ def get_process_model_route():
                     type: integer
                     description: The number of occurrences of the transition.
       500:
-        description: Internal Server Error
+        description: Internal Server Error        
     """    
-    variant_name = request.args.get('variant_name')
+    variant_names = request.args.getlist('variant_names')    
     model_type = request.args.get('model_type')    
+
+    if not variant_names or not model_type:
+        return jsonify({"error": "variant_names and model_type are required"}), 400
+    
+    if len(variant_names) == 1 and variant_names[0] == 'ALL':
+        variant_names = None
+    
     try:
-      process_model = get_process_model(variant_name, model_type)    
+      process_model = get_process_model(variant_names, model_type)    
     except Exception as e:
       error = str(e)
       raise ValidationException(error,"Application exception") from e
@@ -260,7 +257,7 @@ def get_causal_graph_route():
 
     ---
     parameters:
-      - name: variant_name
+      - name: variant_names
         in: query
         type: string
         required: true
@@ -304,12 +301,19 @@ def get_causal_graph_route():
         description: Internal Server Error
     """
 
-    variant_name = request.args.get('variant_name')
+    variant_names = request.args.getlist('variant_names')
     modality = request.args.get('modality')
     prior_knowledge = request.args.get('prior_knowledge', None)
     p_value_threshold = request.args.get('p_value_threshold', None)
+
+    if not variant_names or not modality:
+        return jsonify({"error": "variant_names and modality are required"}), 400
+    
+    if len(variant_names) == 1 and variant_names[0] == 'ALL':
+        variant_names = None
+
     try:
-      causal_graph = get_causal_graph(variant_name, modality,prior_knowledge,p_value_threshold)            
+      causal_graph = get_causal_graph(variant_names, modality,prior_knowledge,p_value_threshold)            
     except Exception as e:
       error = str(e)
       raise ValidationException(error,"Application exception") from e
@@ -322,7 +326,7 @@ def get_explanations_route():
 
     ---
     parameters:
-      - name: variant_name
+      - name: variant_names
         in: query
         type: string
         required: true
@@ -356,12 +360,19 @@ def get_explanations_route():
       500:
         description: Internal Server Error
     """    
-    variant_name = request.args.get('variant_name')
+    variant_names = request.args.getlist('variant_names')
     modality = request.args.get('modality')
     prior_knowledge = request.args.get('prior_knowledge', None)
     p_threshold = request.args.get('p_value_threshold', None)    
+
+    if not variant_names or not modality:
+        return jsonify({"error": "variant_names and modality are required"}), 400
+    
+    if len(variant_names) == 1 and variant_names[0] == 'ALL':
+        variant_names = None
+
     try:
-      discrepancies = get_explanations(variant_name,modality,prior_knowledge,p_threshold)    
+      discrepancies = get_explanations(variant_names,modality,prior_knowledge,p_threshold)    
     except Exception as e:
       error = str(e)
       raise ValidationException(error,"Application exception") from e

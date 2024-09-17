@@ -22,7 +22,34 @@ from sax.core.utils.constants import Constants
 from sax.core.process_data.raw_event_data import RawEventData
 import sax.core.process_mining.process_mining as pm
 
-def discover_causal_dependencies_unification(dataObject:RawEventData,algorithm: Optional[Algorithm] = DEFAULT_VARIANT, modality: Optional[Modality] = DEFAULT_MODALITY,prior_knowledge: Optional[bool]=True, depth: int =1) -> CausalResultInfo:
+
+def discover_causal_dependencies(dataObject:RawEventData,variants: Optional[List[str]] = None, algorithm: Optional[Algorithm] = DEFAULT_VARIANT, modality: Optional[Modality] = DEFAULT_MODALITY,prior_knowledge: Optional[bool]=True, depth: int =1) -> CausalResultInfo:
+    """
+    Create causal execution dependency model for the given event log represented by the dataobject
+
+    :param dataObject: event log
+    :type dataObject: RawEventData 
+    :param variants: a List of one or more variant specifications to perform causal discovery on , optional (if not specified will perform causal discovery on the whole event log)
+    :type variants:  Optional[List[str]], optional
+    :param variant: Algorithm to use for causal discovery, defaults to Lingam
+    :type variant: Optional[Algorithm], optional
+    :param modality: Anchor modality to use for discovery, defaults to CHAIN modality
+    :type modality: Optional[Modality], optional
+    :param prior_knowledge: whether to use prior knowledge, defaults to False
+    :type prior_knowledge: Optional[bool], optional
+    :raises TypeError: in case the event log is not of appropriate format
+    :return: causal dependency model representation
+    :rtype: CausalResultInfo
+    """           
+    if variants is None:
+        return _discover_causal_dependencies_unification(dataObject=dataObject,algorithm=algorithm,modality=modality,prior_knowledge=prior_knowledge,depth=depth)
+    else:
+        # Handle case where variants is provided
+        return _discover_causal_dependencies_unification_variant_specific(dataObject=dataObject,variants=variants,algorithm=algorithm,modality=modality,prior_knowledge=prior_knowledge,depth=depth)
+
+
+
+def _discover_causal_dependencies_unification(dataObject:RawEventData,algorithm: Optional[Algorithm] = DEFAULT_VARIANT, modality: Optional[Modality] = DEFAULT_MODALITY,prior_knowledge: Optional[bool]=True, depth: int =1) -> CausalResultInfo:
     variants_dict = __get_variants_dict__(rawEventData=dataObject)
     results_per_variant =  __results_per_variants__(rawEventData=dataObject, variants_dict=variants_dict,modality=modality ,prior_knowledge=prior_knowledge, algorithm=algorithm)
     general_graph = __unification_of_results__(results=results_per_variant)
@@ -31,9 +58,27 @@ def discover_causal_dependencies_unification(dataObject:RawEventData,algorithm: 
     return CausalResultInfo((nx.to_numpy_array(general_graph)).T, list(general_graph.nodes()))
 
 
-def discover_causal_dependencies_unification_variant_specific(dataObject:RawEventData, variants:List[List[str]],algorithm: Optional[Algorithm] = DEFAULT_VARIANT, modality: Optional[Modality] = DEFAULT_MODALITY,prior_knowledge: Optional[bool]=True, depth: int =1) -> CausalResultInfo:
+# def _discover_causal_dependencies_unification_variant_specific(dataObject:RawEventData, variants:List[List[str]],algorithm: Optional[Algorithm] = DEFAULT_VARIANT, modality: Optional[Modality] = DEFAULT_MODALITY,prior_knowledge: Optional[bool]=True, depth: int =1) -> CausalResultInfo:
+#     results_per_variants = []
+#     for variant in variants:
+#         variant_sorted = sorted(variant)
+#         variant_set_str = str(variant_sorted)
+#         variants_dict = __get_variants_dict__(rawEventData=dataObject)
+#         variant_specific_dict = {}
+#         variant_specific_dict[variant_set_str] = variants_dict[variant_set_str]
+#         results_per_variant =  __results_per_variants__(rawEventData=dataObject, variants_dict=variant_specific_dict,modality=modality ,prior_knowledge=prior_knowledge, algorithm=algorithm)
+#         general_graph = __unification_of_results__(results=results_per_variant)
+#         results_per_variants.append(CausalResultInfo((nx.to_numpy_array(general_graph)).T, list(general_graph.nodes())))
+
+#     if len(results_per_variants)>1:
+#         general_graph = __unification_of_results__(results=results_per_variants)
+
+#     return CausalResultInfo((nx.to_numpy_array(general_graph)).T, list(general_graph.nodes()))
+
+def _discover_causal_dependencies_unification_variant_specific(dataObject:RawEventData, variants:List[str],algorithm: Optional[Algorithm] = DEFAULT_VARIANT, modality: Optional[Modality] = DEFAULT_MODALITY,prior_knowledge: Optional[bool]=True, depth: int =1) -> CausalResultInfo:
     results_per_variants = []
-    for variant in variants:
+    for variant_str in variants:
+        variant = variant_str.split(",")
         variant_sorted = sorted(variant)
         variant_set_str = str(variant_sorted)
         variants_dict = __get_variants_dict__(rawEventData=dataObject)
@@ -49,12 +94,13 @@ def discover_causal_dependencies_unification_variant_specific(dataObject:RawEven
     return CausalResultInfo((nx.to_numpy_array(general_graph)).T, list(general_graph.nodes()))
 
 
-def discover_causal_dependencies(dataObject:RawEventData,variant: Optional[Algorithm] = DEFAULT_VARIANT, modality: Optional[Modality] = DEFAULT_MODALITY,prior_knowledge: Optional[bool]=True, depth: int =1) -> CausalResultInfo:
+
+def _discover_causal_dependencies(dataObject:RawEventData,variant: Optional[Algorithm] = DEFAULT_VARIANT, modality: Optional[Modality] = DEFAULT_MODALITY,prior_knowledge: Optional[bool]=True, depth: int =1) -> CausalResultInfo:
     """
-    Create causal execution dependency model for the given event log
+    Internal method -create causal execution dependency model for the given event log
 
     :param dataObject: event log
-    :type dataObject: RawEventData
+    :type dataObject: RawEventData    
     :param variant: Algorithm to use for causal discovery, defaults to Lingam
     :type variant: Optional[Algorithm], optional
     :param modality: Anchor modality to use for discovery, defaults to CHAIN modality
@@ -79,7 +125,7 @@ def discover_causal_dependencies(dataObject:RawEventData,variant: Optional[Algor
 
 
 
-def getDataCausalRepresentation(dataframe: RawEventData,modality,prior_knowledge,p_value_threshold):
+def getDataCausalRepresentation(dataframe: RawEventData, modality,prior_knowledge,p_value_threshold,variants: Optional[List[str]] = None):
         """
         The purpose of this function is to take a raw event log as input and output a dictionary representation of the causal model discovered from this event log.
         :param dataframe: A pandas dataframe containing the raw event log data.
@@ -87,9 +133,11 @@ def getDataCausalRepresentation(dataframe: RawEventData,modality,prior_knowledge
         :return: A dictionary representing the causal model, where each key is a tuple representing a transition between two activities, and the value is the strength of that transition as determined causal discovery.
         :rtype: dict
         """
-        causalModel = discover_causal_dependencies(dataObject=dataframe,modality=modality,prior_knowledge=prior_knowledge)
+        causalModel = discover_causal_dependencies(dataObject=dataframe,variants=variants,modality=modality,prior_knowledge=prior_knowledge)
         causalPairs = getModelCausalRepresentation(causalModel,p_value_threshold)
         return causalPairs
+
+
 
 def getModelCausalRepresentation(model,p_value_threshold):
     def _get_causal_graph_representation(result: CausalResultInfo,p_value_threshold=None):
@@ -184,7 +232,7 @@ def __results_per_variants__(rawEventData : RawEventData, variants_dict: Dict[st
             if set(variants_dict[variant][0]) <= set(variants_dict[second_variant][0]):
                 for sub_variant in variants_dict[second_variant]:
                     sub_variant_str = ','.join(sub_variant)                    
-                    or_variant = rawEventData.getVariant(sub_variant_str)
+                    or_variant = rawEventData.filterVariants([sub_variant_str])
                     variant_df = or_variant.getData()
                     columns = variants_dict[variant][0]
                     variant_df = variant_df.reset_index()
@@ -197,7 +245,7 @@ def __results_per_variants__(rawEventData : RawEventData, variants_dict: Dict[st
         combined_event = pm.create_from_dataframe(combined_df,False,case_id=Constants.CASE_ID_KEY, activity_key=Constants.ACTIVITY_KEY, timestamp_key=Constants.TIMESTAMP_KEY, starttime_column=Constants.START_BASE_COLUMN)
         if len(combined_df) > len(combined_df.columns):
             try:
-                result_single = discover_causal_dependencies(combined_event, modality=modality, prior_knowledge=prior_knowledge, variant=algorithm)
+                result_single = _discover_causal_dependencies(combined_event, modality=modality, prior_knowledge=prior_knowledge, variant=algorithm)
                 results.append(result_single)
             except Exception:
                 pass

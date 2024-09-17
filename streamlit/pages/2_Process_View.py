@@ -76,12 +76,13 @@ if dataframe is not None:
         'You selected: ', get_key_for_value(df,option)
         if option:
             st.subheader('Variant view')
-            variant = dataframe.getVariant(get_key_for_value(df,option))
-            net = pm.discover_heuristics_net(variant)
+            variant_name= get_key_for_value(df,option)
+            #variant = dataframe.getVariant(get_key_for_value(df,option))
+            net = pm.discover_heuristics_net(session_state.data,[variant_name])
             variant_image_file = view_heuristic_net(net)
             variant_image = Image.open(variant_image_file.name)
             st.image(variant_image)            
-            session_state.variant = variant
+            session_state.variant = variant_name
  
        
 

@@ -59,15 +59,16 @@ if (session_state is not None) and hasattr(session_state, "variant") and (sessio
     with st.spinner('Please wait...'):
         #display both process model and causal model alongside
         variant= session_state.variant
-        net = pm.discover_heuristics_net(variant)
-        dfg, event_log = pm.discover_dfg(variant)
+        data = session_state.data
+        net = pm.discover_heuristics_net(data,[variant])
+        dfg, event_log = pm.discover_dfg(data,[variant])
         variant_image_file = view_heuristic_net(net)
         variant_image = Image.open(variant_image_file.name)
         session_state.processModel=dfg
         print(session_state.processModel)
         
         try:
-            causal_model=cd.discover_causal_dependencies(variant,prior_knowledge=True)
+            causal_model=cd.discover_causal_dependencies(data,[variant],prior_knowledge=True)
             causal_image_grapth = view_causal_dependencies(causal_model)
             causal_image_grapth.format = 'png'
             causal_image_grapth.render('causal_image', cleanup=True)  # Save the PNG image

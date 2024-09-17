@@ -139,16 +139,7 @@ class BaseProcessDataObject:
         return NotImplementedError  
             
 
-    def getVariant(self, activities: List[str]) -> 'BaseProcessDataObject':
-        """
-        Provided a list of activity names, return in a dataframe all traces instances which belong to this variant
 
-        :param activities: List of activities names
-        :type: List
-        :return: Dataframe with all trace instances containing specified activities
-        :rtype: BaseProcessDataObject
-        """        
-        return NotImplementedError  
     
     def getVariants(self) -> dict:
         """
