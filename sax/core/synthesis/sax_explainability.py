@@ -1,6 +1,7 @@
 # -----------------------------------------------------------------------------
 # Copyright contributors to the SAX4BPM project
 # -----------------------------------------------------------------------------
+from typing import List, Optional
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnableLambda, RunnableParallel
@@ -60,17 +61,17 @@ def _getChain(model: BaseLLM,causal: bool, process:bool, xai:bool, rag:bool, ret
     :rtype: chain
     """
     print(f"_getChain: process: {process}, causal: {causal}, xai: {xai}, rag: {rag}, retriever: {retriever}")
-    def getCausalPerspective(data, modality, prior_knowledge,p_value_threshold):
-        result = cd.getDataCausalRepresentation(data,modality=modality,prior_knowledge=prior_knowledge,p_value_threshold=p_value_threshold) 
+    def getCausalPerspective(data, modality, prior_knowledge,p_value_threshold,variants:Optional[List[str]]=None):
+        result = cd.get_data_causal_representation(data,modality=modality,prior_knowledge=prior_knowledge,p_value_threshold=p_value_threshold,variants=variants) 
         print("Causal: ",result)
         return result
     
-    def getProcessPerspective(data):
-        result =  pm.getDataProcessRepresentation(data)
+    def getProcessPerspective(data,variants:Optional[List[str]]=None):
+        result =  pm.get_data_process_representation(data,variants)
         print("Process:" , result)
         return result 
     
-    def getXAIPerspective(data):
+    def getXAIPerspective(data,variants:Optional[List[str]]=None):
         #TODO
         result = ""
         print("XAI", result)
@@ -82,9 +83,9 @@ def _getChain(model: BaseLLM,causal: bool, process:bool, xai:bool, rag:bool, ret
         retriver = retriever.get_retriever()
         return retriver | format_docs
     
-    causal_runnable = RunnableLambda(lambda x: {"causal": getCausalPerspective(x["data"],x["modality"],x["prior_knowledge"],x["p_value_threshold"])})
-    process_runnable = RunnableLambda(lambda x: {"process": getProcessPerspective(x["data"])})
-    xai_runnable= RunnableLambda(lambda x: {"xai": getXAIPerspective(x["data"])})
+    causal_runnable = RunnableLambda(lambda x: {"causal": getCausalPerspective(x["data"],x["modality"],x["prior_knowledge"],x["p_value_threshold"],x["variants"])})
+    process_runnable = RunnableLambda(lambda x: {"process": getProcessPerspective(x["data"],x["variants"])})
+    xai_runnable= RunnableLambda(lambda x: {"xai": getXAIPerspective(x["data"],x["variants"])})
     if rag:
         rag_retriever = getDocuments(retriever)
     else:
@@ -343,7 +344,7 @@ def _getChain(model: BaseLLM,causal: bool, process:bool, xai:bool, rag:bool, ret
 
     
 
-def getSyntethis(data:RawEventData, query:str, model: BaseLLM,causal: bool, process:bool, xai:bool, rag:bool, retriever: DocumentRetrieverLLM =None, modality =Modality.PARENT, prior_knowledge=True, p_value_threshold=None):
+def getSyntethis(data:RawEventData, query:str, model: BaseLLM,causal: bool, process:bool, xai:bool, rag:bool, retriever: DocumentRetrieverLLM =None, modality =Modality.PARENT, prior_knowledge=True, p_value_threshold=None,variants:Optional[List[str]]=None):
     """Get blended answer based on the user-chosen perspectives for the user provided query
 
     :param data: event log data
@@ -372,7 +373,7 @@ def getSyntethis(data:RawEventData, query:str, model: BaseLLM,causal: bool, proc
     :rtype: str
     """
     chain = _getChain(model,causal, process, xai, rag, retriever)
-    result = chain.invoke({"data":data,"query":query,"modality":modality,"prior_knowledge":prior_knowledge,"p_value_threshold":p_value_threshold})
+    result = chain.invoke({"data":data,"query":query,"modality":modality,"prior_knowledge":prior_knowledge,"p_value_threshold":p_value_threshold,"variants":variants})
     return result
 
 def getModel(modelType:ModelTypes, modelName: str, temperature: int):
@@ -392,7 +393,7 @@ def getModel(modelType:ModelTypes, modelName: str, temperature: int):
 
 
 
-def getExplanations(data:RawEventData,modality,prior_knowledge = None, p_value_threshold=None ):
+def getExplanations(data:RawEventData,modality,variants:Optional[List[str]]=None,prior_knowledge = None, p_value_threshold=None ):
     """Return an array of semantic explanations for all process-causal disrepancies 
 
     :param data: event log data
@@ -406,8 +407,8 @@ def getExplanations(data:RawEventData,modality,prior_knowledge = None, p_value_t
     :return: array of disrepancies
     :rtype: array[str]
     """
-    dfg,event_log = pm.discover_dfg(data)  
-    causalModel = cd.discover_causal_dependencies(dataObject=data,modality=modality,prior_knowledge=prior_knowledge)
+    dfg,event_log = pm.discover_dfg(data,variants)  
+    causalModel = cd.discover_causal_dependencies(dataObject=data,variants=variants,modality=modality,prior_knowledge=prior_knowledge)
     result = enumerateDisrepancies(dfg, causalModel,p_value_threshold=p_value_threshold)
     return result
       
@@ -435,8 +436,8 @@ def enumerateDisrepancies(processModel, causalModel,p_value_threshold=None):
     removedEdge = 'Altering the \'{first_activity}\' completion time is not likely to affect lead time of \'{second_activity}\' '    
 
     explanations = []
-    processRepresentation = pm.getModelProcessRepresentation(processModel)
-    causalModel = cd.getModelCausalRepresentation(causalModel,p_value_threshold=p_value_threshold)
+    processRepresentation = pm.get_model_process_representation(processModel)
+    causalModel = cd.get_model_causal_representation(causalModel,p_value_threshold=p_value_threshold)
     #calculateDiff should return tuples of activities in correct order between which edges were added or removed
     addedEdges,removedEdges = _calculateDiff(processRepresentation,causalModel)
     for i, pair in enumerate(addedEdges):

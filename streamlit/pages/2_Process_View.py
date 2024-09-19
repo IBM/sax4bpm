@@ -74,14 +74,15 @@ if dataframe is not None:
         df['Num. Traces'])
 
         'You selected: ', get_key_for_value(df,option)
-        if option:
+        if option:            
             st.subheader('Variant view')
-            variant = dataframe.getVariant(get_key_for_value(df,option))
-            net = pm.discover_heuristics_net(variant)
-            variant_image_file = view_heuristic_net(net)
+            variant_name= get_key_for_value(df,option)            
+            print("Selected variant:",variant_name)                        
+            net = pm.discover_heuristics_net(dataframe,[variant_name])            
+            variant_image_file = view_heuristic_net(net)           
             variant_image = Image.open(variant_image_file.name)
-            st.image(variant_image)            
-            session_state.variant = variant
+            st.image(variant_image)                        
+            session_state.variant = variant_name
  
        
 

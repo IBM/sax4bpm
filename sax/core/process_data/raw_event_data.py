@@ -1,6 +1,7 @@
 # -----------------------------------------------------------------------------
 # Copyright contributors to the SAX4BPM project
 # -----------------------------------------------------------------------------
+from typing import List
 import pandas as pd
 from pandas import DataFrame
 from pm4py.algo.filtering.log.variants import variants_filter
@@ -274,33 +275,69 @@ class RawEventData(BaseProcessDataObject):
         df.rename(columns=name_mapping, inplace=True)       
         return log_converter.apply(df)
     
-    
-    
-  
-    def getVariant(self, variant_key) -> 'RawEventData':   
+
+    from typing import List
+
+    def filterVariants(self, variant_keys: List[str]) -> 'RawEventData':   
         """
-        Get a specific variant data.
+        Get specific variants data for specified variants and return a new RawEventData object only with the filtered variants data.
 
         Parameters
         ----------
-        variant_key : str
-            The name of the variant to retrieve.
+        variant_keys : List[str]
+            The list of variant names to retrieve.
 
         Returns
         -------
         variant : RawEventData
             The RawEventData object representing the specified variant subset of traces.
-
         """            
         if self._permutations is None:
             self._permutations = self._getVariants()
 
-        chosen_ids = self._permutations[variant_key]        
+        # Initialize an empty set to store all chosen_ids across variant_keys
+        all_chosen_ids = set()
+
+        # Iterate over each key to collect the chosen_ids
+        for variant_key in variant_keys:
+            if variant_key in self._permutations:
+                chosen_ids = self._permutations[variant_key]
+                all_chosen_ids.update(chosen_ids)
+            else:
+                raise KeyError(f"Variant key '{variant_key}' not found in variants")
+
+        # Filter the dataframe for rows that match any of the chosen_ids
         id_columns = self.data[self.mandatory_properties[Constants.CASE_ID_KEY]]        
-        selected_df = self.data[id_columns.isin(chosen_ids)]                         
-        original_df = selected_df.copy()       
+        selected_df = self.data[id_columns.isin(all_chosen_ids)]                         
+        original_df = selected_df.copy()
+
+        # Return the new RawEventData object with the filtered data
+        return RawEventData(original_df, self.mandatory_properties, self.optional_properties)
+
+    # def _getVariant(self, variant_key) -> 'RawEventData':   
+    #     """
+    #     Get a specific variant data and return a new RawEventData object only with the filtered variant data.
+
+    #     Parameters
+    #     ----------
+    #     variant_key : str
+    #         The name of the variant to retrieve.
+
+    #     Returns
+    #     -------
+    #     variant : RawEventData
+    #         The RawEventData object representing the specified variant subset of traces.
+
+    #     """            
+    #     if self._permutations is None:
+    #         self._permutations = self._getVariants()
+
+    #     chosen_ids = self._permutations[variant_key]        
+    #     id_columns = self.data[self.mandatory_properties[Constants.CASE_ID_KEY]]        
+    #     selected_df = self.data[id_columns.isin(chosen_ids)]                         
+    #     original_df = selected_df.copy()       
         
-        return RawEventData(original_df, self.mandatory_properties, self.optional_properties)        
+    #     return RawEventData(original_df, self.mandatory_properties, self.optional_properties)        
     
     
     

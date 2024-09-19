@@ -82,3 +82,6 @@ experiments/AutoTwin/perf/neo4j_sample_Performance.csv
 add_copyright.py
 .env
 /experiments
+test/llms.py
+test/process_exploration.py
+streamlit/causal_image.png
