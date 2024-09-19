@@ -215,14 +215,13 @@ def discover_heuristics_net(dataframe: RawEventData,variants: Optional[List[str]
         :return: heuristic net
         :rtype: HeuristicsNet
         """
-        if variants is not None:
-           event_log = dataframe.filterVariants(variants)    
+        if variants is not None:           
+           event_log = dataframe.filterVariants(variants)               
         else:
            event_log = dataframe     
         if (lifecycleTypes is not None) or (Constants.TYPE_KEY in dataframe.getMandatoryProperties()):
-                event_log= dataframe.filterLifecycleEvents(lifecycleTypes)
-                                   
-        formatted_log = event_log.getLog()
+                event_log= event_log.filterLifecycleEvents(lifecycleTypes)        
+        formatted_log = event_log.getLog()        
         map =  pm4py.discover_heuristics_net(formatted_log)
 
         return map
@@ -254,7 +253,7 @@ def discover_dfg(dataframe: RawEventData,variants: Optional[List[str]] = None,li
         else:
            event_log = dataframe    
         if (lifecycleTypes is not None) or (Constants.TYPE_KEY in dataframe.getMandatoryProperties()):
-                event_log= dataframe.filterLifecycleEvents(lifecycleTypes)
+                event_log= event_log.filterLifecycleEvents(lifecycleTypes)
                                    
         formatted_log = event_log.getLog()
         dfg =  dfg_discovery.apply(formatted_log, variant=dfg_discovery.Variants.FREQUENCY)
@@ -308,7 +307,7 @@ def discover_process_tree(dataframe: RawEventData,variants: Optional[List[str]] 
         else:
            event_log = dataframe     
         if (lifecycleTypes is not None) or (Constants.TYPE_KEY in dataframe.getMandatoryProperties()):
-                event_log= dataframe.filterLifecycleEvents(lifecycleTypes)
+                event_log= event_log.filterLifecycleEvents(lifecycleTypes)
    
         formatted_log = event_log.getLog()
 
@@ -344,7 +343,7 @@ def discover_process_map( dataframe: RawEventData,variants: Optional[List[str]] 
         else:
            event_log = dataframe        
         if (lifecycleTypes is not None) or (Constants.TYPE_KEY in dataframe.getMandatoryProperties()):
-                event_log= dataframe.filterLifecycleEvents(lifecycleTypes)
+                event_log= event_log.filterLifecycleEvents(lifecycleTypes)
           
         formatted_log = event_log.getLog()
 
@@ -404,7 +403,7 @@ def filter_end_activities(dataframe: RawEventData, activities, variants: Optiona
         filtered = pm4py.filter_end_activities(df.getLog(), activities,retain)
         return filtered
     
-def getStartActivities(dataframe: RawEventData,variants: Optional[List[str]] = None):
+def get_start_activities(dataframe: RawEventData,variants: Optional[List[str]] = None):
         """
         Returns the start activities from a log object
 
@@ -417,7 +416,7 @@ def getStartActivities(dataframe: RawEventData,variants: Optional[List[str]] = N
                df=dataframe
         return pm4py.get_start_activities(df.getLog())
     
-def getEndActivities(dataframe: RawEventData,variants: Optional[List[str]] = None):       
+def get_end_activities(dataframe: RawEventData,variants: Optional[List[str]] = None):       
         """
         Returns the end activities from a log object
 
@@ -430,7 +429,7 @@ def getEndActivities(dataframe: RawEventData,variants: Optional[List[str]] = Non
                df=dataframe
         return pm4py.get_end_activities(df.getLog())
 
-def getDataProcessRepresentation(dataframe: RawEventData,variants: Optional[List[str]] = None):
+def get_data_process_representation(dataframe: RawEventData,variants: Optional[List[str]] = None):
         """
         The purpose of this function is to take a raw event log as input and output a dictionary representation of the process model discovered when mining this event log.
         :param dataframe: A pandas dataframe containing the raw event log data.
@@ -439,10 +438,10 @@ def getDataProcessRepresentation(dataframe: RawEventData,variants: Optional[List
         :rtype: dict
         """        
         dfg, _ = discover_dfg(dataframe,variants)
-        processRepresentation = getModelProcessRepresentation(dfg)
+        processRepresentation = get_model_process_representation(dfg)
         return processRepresentation
 
-def getModelProcessRepresentation(model):
+def get_model_process_representation(model):
         def _getPairsProcess(dfgModel):    
                 result_dict = {}
                 for pair, strength in dfgModel.items():

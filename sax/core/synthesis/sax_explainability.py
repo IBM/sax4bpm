@@ -62,12 +62,12 @@ def _getChain(model: BaseLLM,causal: bool, process:bool, xai:bool, rag:bool, ret
     """
     print(f"_getChain: process: {process}, causal: {causal}, xai: {xai}, rag: {rag}, retriever: {retriever}")
     def getCausalPerspective(data, modality, prior_knowledge,p_value_threshold,variants:Optional[List[str]]=None):
-        result = cd.getDataCausalRepresentation(data,modality=modality,prior_knowledge=prior_knowledge,p_value_threshold=p_value_threshold,variants=variants) 
+        result = cd.get_data_causal_representation(data,modality=modality,prior_knowledge=prior_knowledge,p_value_threshold=p_value_threshold,variants=variants) 
         print("Causal: ",result)
         return result
     
     def getProcessPerspective(data,variants:Optional[List[str]]=None):
-        result =  pm.getDataProcessRepresentation(data,variants)
+        result =  pm.get_data_process_representation(data,variants)
         print("Process:" , result)
         return result 
     
@@ -436,8 +436,8 @@ def enumerateDisrepancies(processModel, causalModel,p_value_threshold=None):
     removedEdge = 'Altering the \'{first_activity}\' completion time is not likely to affect lead time of \'{second_activity}\' '    
 
     explanations = []
-    processRepresentation = pm.getModelProcessRepresentation(processModel)
-    causalModel = cd.getModelCausalRepresentation(causalModel,p_value_threshold=p_value_threshold)
+    processRepresentation = pm.get_model_process_representation(processModel)
+    causalModel = cd.get_model_causal_representation(causalModel,p_value_threshold=p_value_threshold)
     #calculateDiff should return tuples of activities in correct order between which edges were added or removed
     addedEdges,removedEdges = _calculateDiff(processRepresentation,causalModel)
     for i, pair in enumerate(addedEdges):

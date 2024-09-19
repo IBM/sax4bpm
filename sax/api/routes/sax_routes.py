@@ -71,7 +71,7 @@ def get_causal_graph(variant_names, modality, prior_knowledge = False, p_value_t
     
     modality = Modality.from_string(modality)     
 
-    causal_graph = cd.getDataCausalRepresentation(dataframe=imported_data,modality=modality,prior_knowledge=prior_knowledge,p_value_threshold=p_value_threshold,variants=variant_names)
+    causal_graph = cd.get_data_causal_representation(dataframe=imported_data,modality=modality,prior_knowledge=prior_knowledge,p_value_threshold=p_value_threshold,variants=variant_names)
     result_list =  [{"from": pair[0], "to": pair[1], "items": count} for pair, count in causal_graph.items()]
     return result_list
 

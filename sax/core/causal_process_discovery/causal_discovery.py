@@ -58,22 +58,7 @@ def _discover_causal_dependencies_unification(dataObject:RawEventData,algorithm:
     return CausalResultInfo((nx.to_numpy_array(general_graph)).T, list(general_graph.nodes()))
 
 
-# def _discover_causal_dependencies_unification_variant_specific(dataObject:RawEventData, variants:List[List[str]],algorithm: Optional[Algorithm] = DEFAULT_VARIANT, modality: Optional[Modality] = DEFAULT_MODALITY,prior_knowledge: Optional[bool]=True, depth: int =1) -> CausalResultInfo:
-#     results_per_variants = []
-#     for variant in variants:
-#         variant_sorted = sorted(variant)
-#         variant_set_str = str(variant_sorted)
-#         variants_dict = __get_variants_dict__(rawEventData=dataObject)
-#         variant_specific_dict = {}
-#         variant_specific_dict[variant_set_str] = variants_dict[variant_set_str]
-#         results_per_variant =  __results_per_variants__(rawEventData=dataObject, variants_dict=variant_specific_dict,modality=modality ,prior_knowledge=prior_knowledge, algorithm=algorithm)
-#         general_graph = __unification_of_results__(results=results_per_variant)
-#         results_per_variants.append(CausalResultInfo((nx.to_numpy_array(general_graph)).T, list(general_graph.nodes())))
 
-#     if len(results_per_variants)>1:
-#         general_graph = __unification_of_results__(results=results_per_variants)
-
-#     return CausalResultInfo((nx.to_numpy_array(general_graph)).T, list(general_graph.nodes()))
 
 def _discover_causal_dependencies_unification_variant_specific(dataObject:RawEventData, variants:List[str],algorithm: Optional[Algorithm] = DEFAULT_VARIANT, modality: Optional[Modality] = DEFAULT_MODALITY,prior_knowledge: Optional[bool]=True, depth: int =1) -> CausalResultInfo:
     results_per_variants = []
@@ -125,7 +110,7 @@ def _discover_causal_dependencies(dataObject:RawEventData,variant: Optional[Algo
 
 
 
-def getDataCausalRepresentation(dataframe: RawEventData, modality,prior_knowledge,p_value_threshold,variants: Optional[List[str]] = None):
+def get_data_causal_representation(dataframe: RawEventData, modality,prior_knowledge,p_value_threshold,variants: Optional[List[str]] = None):
         """
         The purpose of this function is to take a raw event log as input and output a dictionary representation of the causal model discovered from this event log.
         :param dataframe: A pandas dataframe containing the raw event log data.
@@ -134,12 +119,12 @@ def getDataCausalRepresentation(dataframe: RawEventData, modality,prior_knowledg
         :rtype: dict
         """
         causalModel = discover_causal_dependencies(dataObject=dataframe,variants=variants,modality=modality,prior_knowledge=prior_knowledge)
-        causalPairs = getModelCausalRepresentation(causalModel,p_value_threshold)
+        causalPairs = get_model_causal_representation(causalModel,p_value_threshold)
         return causalPairs
 
 
 
-def getModelCausalRepresentation(model,p_value_threshold):
+def get_model_causal_representation(model,p_value_threshold):
     def _get_causal_graph_representation(result: CausalResultInfo,p_value_threshold=None):
         result_dict = {}
         np_matrix = result.getAdjacencyMatrix()

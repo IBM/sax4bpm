@@ -57,27 +57,35 @@ if 'causalModel' not in session_state:
 
 if (session_state is not None) and hasattr(session_state, "variant") and (session_state.variant is not None):
     with st.spinner('Please wait...'):
-        #display both process model and causal model alongside
+        #display both process model and causal model alongside        
         variant= session_state.variant
+        print("Starting process mining: variant",variant)
         data = session_state.data
         net = pm.discover_heuristics_net(data,[variant])
         dfg, event_log = pm.discover_dfg(data,[variant])
         variant_image_file = view_heuristic_net(net)
         variant_image = Image.open(variant_image_file.name)
         session_state.processModel=dfg
-        print(session_state.processModel)
+        print("Process Model:",session_state.processModel)
         
         try:
-            causal_model=cd.discover_causal_dependencies(data,[variant],prior_knowledge=True)
-            causal_image_grapth = view_causal_dependencies(causal_model)
-            causal_image_grapth.format = 'png'
-            causal_image_grapth.render('causal_image', cleanup=True)  # Save the PNG image
-            session_state.causalModel=causal_model
-            causal_graph_image = Image.open('causal_image.png')
-            print(session_state.causalModel.adjacencyMatrix)
-            print(session_state.causalModel.columns)
+            print("Starting causal discovery: variant",variant)
+            causal_model=cd.discover_causal_dependencies(data,[variant],prior_knowledge=True)            
+            print("Causal model:")
+            print(causal_model.adjacencyMatrix)
+            print(causal_model.columns)
+            if causal_model.columns:
+                session_state.causalModel=causal_model
+                causal_image_grapth = view_causal_dependencies(causal_model)
+                causal_image_grapth.format = 'png'
+                causal_image_grapth.render('causal_image', cleanup=True)  # Save the PNG image            
+                causal_graph_image = Image.open('causal_image.png')
+            else:
+                session_state.causalModel=None
+                st.error("Causal model is empty: mostly likely due to the fact that you chose variant with too few instances to analyze")            
         except Exception as e:
             st.error("An error occurred: {}".format(str(e)))
+            print(e)
             session_state.causalModel=None
         
 
