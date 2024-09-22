@@ -245,7 +245,7 @@ class ParentAnchorTransformer(BaseAnchor):
                 else: return start_time_column
         return None  # Return None if the tuple is not found
 
-    def _apply_lingam(self,transposed_df,start_time_column_name, alg_variant, first_activity,second_activity,prior_knowledge):  
+    def _apply_lingam(self,transposed_df,start_time_column_name, alg_variant, first_activity,second_activity,prior_knowledge, threshold=0.5):  
         # Assisted by WCA for GP
         # Latest GenAI contribution: granite-20B-code-instruct-v2 model
         """
@@ -298,7 +298,7 @@ class ParentAnchorTransformer(BaseAnchor):
         #Given the two columns of time difference, apply Lingam    
         args = {"data": result_df}
         if prior_knowledge:
-            args["prior_knowledge"] = PriorKnowledge(result_df)
+            args["prior_knowledge"] = PriorKnowledge(result_df, threshold=threshold)
         if num_rows > 0: 
             if alg_variant == Algorithm.LINGAM:
                 algorithm = LingamImpl(**args)
@@ -350,4 +350,4 @@ class ParentAnchorTransformer(BaseAnchor):
             adjacency_matrix[j, i] = value  # Swap i and j
 
         return adjacency_matrix, list(unique_elements)
-    
+        

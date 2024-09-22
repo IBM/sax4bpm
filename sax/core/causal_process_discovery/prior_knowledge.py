@@ -12,14 +12,14 @@ class PriorKnowledge:
     Prior knowledge representation for a particular event log. This object should be created and passed to the causal dependency discovery algorithm in case the user intends
     to run the algorithm with prior knowledge. The rules for creation of prior knowledge matrix are described here https://lingam.readthedocs.io/en/stable/tutorial/pk_direct.html
     """    
-    def __init__(self,data: DataFrame):
+    def __init__(self,data: DataFrame, threshold=0.5):
         '''
         This class allows adding any prior knoweledge to the causal discovery process 
         '''
-        self.prior_knowledge = self._assesPriorKnowledge(data)
+        self.prior_knowledge = self._assesPriorKnowledge(data, threshold=threshold)
         self.data = data
 
-    def _assesPriorKnowledge(self,data: DataFrame):      
+    def _assesPriorKnowledge(self,data: DataFrame,threshold = 0.5):      
         # Assisted by WCA for GP
         # Latest GenAI contribution: granite-20B-code-instruct-v2 model
         '''
@@ -40,7 +40,7 @@ class PriorKnowledge:
             for ind2, column2 in enumerate(data.columns):
                 if column1!=column2 :
                     residuals = data[column1] - data[column2]
-                    if (residuals >= 0).all():                        
+                    if ((residuals >= 0).sum()/ len(residuals))>=threshold:                        
                         prior_knowledge[ind2][ind1] = 0
         return prior_knowledge
     
