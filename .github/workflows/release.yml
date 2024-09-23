@@ -6,8 +6,7 @@ on:
   workflow_dispatch: # This adds the manual trigger
 
 jobs:
-  build:
-    if: github.ref == 'refs/heads/main'  # Ensures it runs only for releases on the 'main' branch
+  build:   
     runs-on: ubuntu-latest
 
     steps:
