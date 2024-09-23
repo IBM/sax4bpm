@@ -115,6 +115,14 @@ def get_data_causal_representation(dataframe: RawEventData, modality,prior_knowl
         The purpose of this function is to take a raw event log as input and output a dictionary representation of the causal model discovered from this event log.
         :param dataframe: A pandas dataframe containing the raw event log data.
         :type dataframe: RawEventData
+        :param modality: Anchor modality to use for discovery, defaults to CHAIN modality
+        :type modality: Optional[Modality], optional
+        :param prior_knowledge: whether to use prior knowledge, defaults to False
+        :type prior_knowledge: Optional[bool], optional   
+        :param p_value_threshold: a threshold for casual strength coefficient, edges with weights bellow this coefficient will not be presented
+        :type p_value_threshold: float
+        :param variants: a List of one or more variant specifications to perform causal discovery on , optional (if not specified will perform causal discovery on the whole event log)
+        :type variants:  Optional[List[str]], optional
         :return: A dictionary representing the causal model, where each key is a tuple representing a transition between two activities, and the value is the strength of that transition as determined causal discovery.
         :rtype: dict
         """
@@ -125,6 +133,16 @@ def get_data_causal_representation(dataframe: RawEventData, modality,prior_knowl
 
 
 def get_model_causal_representation(model,p_value_threshold):
+    """
+    The purpose of this function is to take a causal model which is an adjacency matrix and create a dictionary representing this model, optionally filtering out edges with coefficient weights below specified threshold.
+    :param model The causal model represented by CausalResultInfo object
+    :type model CausalResultInfo
+    :param p_value_threshold: a threshold for casual strength coefficient, edges with weights bellow this coefficient will not be presented
+    :type p_value_threshold: float
+
+    :return: A dictionary representing the causal model, where each key is a tuple representing a transition between two activities, and the value is the strength of that transition as determined causal discovery.
+    :rtype: dict
+    """    
     def _get_causal_graph_representation(result: CausalResultInfo,p_value_threshold=None):
         result_dict = {}
         np_matrix = result.getAdjacencyMatrix()
