@@ -235,26 +235,6 @@ holding basic process event log data, such as trace id, activity name, activity 
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="sax.core.process_data.data.BaseProcessDataObject.getVariant">
-<span class="sig-name descname"><span class="pre">getVariant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">activities</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#sax.core.process_data.data.BaseProcessDataObject" title="sax.core.process_data.data.BaseProcessDataObject"><span class="pre">BaseProcessDataObject</span></a></span></span><a class="headerlink" href="#sax.core.process_data.data.BaseProcessDataObject.getVariant" title="Link to this definition"></a></dt>
-<dd><p>Provided a list of activity names, return in a dataframe all traces instances which belong to this variant</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>activities</strong> -- List of activities names</p>
-</dd>
-<dt class="field-even">Type<span class="colon">:</span></dt>
-<dd class="field-even"><p>List</p>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Dataframe with all trace instances containing specified activities</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#sax.core.process_data.data.BaseProcessDataObject" title="sax.core.process_data.data.BaseProcessDataObject">BaseProcessDataObject</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="sax.core.process_data.data.BaseProcessDataObject.getVariants">
 <span class="sig-name descname"><span class="pre">getVariants</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#sax.core.process_data.data.BaseProcessDataObject.getVariants" title="Link to this definition"></a></dt>
 <dd><p>Return a dictionary mapping of all possible process variants in the event log, to a number of traces per each variant</p>
@@ -309,6 +289,12 @@ The purpose of the object is to summarize and return the discovery results</p>
 <dd><p>Bases: <a class="reference internal" href="#sax.core.process_data.data.BaseProcessDataObject" title="sax.core.process_data.data.BaseProcessDataObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseProcessDataObject</span></code></a></p>
 <p>Raw event representation of event log, where each row represents a single event in a trace (one activity), and the columns
 are the activity name, activity timestamp, and additional activity payload attributes</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sax.core.process_data.raw_event_data.RawEventData.List">
+<span class="sig-name descname"><span class="pre">List</span></span><a class="headerlink" href="#sax.core.process_data.raw_event_data.RawEventData.List" title="Link to this definition"></a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></p>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="sax.core.process_data.raw_event_data.RawEventData.copy">
 <span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sax.core.process_data.raw_event_data.RawEventData.copy" title="Link to this definition"></a></dt>
@@ -339,15 +325,35 @@ rtype: RawEventData</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="sax.core.process_data.raw_event_data.RawEventData.getLog">
-<span class="sig-name descname"><span class="pre">getLog</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sax.core.process_data.raw_event_data.RawEventData.getLog" title="Link to this definition"></a></dt>
-<dd><p>Return the pm4py event log representing this dataframe object</p>
+<dt class="sig sig-object py" id="sax.core.process_data.raw_event_data.RawEventData.filterVariants">
+<span class="sig-name descname"><span class="pre">filterVariants</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variant_keys</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#sax.core.process_data.raw_event_data.RawEventData" title="sax.core.process_data.raw_event_data.RawEventData"><span class="pre">RawEventData</span></a></span></span><a class="headerlink" href="#sax.core.process_data.raw_event_data.RawEventData.filterVariants" title="Link to this definition"></a></dt>
+<dd><p>Get specific variants data for specified variants and return a new RawEventData object only with the filtered variants data.</p>
 <section id="id2">
 <h3>Parameters<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
-<p>None</p>
+<dl class="simple">
+<dt>variant_keys<span class="classifier">List[str]</span></dt><dd><p>The list of variant names to retrieve.</p>
+</dd>
+</dl>
 </section>
 <section id="id3">
 <h3>Returns<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt>variant<span class="classifier">RawEventData</span></dt><dd><p>The RawEventData object representing the specified variant subset of traces.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sax.core.process_data.raw_event_data.RawEventData.getLog">
+<span class="sig-name descname"><span class="pre">getLog</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sax.core.process_data.raw_event_data.RawEventData.getLog" title="Link to this definition"></a></dt>
+<dd><p>Return the pm4py event log representing this dataframe object</p>
+<section id="id4">
+<h3>Parameters<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<p>None</p>
+</section>
+<section id="id5">
+<h3>Returns<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
 <dl class="simple">
 <dt>log<span class="classifier">pm4py event log</span></dt><dd><p>The pm4py event log representing this dataframe object</p>
 </dd>
@@ -358,27 +364,6 @@ rtype: RawEventData</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="sax.core.process_data.raw_event_data.RawEventData.getMandatoryPropertiesData">
 <span class="sig-name descname"><span class="pre">getMandatoryPropertiesData</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sax.core.process_data.raw_event_data.RawEventData.getMandatoryPropertiesData" title="Link to this definition"></a></dt>
-<dd><p>Return the mandatory properties columns: caseID, activity and event lifecycle columns and timestamp columns</p>
-<section id="id4">
-<h3>Parameters<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
-<p>None</p>
-</section>
-<section id="id5">
-<h3>Returns<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
-<dl class="field-list simple">
-<dt class="field-odd">return<span class="colon">:</span></dt>
-<dd class="field-odd"><p>mandatory properties data</p>
-</dd>
-<dt class="field-even">rtype<span class="colon">:</span></dt>
-<dd class="field-even"><p>_type_</p>
-</dd>
-</dl>
-</section>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="sax.core.process_data.raw_event_data.RawEventData.getOptionalPropertiesData">
-<span class="sig-name descname"><span class="pre">getOptionalPropertiesData</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sax.core.process_data.raw_event_data.RawEventData.getOptionalPropertiesData" title="Link to this definition"></a></dt>
 <dd><p>Return the mandatory properties columns: caseID, activity and event lifecycle columns and timestamp columns</p>
 <section id="id6">
 <h3>Parameters<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
@@ -398,20 +383,21 @@ rtype: RawEventData</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="sax.core.process_data.raw_event_data.RawEventData.getVariant">
-<span class="sig-name descname"><span class="pre">getVariant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variant_key</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#sax.core.process_data.raw_event_data.RawEventData" title="sax.core.process_data.raw_event_data.RawEventData"><span class="pre">RawEventData</span></a></span></span><a class="headerlink" href="#sax.core.process_data.raw_event_data.RawEventData.getVariant" title="Link to this definition"></a></dt>
-<dd><p>Get a specific variant data.</p>
+<dt class="sig sig-object py" id="sax.core.process_data.raw_event_data.RawEventData.getOptionalPropertiesData">
+<span class="sig-name descname"><span class="pre">getOptionalPropertiesData</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sax.core.process_data.raw_event_data.RawEventData.getOptionalPropertiesData" title="Link to this definition"></a></dt>
+<dd><p>Return the mandatory properties columns: caseID, activity and event lifecycle columns and timestamp columns</p>
 <section id="id8">
 <h3>Parameters<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
-<dl class="simple">
-<dt>variant_key<span class="classifier">str</span></dt><dd><p>The name of the variant to retrieve.</p>
-</dd>
-</dl>
+<p>None</p>
 </section>
 <section id="id9">
 <h3>Returns<a class="headerlink" href="#id9" title="Link to this heading"></a></h3>
-<dl class="simple">
-<dt>variant<span class="classifier">RawEventData</span></dt><dd><p>The RawEventData object representing the specified variant subset of traces.</p>
+<dl class="field-list simple">
+<dt class="field-odd">return<span class="colon">:</span></dt>
+<dd class="field-odd"><p>mandatory properties data</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>_type_</p>
 </dd>
 </dl>
 </section>
