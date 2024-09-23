@@ -88,24 +88,15 @@
   <section id="Process-mining-and-causal-discovery-example">
 <h1>Process mining and causal discovery example<a class="headerlink" href="#Process-mining-and-causal-discovery-example" title="Link to this heading"></a></h1>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import sys
-import os
-# Get the current directory (where the notebook is located)
-notebook_dir = os.getcwd()
-# Get the parent directory
-parent_dir = os.path.abspath(os.path.join(notebook_dir, os.pardir))
-# Get two directories up
-two_dirs_up = os.path.abspath(os.path.join(parent_dir, os.pardir))
-# Add the project directory to the Python path
-sys.path.append(two_dirs_up)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>! pip install sax4bpm
 </pre></div>
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import warnings
@@ -115,7 +106,7 @@ warnings.filterwarnings(&#39;ignore&#39;, category=UserWarning)
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import sax
@@ -130,17 +121,17 @@ import sax.core.process_mining.process_mining as pm
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>#Import event log file and create event_log data object
-fileName = &quot;C:\Data\Automation\SAX\Data\collider expirementation\collider non-overlapping runs U[5,7], U[9,11]\simulated_run_non_overlapping_gen.csv&quot;
+fileName = &quot;simulated_run_non_overlapping_gen.csv&quot;
 event_log = pm.import_csv(eventlog=fileName,kloop_unroling=False,timestamp_format=&quot;%Y-%m-%d %H:%M:%S.%f&quot;)
 <br/></pre></div>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Get the parsed dataset from the event log object
@@ -149,7 +140,7 @@ event_log.getData()
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -297,7 +288,7 @@ event_log.getData()
 </div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Fetch and print the mandatory properties and optional properties within the event log file
@@ -318,7 +309,7 @@ Optional properties of the parsed event log:
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><br/><span></span>#Filter only the specified lifecycle events
@@ -328,7 +319,7 @@ filtered_log.getData()
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -476,49 +467,7 @@ filtered_log.getData()
 </div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import pm4py
-formatted_log = filtered_log.getLog()
-map =  pm4py.discover_heuristics_net(formatted_log)
-pm.view_heuristics_net(map)
-<br/></pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-<span class="ansi-red-intense-fg ansi-bold">---------------------------------------------------------------------------</span>
-<span class="ansi-red-intense-fg ansi-bold">Exception</span>                                 Traceback (most recent call last)
-Cell <span class="ansi-green-intense-fg ansi-bold">In[23], line 3</span>
-<span class="ansi-green-fg">      1</span> <span class="ansi-bold" style="color: rgb(0,135,0)">import</span> <span class="ansi-bold" style="color: rgb(0,0,255)">pm4py</span>
-<span class="ansi-green-fg">      2</span> formatted_log <span style="color: rgb(98,98,98)">=</span> filtered_log<span style="color: rgb(98,98,98)">.</span>getData()
-<span class="ansi-green-intense-fg ansi-bold">----&gt; 3</span> <span style="color: rgb(0,135,0)">map</span> <span style="color: rgb(98,98,98)">=</span>  <span class="ansi-yellow-bg">pm4py</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">discover_heuristics_net</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">formatted_log</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-fg">      4</span> pm<span style="color: rgb(98,98,98)">.</span>view_heuristics_net(<span style="color: rgb(0,135,0)">map</span>)
-
-File <span class="ansi-green-intense-fg ansi-bold">c:\Data\Automation\SAX\OpenSource\.venv\lib\site-packages\pm4py\discovery.py:441</span>, in <span class="ansi-cyan-fg">discover_heuristics_net</span><span class="ansi-blue-intense-fg ansi-bold">(log, dependency_threshold, and_threshold, loop_two_threshold, min_act_count, min_dfg_occurrences, activity_key, timestamp_key, case_id_key, decoration)</span>
-<span class="ansi-green-fg">    438</span> parameters[heu_parameters<span style="color: rgb(98,98,98)">.</span>HEU_NET_DECORATION] <span style="color: rgb(98,98,98)">=</span> decoration
-<span class="ansi-green-fg">    440</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> check_is_pandas_dataframe(log):
-<span class="ansi-green-intense-fg ansi-bold">--&gt; 441</span>     <span class="ansi-yellow-bg">check_pandas_dataframe_columns</span><span class="ansi-yellow-bg">(</span>
-<span class="ansi-green-fg">    442</span> <span class="ansi-yellow-bg">        </span><span class="ansi-yellow-bg">log</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">activity_key</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">activity_key</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">timestamp_key</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">timestamp_key</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">case_id_key</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">case_id_key</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-fg">    443</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> heuristics_miner<span style="color: rgb(98,98,98)">.</span>apply_heu_pandas(log, parameters<span style="color: rgb(98,98,98)">=</span>parameters)
-<span class="ansi-green-fg">    444</span> <span class="ansi-bold" style="color: rgb(0,135,0)">else</span>:
-
-File <span class="ansi-green-intense-fg ansi-bold">c:\Data\Automation\SAX\OpenSource\.venv\lib\site-packages\pm4py\util\pandas_utils.py:370</span>, in <span class="ansi-cyan-fg">check_pandas_dataframe_columns</span><span class="ansi-blue-intense-fg ansi-bold">(df, activity_key, case_id_key, timestamp_key, start_timestamp_key)</span>
-<span class="ansi-green-fg">    368</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> case_id_key <span class="ansi-bold" style="color: rgb(175,0,255)">is</span> <span class="ansi-bold" style="color: rgb(175,0,255)">not</span> <span class="ansi-bold" style="color: rgb(0,135,0)">None</span>:
-<span class="ansi-green-fg">    369</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> case_id_key <span class="ansi-bold" style="color: rgb(175,0,255)">not</span> <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> df<span style="color: rgb(98,98,98)">.</span>columns:
-<span class="ansi-green-intense-fg ansi-bold">--&gt; 370</span>         <span class="ansi-bold" style="color: rgb(0,135,0)">raise</span> <span class="ansi-bold" style="color: rgb(215,95,95)">Exception</span>(<span style="color: rgb(175,0,0)">&#34;</span><span style="color: rgb(175,0,0)">the specified case ID column is not contained in the dataframe. Available columns: </span><span style="color: rgb(175,0,0)">&#34;</span><span style="color: rgb(98,98,98)">+</span><span style="color: rgb(0,135,0)">str</span>(<span style="color: rgb(0,135,0)">sorted</span>(<span style="color: rgb(0,135,0)">list</span>(df<span style="color: rgb(98,98,98)">.</span>columns))))
-<span class="ansi-green-fg">    372</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> case_id_key <span class="ansi-bold" style="color: rgb(175,0,255)">not</span> <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> str_columns:
-<span class="ansi-green-fg">    373</span>         <span class="ansi-bold" style="color: rgb(0,135,0)">raise</span> <span class="ansi-bold" style="color: rgb(215,95,95)">Exception</span>(<span style="color: rgb(175,0,0)">&#34;</span><span style="color: rgb(175,0,0)">the case ID column should be of type string.</span><span style="color: rgb(175,0,0)">&#34;</span>)
-
-<span class="ansi-red-intense-fg ansi-bold">Exception</span>: the specified case ID column is not contained in the dataframe. Available columns: [&#39;Id&#39;, &#39;Resource&#39;, &#39;Role&#39;, &#39;Source&#39;, &#39;Timestamp&#39;, &#39;Type&#39;, &#39;start:timestamp&#39;]
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>#Performm process mining
@@ -532,11 +481,11 @@ pm.view_heuristics_net(net)
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/PM_Causal_Discovery_9_0.png" src="_images/PM_Causal_Discovery_9_0.png" />
+<img alt="_images/PM_Causal_Discovery_8_0.png" src="_images/PM_Causal_Discovery_8_0.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>#transform the RawEventData to tabular representation
@@ -546,7 +495,7 @@ transposed_df.getData()
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -694,7 +643,7 @@ transposed_df.getData()
 </div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>#Perform causal discovery
@@ -705,11 +654,11 @@ cd.view_causal_dependencies(result)
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
-<img alt="_images/PM_Causal_Discovery_11_0.svg" src="_images/PM_Causal_Discovery_11_0.svg" />
+<img alt="_images/PM_Causal_Discovery_10_0.svg" src="_images/PM_Causal_Discovery_10_0.svg" />
 </div>
 </div>
 </section>

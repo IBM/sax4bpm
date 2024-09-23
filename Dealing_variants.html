@@ -87,29 +87,15 @@
   <section id="Dealing-with-variants-example">
 <h1>Dealing with variants example<a class="headerlink" href="#Dealing-with-variants-example" title="Link to this heading"></a></h1>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import sys
-import os
-# Get the current directory (where the notebook is located)
-notebook_dir = os.getcwd()
-
-# Get the parent directory
-parent_dir = os.path.abspath(os.path.join(notebook_dir, os.pardir))
-
-# Get two directories up
-two_dirs_up = os.path.abspath(os.path.join(parent_dir, os.pardir))
-
-
-# Add the project directory to the Python path
-sys.path.append(two_dirs_up)
-import sax
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>! pip install sax4bpm
 </pre></div>
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import warnings
@@ -119,7 +105,7 @@ warnings.filterwarnings(&#39;ignore&#39;, category=UserWarning)
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><br/><span></span>from sax.core.process_data.formatters.xes_formatter import XESFormatter
@@ -147,7 +133,7 @@ from pm4py.objects.conversion.process_tree import converter as pt_converter
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>#Import the event log file and create an event log data object
@@ -162,9 +148,7 @@ event_log = pm.import_xes(fileName,timestamp_format=&quot;%Y-%m-%d %H:%M:%S.%f&q
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-c:\Data\Automation\SAX\OpenSource\.venv\lib\site-packages\tqdm\auto.py:21: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html
-  from .autonotebook import tqdm as notebook_tqdm
-parsing log, completed traces :: 100%|██████████| 378/378 [00:00&lt;00:00, 1024.35it/s]
+parsing log, completed traces :: 100%|██████████| 378/378 [00:00&lt;00:00, 1380.97it/s]
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">

@@ -14,11 +14,11 @@
 <ellipse fill="none" stroke="black" cx="76.04" cy="-18" rx="76.09" ry="18"/>
 <text text-anchor="middle" x="76.04" y="-14.3" font-family="Times New Roman,serif" font-size="14.00">Close Application</text>
 </g>
-<!-- Email -->
+<!-- Archive -->
 <g id="node2" class="node">
-<title>Email</title>
-<ellipse fill="none" stroke="black" cx="118.04" cy="-192" rx="30.59" ry="18"/>
-<text text-anchor="middle" x="118.04" y="-188.3" font-family="Times New Roman,serif" font-size="14.00">Email</text>
+<title>Archive</title>
+<ellipse fill="none" stroke="black" cx="118.04" cy="-192" rx="38.99" ry="18"/>
+<text text-anchor="middle" x="118.04" y="-188.3" font-family="Times New Roman,serif" font-size="14.00">Archive</text>
 </g>
 <!-- and_0 -->
 <g id="node6" class="node">
@@ -26,18 +26,18 @@
 <ellipse fill="none" stroke="black" cx="118.04" cy="-105" rx="33.29" ry="18"/>
 <text text-anchor="middle" x="118.04" y="-101.3" font-family="Times New Roman,serif" font-size="14.00">and_0</text>
 </g>
-<!-- Email&#45;&gt;and_0 -->
+<!-- Archive&#45;&gt;and_0 -->
 <g id="edge7" class="edge">
-<title>Email&#45;&gt;and_0</title>
+<title>Archive&#45;&gt;and_0</title>
 <path fill="none" stroke="black" d="M118.04,-173.8C118.04,-162.58 118.04,-147.67 118.04,-134.69"/>
 <polygon fill="black" stroke="black" points="121.54,-134.98 118.04,-124.98 114.54,-134.98 121.54,-134.98"/>
 <text text-anchor="middle" x="130.54" y="-144.8" font-family="Times New Roman,serif" font-size="14.00">1.00</text>
 </g>
-<!-- Archive -->
+<!-- Email -->
 <g id="node3" class="node">
-<title>Archive</title>
-<ellipse fill="none" stroke="black" cx="206.04" cy="-192" rx="38.99" ry="18"/>
-<text text-anchor="middle" x="206.04" y="-188.3" font-family="Times New Roman,serif" font-size="14.00">Archive</text>
+<title>Email</title>
+<ellipse fill="none" stroke="black" cx="206.04" cy="-192" rx="30.59" ry="18"/>
+<text text-anchor="middle" x="206.04" y="-188.3" font-family="Times New Roman,serif" font-size="14.00">Email</text>
 </g>
 <!-- and_1 -->
 <g id="node7" class="node">
@@ -45,9 +45,9 @@
 <ellipse fill="none" stroke="black" cx="206.04" cy="-105" rx="33.29" ry="18"/>
 <text text-anchor="middle" x="206.04" y="-101.3" font-family="Times New Roman,serif" font-size="14.00">and_1</text>
 </g>
-<!-- Archive&#45;&gt;and_1 -->
+<!-- Email&#45;&gt;and_1 -->
 <g id="edge8" class="edge">
-<title>Archive&#45;&gt;and_1</title>
+<title>Email&#45;&gt;and_1</title>
 <path fill="none" stroke="black" d="M206.04,-173.8C206.04,-162.58 206.04,-147.67 206.04,-134.69"/>
 <polygon fill="black" stroke="black" points="209.54,-134.98 206.04,-124.98 202.54,-134.98 209.54,-134.98"/>
 <text text-anchor="middle" x="218.54" y="-144.8" font-family="Times New Roman,serif" font-size="14.00">1.00</text>
@@ -105,16 +105,16 @@
 <polygon fill="black" stroke="black" points="230.73,-48.35 230.98,-37.76 224.18,-45.88 230.73,-48.35"/>
 <text text-anchor="middle" x="235.54" y="-57.8" font-family="Times New Roman,serif" font-size="14.00">1.00</text>
 </g>
-<!-- and_2&#45;&gt;Email -->
+<!-- and_2&#45;&gt;Archive -->
 <g id="edge3" class="edge">
-<title>and_2&#45;&gt;Email</title>
+<title>and_2&#45;&gt;Archive</title>
 <path fill="none" stroke="black" d="M153.35,-261.21C147.26,-249.45 139,-233.48 132,-219.96"/>
 <polygon fill="black" stroke="black" points="135.12,-218.37 127.41,-211.1 128.9,-221.59 135.12,-218.37"/>
 <text text-anchor="middle" x="155.54" y="-231.8" font-family="Times New Roman,serif" font-size="14.00">1.00</text>
 </g>
-<!-- and_2&#45;&gt;Archive -->
+<!-- and_2&#45;&gt;Email -->
 <g id="edge4" class="edge">
-<title>and_2&#45;&gt;Archive</title>
+<title>and_2&#45;&gt;Email</title>
 <path fill="none" stroke="black" d="M170.74,-261.21C176.82,-249.45 185.09,-233.48 192.09,-219.96"/>
 <polygon fill="black" stroke="black" points="195.18,-221.59 196.67,-211.1 188.97,-218.37 195.18,-221.59"/>
 <text text-anchor="middle" x="199.54" y="-231.8" font-family="Times New Roman,serif" font-size="14.00">1.00</text>
