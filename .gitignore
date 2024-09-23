@@ -85,3 +85,7 @@ add_copyright.py
 test/llms.py
 test/process_exploration.py
 streamlit/causal_image.png
+docs/source/RequestPaymentRejectedAndPayment.xes
+docs/source/simulated_run_non_overlapping_gen.csv
+docs/source/simulated_run_non_overlapping_gen.csv
+docs/source/RequestPaymentRejectedAndPayment.xes

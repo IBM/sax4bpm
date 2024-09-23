@@ -20,7 +20,7 @@ from sax.core.utils.constants import Constants
 import xml.etree.ElementTree as Xet
 
 
-def import_xes(eventlog, kloop_unroling: bool=True, case_id: str=XESFormatter.Parameters.CASE_ID, activity_key: str=XESFormatter.Parameters.ACTIVITY, timestamp_key: str=XESFormatter.Parameters.TIMESTAMP, lifecycle_type: str= XESFormatter.Parameters.TYPE,timestamp_format: str=XESFormatter.Parameters.TIMESTAMP_FORMAT) ->RawEventData:
+def import_xes(eventlog, kloop_unroling: bool=False, case_id: str=XESFormatter.Parameters.CASE_ID, activity_key: str=XESFormatter.Parameters.ACTIVITY, timestamp_key: str=XESFormatter.Parameters.TIMESTAMP, lifecycle_type: str= XESFormatter.Parameters.TYPE,timestamp_format: str=XESFormatter.Parameters.TIMESTAMP_FORMAT) ->RawEventData:
         """
         Parse XES file into event log
 
@@ -28,6 +28,8 @@ def import_xes(eventlog, kloop_unroling: bool=True, case_id: str=XESFormatter.Pa
         ----------
         :param eventlog: XES event log file
         :type eventlog: Path to the file
+        :param kloop_unroling: whether to perform kloop_unrolling (renaming repetitive activities for further causal discovery)
+        :type kloop_unroling: boolean
         :param case_id: name of the case id column, defaults to XESFormatter.Parameters.CASE_ID
         :type case_id: str, optional
         :param activity_key: name of the activity column, defaults to XESFormatter.Parameters.ACTIVITY
@@ -62,7 +64,7 @@ def import_xes(eventlog, kloop_unroling: bool=True, case_id: str=XESFormatter.Pa
         return dataframe
     
    
-def import_csv(eventlog, kloop_unroling: bool=True, case_id: str=CSVFormatter.Parameters.CASE_ID, activity_key: str=CSVFormatter.Parameters.ACTIVITY, timestamp_key: str=CSVFormatter.Parameters.TIMESTAMP,lifecycle_type: str= CSVFormatter.Parameters.TYPE, timestamp_format: str=CSVFormatter.Parameters.TIMESTAMP_FORMAT, starttime_column: str=CSVFormatter.Parameters.STARTTIME_COLUMN) ->RawEventData:
+def import_csv(eventlog, kloop_unroling: bool=False, case_id: str=CSVFormatter.Parameters.CASE_ID, activity_key: str=CSVFormatter.Parameters.ACTIVITY, timestamp_key: str=CSVFormatter.Parameters.TIMESTAMP,lifecycle_type: str= CSVFormatter.Parameters.TYPE, timestamp_format: str=CSVFormatter.Parameters.TIMESTAMP_FORMAT, starttime_column: str=CSVFormatter.Parameters.STARTTIME_COLUMN) ->RawEventData:
         """
         Parse CSV file into event log
 
@@ -70,6 +72,8 @@ def import_csv(eventlog, kloop_unroling: bool=True, case_id: str=CSVFormatter.Pa
         -----------
         :param eventlog: CSV event log file
         :type eventlog: Path to the file
+        :param kloop_unroling: whether to perform kloop_unrolling (renaming repetitive activities for further causal discovery)
+        :type kloop_unroling: boolean
         :param case_id: name of the case id column, defaults to XESFormatter.Parameters.CASE_ID
         :type case_id: str, optional
         :param activity_key: name of the activity column, defaults to XESFormatter.Parameters.ACTIVITY
@@ -107,7 +111,7 @@ def import_csv(eventlog, kloop_unroling: bool=True, case_id: str=CSVFormatter.Pa
         return dataframe
     
    
-def create_from_dataframe(dataframe, kloop_unroling: bool=True, case_id: str=CSVFormatter.Parameters.CASE_ID, activity_key: str=CSVFormatter.Parameters.ACTIVITY, timestamp_key: str=CSVFormatter.Parameters.TIMESTAMP, lifecycle_type: str= CSVFormatter.Parameters.TYPE,timestamp_format: str=CSVFormatter.Parameters.TIMESTAMP_FORMAT,starttime_column: str=CSVFormatter.Parameters.STARTTIME_COLUMN)->RawEventData:
+def create_from_dataframe(dataframe, kloop_unroling: bool=False, case_id: str=CSVFormatter.Parameters.CASE_ID, activity_key: str=CSVFormatter.Parameters.ACTIVITY, timestamp_key: str=CSVFormatter.Parameters.TIMESTAMP, lifecycle_type: str= CSVFormatter.Parameters.TYPE,timestamp_format: str=CSVFormatter.Parameters.TIMESTAMP_FORMAT,starttime_column: str=CSVFormatter.Parameters.STARTTIME_COLUMN)->RawEventData:
         """
         Creates event log from dataframe
         
@@ -115,6 +119,8 @@ def create_from_dataframe(dataframe, kloop_unroling: bool=True, case_id: str=CSV
         -----------
         :param eventlog: XES event log file
         :type eventlog: Path to the file
+        :param kloop_unroling: whether to perform kloop_unrolling (renaming repetitive activities for further causal discovery)
+        :type kloop_unroling: boolean        
         :param case_id: name of the case id column, defaults to XESFormatter.Parameters.CASE_ID
         :type case_id: str, optional
         :param activity_key: name of the activity column, defaults to XESFormatter.Parameters.ACTIVITY
@@ -154,7 +160,7 @@ def create_from_dataframe(dataframe, kloop_unroling: bool=True, case_id: str=CSV
         return extracted_log
 
   
-def import_mxml(eventlog, kloop_unroling: bool=True, case_id: str=MXMLFormatter.Parameters.CASE_ID, activity_key: str=MXMLFormatter.Parameters.ACTIVITY, timestamp_key: str=MXMLFormatter.Parameters.TIMESTAMP, lifecycle_type: str= MXMLFormatter.Parameters.TYPE,timestamp_format: str=MXMLFormatter.Parameters.TIMESTAMP_FORMAT) ->RawEventData:
+def import_mxml(eventlog, kloop_unroling: bool=False, case_id: str=MXMLFormatter.Parameters.CASE_ID, activity_key: str=MXMLFormatter.Parameters.ACTIVITY, timestamp_key: str=MXMLFormatter.Parameters.TIMESTAMP, lifecycle_type: str= MXMLFormatter.Parameters.TYPE,timestamp_format: str=MXMLFormatter.Parameters.TIMESTAMP_FORMAT) ->RawEventData:
         """
         Parse MXML file into event log
 
@@ -162,6 +168,8 @@ def import_mxml(eventlog, kloop_unroling: bool=True, case_id: str=MXMLFormatter.
         -----------
         :param eventlog: XES event log file
         :type eventlog: Path to the file
+        :param kloop_unroling: whether to perform kloop_unrolling (renaming repetitive activities for further causal discovery)
+        :type kloop_unroling: boolean        
         :param case_id: name of the case id column, defaults to XESFormatter.Parameters.CASE_ID
         :type case_id: str, optional
         :param activity_key: name of the activity column, defaults to XESFormatter.Parameters.ACTIVITY
@@ -197,11 +205,7 @@ def import_mxml(eventlog, kloop_unroling: bool=True, case_id: str=MXMLFormatter.
         return dataframe
     
 
-# def _format_log(dataframe: RawEventData) ->  DataFrame:     
-#         event_log = dataframe.getData()   
-#         formatted_log = pm4py.format_dataframe(event_log, case_id=dataframe.mandatory_properties[Constants.CASE_ID_KEY], activity_key=dataframe.mandatory_properties[Constants.ACTIVITY_KEY], timestamp_key=dataframe.mandatory_properties[Constants.TIMESTAMP_KEY])                                     
-#         #return formatted_log     
-#         return event_log
+
 
 
 def discover_heuristics_net(dataframe: RawEventData,variants: Optional[List[str]] = None,lifecycleTypes = None) -> HeuristicsNet:        
@@ -210,6 +214,8 @@ def discover_heuristics_net(dataframe: RawEventData,variants: Optional[List[str]
 
         :param dataframe: event log
         :type dataframe: RawEventData
+        :param variants: a list of variant names to perform discovery on
+        :type variants: List[str]
         :param lifecycleTypes: lifecycle event types to filter, defaults to None
         :type lifecycleTypes: List, optional
         :return: heuristic net
@@ -243,6 +249,8 @@ def discover_dfg(dataframe: RawEventData,variants: Optional[List[str]] = None,li
 
         :param dataframe: event log
         :type dataframe: RawEventData
+        :param variants: a list of variant names to perform discovery on
+        :type variants: List[str]        
         :param lifecycleTypes: lifecycle event types to filter, defaults to None
         :type lifecycleTypes: List, optional
         :return: dfg
@@ -273,6 +281,8 @@ def discover_bpmn_model( dataframe: RawEventData,variants: Optional[List[str]] =
 
         :param dataframe: event log
         :type dataframe: RawEventData
+        :param variants: a list of variant names to perform discovery on
+        :type variants: List[str]        
         :return: BPMN
         :rtype: BPMN
         """            
@@ -296,6 +306,8 @@ def discover_process_tree(dataframe: RawEventData,variants: Optional[List[str]] 
 
         :param dataframe: _description_
         :type dataframe: RawEventData
+        :param variants: a list of variant names to perform discovery on
+        :type variants: List[str]
         :param lifecycleTypes: _description_, defaults to None
         :type lifecycleTypes: _type_, optional
         :return: _description_
@@ -333,6 +345,8 @@ def discover_process_map( dataframe: RawEventData,variants: Optional[List[str]] 
 
         :param dataframe: event log
         :type dataframe: RawEventData
+        :param variants: a list of variant names to perform discovery on
+        :type variants: List[str]        
         :param lifecycleTypes: event lifecycle types to filter, defaults to None
         :type lifecycleTypes: List, optional
         :return: process map
@@ -371,8 +385,12 @@ def filter_start_activities(dataframe: RawEventData, activities,variants: Option
         """
         Filter cases having a start activity in the provided list
 
+        :param dataframe: event log
+        :type dataframe: RawEventData
         :param activities: collection of start activities
         :type activities: List
+        :param variants: a list of variant names which represent the variants to explore from the event log
+        :type variants: List[str]        
         :param retain: if True, we retain the traces containing the given start activities, if false, we drop the traces
         :type retain: bool, optional
         :return: filtered dataframe
@@ -389,8 +407,12 @@ def filter_end_activities(dataframe: RawEventData, activities, variants: Optiona
         """
         Filter cases having an end activity in the provided list
 
+        :param dataframe: event log
+        :type dataframe: RawEventData
         :param activities: collection of end activities
         :type activities: List
+        :param variants: a list of variant names which represent the variants to explore from the event log
+        :type variants: List[str]        
         :param retain: if True, we retain the traces containing the given end activities, if false, we drop the traces
         :type retain: bool, optional
         :return: filtered dataframe
@@ -407,6 +429,10 @@ def get_start_activities(dataframe: RawEventData,variants: Optional[List[str]] =
         """
         Returns the start activities from a log object
 
+        :param dataframe: event log
+        :type dataframe: RawEventData
+        :param variants: a list of variant names which represent the variants to explore from the event log
+        :type variants: List[str]             
         :return: Dictionary of start activities along with their count
         :rtype: dict
         """        
@@ -419,6 +445,11 @@ def get_start_activities(dataframe: RawEventData,variants: Optional[List[str]] =
 def get_end_activities(dataframe: RawEventData,variants: Optional[List[str]] = None):       
         """
         Returns the end activities from a log object
+        
+        :param dataframe: event log
+        :type dataframe: RawEventData
+        :param variants: a list of variant names which represent the variants to explore from the event log
+        :type variants: List[str]     
 
         :return: Dictionary of end activities along with their count
         :rtype: dict
@@ -434,6 +465,8 @@ def get_data_process_representation(dataframe: RawEventData,variants: Optional[L
         The purpose of this function is to take a raw event log as input and output a dictionary representation of the process model discovered when mining this event log.
         :param dataframe: A pandas dataframe containing the raw event log data.
         :type dataframe: RawEventData
+        :param variants: a list of variant names which represent the variants to explore from the event log
+        :type variants: List[str]             
         :return: A dictionary representing the process model, where each key is a tuple representing a transition between two activities, and the value is the strength of that transition as determined by the frequency with which it occurs in the event log.
         :rtype: dict
         """        

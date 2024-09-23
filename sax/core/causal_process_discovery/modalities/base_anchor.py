@@ -15,7 +15,7 @@ class BaseAnchor:
     """    
  
     @abstractmethod
-    def apply(self, dataObject: RawEventData,variant: Optional[Algorithm] = DEFAULT_VARIANT) -> CausalResultInfo:
+    def apply(self, dataObject: RawEventData,variant: Optional[Algorithm] = DEFAULT_VARIANT,prior_knowledge: Optional[bool]=False, threshold: Optional[float]=0.5) -> CausalResultInfo:
         """
         Apply the chosen algorithm variant with the current modality on the process data object.
 
