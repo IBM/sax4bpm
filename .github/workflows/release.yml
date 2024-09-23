@@ -17,9 +17,24 @@ jobs:
       with:
         python-version: '3.x'  # Specify the Python version you need
         
-    - name: Get release version from tag
+    - name: Get release version
       id: get_version
-      run: echo "RELEASE_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+      run: |
+        if [ "${{ github.event_name }}" = "release" ]; then
+          echo "RELEASE_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+        else
+          echo "RELEASE_VERSION=0.2.0" >> $GITHUB_ENV
+        fi
+      shell: bash
+      
+    - name: Print GITHUB_REF
+      run: echo "GITHUB_REF=${GITHUB_REF}"
+      
+    - name: Print GITHUB_REF_tags
+      run: echo "tags=${GITHUB_REF#refs/tags/}"  
+      
+    - name: Debug RELEASE_VERSION
+      run: echo "RELEASE_VERSION=${{ env.RELEASE_VERSION }}"
 
     - name: Update setup.py with release version
       run: |
@@ -35,6 +50,7 @@ jobs:
         python setup.py sdist bdist_wheel
 
     - name: Publish package
+      if: github.event_name == 'release'
       env:
         TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
         TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
