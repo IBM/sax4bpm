@@ -39,6 +39,12 @@ jobs:
     - name: Update setup.py with release version
       run: |
         sed -i "s/version='.*'/version='${{ env.RELEASE_VERSION }}'/" setup.py
+        
+    - name: Check setup.py version
+      run: cat setup.py
+      
+    - name: Clean dist directory
+      run: rm -rf dist/*
 
     - name: Install dependencies
       run: |
