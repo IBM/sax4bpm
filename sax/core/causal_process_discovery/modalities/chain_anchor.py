@@ -23,7 +23,7 @@ class ChainAnchorTransformer(BaseAnchor):
     The chain modality is described here <>
     '''    
 
-    def apply(self, dataObject: RawEventData,variant: Optional[Algorithm] = DEFAULT_VARIANT,prior_knowledge: Optional[bool]=False) -> CausalResultInfo:
+    def apply(self, dataObject: RawEventData,variant: Optional[Algorithm] = DEFAULT_VARIANT,prior_knowledge: Optional[bool]=False, threshold: Optional[float]=0.5) -> CausalResultInfo:
         """
         Transform raw event log in tabular form (the provided event log) to row format, so that each trace is represented by a row and each activity column value holds the accimulated duration
         from trace start time. After the transformation, applies the chosen causal discovery algorithm variant to discover causal execution dependencies
@@ -67,7 +67,7 @@ class ChainAnchorTransformer(BaseAnchor):
         #create and run the algorithm        
         args = {"data": time_difference_df}
         if prior_knowledge:
-            args["prior_knowledge"] = PriorKnowledge(time_difference_df)
+            args["prior_knowledge"] = PriorKnowledge(time_difference_df, threshold=threshold)
         
         if variant == Algorithm.LINGAM:
             algorithm = LingamImpl(**args)
