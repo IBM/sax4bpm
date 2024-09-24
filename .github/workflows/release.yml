@@ -38,7 +38,8 @@ jobs:
 
     - name: Update setup.py with release version
       run: |
-        sed -i "s/version='.*'/version='${{ env.RELEASE_VERSION }}'/" setup.py        
+        sed -i "s/{{VERSION_PLACEHOLDER}}/${{ env.RELEASE_VERSION }}/g" setup.py
+        #sed -i "s/version='.*'/version='${{ env.RELEASE_VERSION }}'/" setup.py        
         
     - name: Check setup.py version
       run: cat setup.py
