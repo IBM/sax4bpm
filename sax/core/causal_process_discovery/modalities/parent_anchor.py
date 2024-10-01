@@ -22,7 +22,7 @@ class ParentAnchorTransformer(BaseAnchor):
     '''    
 
     
-    def apply(self, dataObject: RawEventData,variant: Optional[Algorithm] = DEFAULT_VARIANT,prior_knowledge: Optional[bool]=False, depth: int=1) -> CausalResultInfo:
+    def apply(self, dataObject: RawEventData,variant: Optional[Algorithm] = DEFAULT_VARIANT,prior_knowledge: Optional[bool]=False, depth: int=1,threshold: Optional[float]=0.5) -> CausalResultInfo:
         # Assisted by WCA for GP
         # Latest GenAI contribution: granite-20B-code-instruct-v2 model
         """
@@ -88,7 +88,7 @@ class ParentAnchorTransformer(BaseAnchor):
                 if first_activity == second_activity:
                     #handle rework
                     continue                
-                coefficient = self._apply_lingam(transposed_df,start_time_column_name,variant,first_activity, second_activity,prior_knowledge)
+                coefficient = self._apply_lingam(transposed_df,start_time_column_name,variant,first_activity, second_activity,prior_knowledge,threshold)
                 tuples_map[child_tuple] = coefficient
         global_adj_matrix,list_columns= self._build_global_adj_matrix(tuples_map)
         #return result object built from global matrix
@@ -245,7 +245,7 @@ class ParentAnchorTransformer(BaseAnchor):
                 else: return start_time_column
         return None  # Return None if the tuple is not found
 
-    def _apply_lingam(self,transposed_df,start_time_column_name, alg_variant, first_activity,second_activity,prior_knowledge, threshold=0.5):  
+    def _apply_lingam(self,transposed_df,start_time_column_name, alg_variant, first_activity,second_activity,prior_knowledge, threshold: Optional[float]=0.5):  
         # Assisted by WCA for GP
         # Latest GenAI contribution: granite-20B-code-instruct-v2 model
         """
