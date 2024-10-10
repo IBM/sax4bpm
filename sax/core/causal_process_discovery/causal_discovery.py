@@ -269,11 +269,13 @@ def __unification_of_results__(results: List[CausalResultInfo]):
     or_counter = 0
     G.add_nodes_from(all_columns)
     
+    #we iterate over all the nodes in the original graph(and fix the edges\add new gates as we go)
     for node in all_columns:
         current_sons = []
         label = ''
         mapper_inside_gates = {}
 
+        #we gather all the decendants of each node into 1 big list(for gating purposes)
         for result in results:
             current_graph = __create_graph__(result, 0.4)
             if node in current_graph.nodes():
@@ -285,17 +287,11 @@ def __unification_of_results__(results: List[CausalResultInfo]):
 
                     current_sons.append(sons_node)
                     
-    
+
         if len(current_sons) == 1:
             label = 'and'
         else:
-            #find largest group of sons
-            num_largest_group = 0
-            largest_group = []
-            for son_list in current_sons:
-                if len(son_list) > num_largest_group:
-                    num_largest_group = len(son_list)
-                    largest_group = son_list
+            #find largest group of sons that appear togther(to merge them into and gates)
             changed = True
             while changed:
                 changed = False
@@ -338,64 +334,7 @@ def __unification_of_results__(results: List[CausalResultInfo]):
                                         son_list.remove(second_son)
                                         son_list.append(new_node) 
 
-
-
-
-            #check if the gate should be or 
-            label = 'xor'
-            #find largest group of sons
-            num_largest_group = 0
-            largest_group = []
-            for son_list in current_sons:
-                if len(son_list) > num_largest_group:
-                    num_largest_group = len(son_list)
-                    largest_group = son_list
-            changed = True
-            while changed:
-                changed = False
-                all_son_list = list(set(list(chain.from_iterable(current_sons))))
-                for i, first_son in enumerate(all_son_list[:-1]):
-                    for second_son in all_son_list[(i+1):]:
-                        change_to_add = True
-                        #check if both of the selected sons appear togther in all of the graphs (if so we need to combine them into and because they always appear togther)
-                        for son_list in current_sons:
-                            if (first_son in son_list and not second_son in son_list) or (second_son in son_list and not first_son in son_list):
-                                change_to_add = False
-                                break
-                        if change_to_add:
-                            changed = True
-                            #if one of the sons is and we combine the other with the and gate
-                            if 'and_' in first_son:
-                                new_node = first_son
-                                G.add_edge(new_node, second_son, label=label)
-
-                                for son_list in current_sons:
-                                    if first_son in son_list:
-                                        son_list.remove(second_son)
-                            elif 'and_' in second_son:
-                                new_node = second_son
-                                G.add_edge(new_node, first_son, label=label)
-                                
-                                for son_list in current_sons:
-                                    if first_son in son_list:
-                                        son_list.remove(first_son)
-                            #if none of the sons are and we create a and gate to combine them
-                            else:
-                                new_node = f'and_{and_counter}'
-                                G.add_node(new_node)
-                                and_counter+=1
-                                G.add_edge(new_node, first_son, label=label)
-                                G.add_edge(new_node, second_son, label=label)
-                                for son_list in current_sons:
-                                    if first_son in son_list:
-                                        son_list.remove(first_son)
-                                        son_list.remove(second_son)
-                                        son_list.append(new_node) 
-
-
-
-
-            #check if the gate should be or 
+            #check if the gate should be or , by power of a group aritmetics
             label = 'xor'
             for i, son_list in enumerate(current_sons[:-1]):
                 for current_son in current_sons[(i+1):]:
@@ -419,7 +358,7 @@ def __unification_of_results__(results: List[CausalResultInfo]):
                             label = 'or'
                             current_sons.remove(son_list)
                             break
-
+        #merge co-occuring sons
         for sons_node in current_sons:
             if len(sons_node) >= 2:
                 new_node = f'and_{and_counter}'
@@ -503,11 +442,9 @@ def __unification_of_results_join__(results: List[CausalResultInfo]):
         else:
             #find largest group of sons
             num_largest_group = 0
-            largest_group = []
             for son_list in current_sons:
                 if len(son_list) > num_largest_group:
                     num_largest_group = len(son_list)
-                    largest_group = son_list
             changed = True
             while changed:
                 changed = False
@@ -549,63 +486,6 @@ def __unification_of_results_join__(results: List[CausalResultInfo]):
                                         son_list.remove(first_son)
                                         son_list.remove(second_son)
                                         son_list.append(new_node) 
-
-
-
-
-            #check if the gate should be or 
-            label = 'xor'
-            #find largest group of sons
-            num_largest_group = 0
-            largest_group = []
-            for son_list in current_sons:
-                if len(son_list) > num_largest_group:
-                    num_largest_group = len(son_list)
-                    largest_group = son_list
-            changed = True
-            while changed:
-                changed = False
-                all_son_list = list(set(list(chain.from_iterable(current_sons))))
-                for i, first_son in enumerate(all_son_list[:-1]):
-                    for second_son in all_son_list[(i+1):]:
-                        change_to_add = True
-                        #check if both of the selected sons appear togther in all of the graphs (if so we need to combine them into and because they always appear togther)
-                        for son_list in current_sons:
-                            if (first_son in son_list and not second_son in son_list) or (second_son in son_list and not first_son in son_list):
-                                change_to_add = False
-                                break
-                        if change_to_add:
-                            changed = True
-                            #if one of the sons is and we combine the other with the and gate
-                            if 'and_' in first_son:
-                                new_node = first_son
-                                G.add_edge(second_son, new_node, label=label)
-
-                                for son_list in current_sons:
-                                    if first_son in son_list:
-                                        son_list.remove(second_son)
-                            elif 'and_' in second_son:
-                                new_node = second_son
-                                G.add_edge(first_son, new_node, label=label)
-                                
-                                for son_list in current_sons:
-                                    if first_son in son_list:
-                                        son_list.remove(first_son)
-                            #if none of the sons are and we create a and gate to combine them
-                            else:
-                                new_node = f'and_{and_counter}'
-                                G.add_node(new_node)
-                                and_counter+=1
-                                G.add_edge(first_son, new_node, label=label)
-                                G.add_edge(second_son, new_node, label=label)
-                                for son_list in current_sons:
-                                    if first_son in son_list:
-                                        son_list.remove(first_son)
-                                        son_list.remove(second_son)
-                                        son_list.append(new_node) 
-
-
-
 
             #check if the gate should be or 
             label = 'xor'
