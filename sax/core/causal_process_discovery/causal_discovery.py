@@ -273,7 +273,6 @@ def __unification_of_results__(results: List[CausalResultInfo]):
     for node in all_columns:
         current_sons = []
         label = ''
-        mapper_inside_gates = {}
 
         #we gather all the decendants of each node into 1 big list(for gating purposes)
         for result in results:
@@ -336,53 +335,23 @@ def __unification_of_results__(results: List[CausalResultInfo]):
 
             #check if the gate should be or , by power of a group aritmetics
             label = 'xor'
-            for i, son_list in enumerate(current_sons[:-1]):
-                for current_son in current_sons[(i+1):]:
-                    if set(son_list)<= set(current_son):
-                        res = set(current_son) - set(son_list)
-                        remove_func = False
-                        for sub_set in current_sons[(i+1):]:
-                            if set(sub_set) == res:
-                                remove_func = True
-                        if remove_func:
-                            label = 'or'
-                            current_sons.remove(current_son)
-                            break
-                    elif set(son_list) >= set(current_son):
-                        res = set(son_list) - set(current_son)
-                        remove_func = False
-                        for sub_set in current_sons[(i+1):]:
-                            if set(sub_set) == res:
-                                remove_func = True
-                        if remove_func:
-                            label = 'or'
-                            current_sons.remove(son_list)
-                            break
-        #merge co-occuring sons
-        for sons_node in current_sons:
-            if len(sons_node) >= 2:
-                new_node = f'and_{and_counter}'
-                G.add_node(new_node)
-                and_counter+=1
-                for son_node in sons_node:
-                    G.add_edge(new_node, son_node, label=label)
-                G.add_edge(node, new_node, label=label)
-                sons_node.sort()
-                mapper_inside_gates[str(sons_node)] = new_node            
+            num_largest_group = 0
+            largets_group = []
+            for son_list in current_sons:
+                if len(son_list) > num_largest_group:
+                    num_largest_group = len(son_list)
+                    largets_group = son_list
+            if 2**num_largest_group - 1 == len(current_sons):
+                #current_sons = largets_group
+                label = 'or'
+                current_sons = [largets_group]
+
+            
+        
                             
         connected_nodes = []
-        to_remove = []
         for son_list in current_sons:
-            should_add = True
-
-            for insider in mapper_inside_gates.keys():
-                son_list.sort()
-                if insider == str(son_list):
-                    should_add = False
-                    connected_nodes.append(mapper_inside_gates[str(son_list)])
-                    to_remove.append(mapper_inside_gates[str(son_list)])
-            if should_add:
-                connected_nodes = connected_nodes + son_list
+            connected_nodes = connected_nodes + son_list
         
         if len(connected_nodes) >=2 :
             if label == 'and':
@@ -400,8 +369,7 @@ def __unification_of_results__(results: List[CausalResultInfo]):
             G.add_edge(node, new_node, label=label)
             for parent in connected_nodes:
                 G.add_edge(new_node, parent, label=label)
-            for remove_node in to_remove:
-                G.remove_edge(node, remove_node)
+
         elif len(connected_nodes) == 1:
             G.add_edge(node, connected_nodes[0])
 
