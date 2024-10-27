@@ -4,6 +4,7 @@
 from enum import Enum
 from typing import Optional
 
+import numpy as np
 import pandas as pd
 
 from sax.core.process_data.data import BaseProcessDataObject
@@ -114,3 +115,16 @@ def add_start_time(df,timestamp_column_name,id_column_name, start_column_name):
 
     # Display the result
     return result_df
+
+
+def get_uniformity(df):
+    uniformity = np.eye(len(df.columns)) -1
+    for ind1, column1 in enumerate(df.columns):
+        for ind2, column2 in enumerate(df.columns):
+            if column1!=column2 :
+                residuals = df[column1] - df[column2]
+                if (residuals >= 0).all():                        
+                    uniformity[ind2][ind1] = 0
+                else:
+                    uniformity[ind2][ind1] = (residuals >= 0).sum()/ len(residuals)
+    return uniformity
