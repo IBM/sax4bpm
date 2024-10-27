@@ -46,8 +46,7 @@ def discover_causal_dependencies(dataObject:RawEventData,variants: Optional[List
     else:
         # Handle case where variants is provided
         return _discover_causal_dependencies_unification_variant_specific(dataObject=dataObject,variants=variants,algorithm=algorithm,modality=modality,prior_knowledge=prior_knowledge,threshold=threshold,depth=depth)
-
-
+    
 
 def _discover_causal_dependencies_unification(dataObject:RawEventData,algorithm: Optional[Algorithm] = DEFAULT_VARIANT, modality: Optional[Modality] = DEFAULT_MODALITY,prior_knowledge: Optional[bool]=True, threshold: Optional[float]=0.5,depth: int =1) -> CausalResultInfo:
     variants_dict = __get_variants_dict__(rawEventData=dataObject)
@@ -56,8 +55,6 @@ def _discover_causal_dependencies_unification(dataObject:RawEventData,algorithm:
 
 
     return CausalResultInfo((nx.to_numpy_array(general_graph)).T, list(general_graph.nodes()))
-
-
 
 
 def _discover_causal_dependencies_unification_variant_specific(dataObject:RawEventData, variants:List[str],algorithm: Optional[Algorithm] = DEFAULT_VARIANT, modality: Optional[Modality] = DEFAULT_MODALITY,prior_knowledge: Optional[bool]=True, threshold: Optional[float]=0.5,depth: int =1) -> CausalResultInfo:
@@ -77,7 +74,6 @@ def _discover_causal_dependencies_unification_variant_specific(dataObject:RawEve
         general_graph = __unification_of_results__(results=results_per_variants)
 
     return CausalResultInfo((nx.to_numpy_array(general_graph)).T, list(general_graph.nodes()))
-
 
 
 def _discover_causal_dependencies(dataObject:RawEventData,variant: Optional[Algorithm] = DEFAULT_VARIANT, modality: Optional[Modality] = DEFAULT_MODALITY,prior_knowledge: Optional[bool]=True, threshold: Optional[float]=0.5,depth: int =1) -> CausalResultInfo:
@@ -337,6 +333,7 @@ def __unification_of_results__(results: List[CausalResultInfo]):
             label = 'xor'
             num_largest_group = 0
             largets_group = []
+
             for son_list in current_sons:
                 if len(son_list) > num_largest_group:
                     num_largest_group = len(son_list)
