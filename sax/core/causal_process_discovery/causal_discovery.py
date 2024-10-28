@@ -342,6 +342,7 @@ def __unification_of_results__(results: List[CausalResultInfo]):
                     largets_group = son_list
             if 2**num_largest_group - 1 == len(current_sons):
                 #current_sons = largets_group
+                #if we have or gate we need to only connect to the largest group (not to each of the groups)
                 label = 'or'
                 current_sons = [largets_group]        
                             
@@ -462,9 +463,11 @@ def __unification_of_results_join__(results: List[CausalResultInfo]):
                 current_sons = [largets_group]
                             
         connected_nodes = []
+
         for son_list in current_sons:
             connected_nodes = connected_nodes + son_list
         
+        #otherwise no gateway is needed
         if len(connected_nodes) >=2 :
             if label == 'and':
                 G.add_node(f'{label}_{and_counter}')
