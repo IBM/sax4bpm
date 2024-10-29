@@ -1,6 +1,7 @@
 # -----------------------------------------------------------------------------
 # Copyright contributors to the SAX4BPM project
 # -----------------------------------------------------------------------------
+from typing import Optional
 import xml.etree.ElementTree as Xet
 
 import pandas as pd
@@ -8,7 +9,7 @@ import pandas as pd
 from sax.core.process_data.data import BaseProcessDataObject
 from sax.core.process_data.raw_event_data import RawEventData
 from sax.core.utils import helper_utils
-from sax.core.utils.constants import Constants, ConstantsMeta
+from sax.core.utils.constants import Constants, ConstantsMeta, LifecycleTypes
 from .base_formatter import BaseFormatter
 
 
@@ -89,7 +90,7 @@ class MXMLFormatter(BaseFormatter):
         self.parameters[Constants.TIMESTAMP_FORMAT_KEY] = helper_utils.get_param_value(Constants.TIMESTAMP_FORMAT_KEY, parameters, MXMLFormatter.Parameters.TIMESTAMP_FORMAT)        
         self.parameters[Constants.RESOURCE_KEY] = helper_utils.get_param_value(Constants.RESOURCE_KEY, parameters, MXMLFormatter.Parameters.RESOURCE_ID)        
 
-    def extract_data(self,event_log_data) -> BaseProcessDataObject:
+    def extract_data(self,event_log_data,lifecycle_type: Optional[LifecycleTypes] = None) -> BaseProcessDataObject:
         """
         Extract tabular data from the provided MXML event log file, instantiate raw data object containing the tabular data.
 
@@ -113,7 +114,7 @@ class MXMLFormatter(BaseFormatter):
         mandatory_properties,optional_properties = self._getProperties(event_log, self.parameters)
         event_log = helper_utils.add_start_time(event_log, timestamp_column_name=mandatory_properties[Constants.TIMESTAMP_KEY], id_column_name=mandatory_properties[Constants.CASE_ID_KEY], start_column_name=Constants.STARTTIME_COLUMN)
         mandatory_properties[Constants.STARTTIME_COLUMN]=Constants.STARTTIME_COLUMN     
-        return RawEventData(event_log,mandatory_properties,optional_properties)
+        return RawEventData(event_log,mandatory_properties,optional_properties,lifecycle_type)
     
         
     

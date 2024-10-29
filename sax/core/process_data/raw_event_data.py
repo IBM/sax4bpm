@@ -1,7 +1,7 @@
 # -----------------------------------------------------------------------------
 # Copyright contributors to the SAX4BPM project
 # -----------------------------------------------------------------------------
-from typing import List
+from typing import List, Optional
 import pandas as pd
 from pandas import DataFrame
 from pm4py.algo.filtering.log.variants import variants_filter
@@ -21,7 +21,7 @@ class RawEventData(BaseProcessDataObject):
     """    
 
     _permutations = None
-    def __init__(self,data:DataFrame, mandatory_properties:dict,optional_properties:dict):           
+    def __init__(self,data:DataFrame, mandatory_properties:dict,optional_properties:dict, chosen_lifecycle_event: Optional[LifecycleTypes] = None):           
         """
         Initializes a SAX raw event object.
 
@@ -44,8 +44,14 @@ class RawEventData(BaseProcessDataObject):
             If any of the input arguments are not of the expected type.
         ValueError
             If any of the input arguments do not have the expected value.
-        """   
-        super().__init__(data=data,mandatory_properties=mandatory_properties,optional_properties =optional_properties)        
+        """               
+        super().__init__(data=data,mandatory_properties=mandatory_properties,optional_properties =optional_properties) 
+        if (Constants.TYPE_KEY in mandatory_properties):
+            if chosen_lifecycle_event is None:
+                chosen_lifecycle_event = LifecycleTypes.COMPLETE
+            filtered_df = self.data[self.data[self.mandatory_properties[Constants.TYPE_KEY]].str.lower().isin([chosen_lifecycle_event.value.lower()])]
+
+            self.data = filtered_df  
         self._initLog() 
 
 
@@ -145,11 +151,7 @@ class RawEventData(BaseProcessDataObject):
 
         """
         data_map = {}
-
-        if Constants.TYPE_KEY in self.getMandatoryProperties():               
-            event_log= self.filterLifecycleEvents([LifecycleTypes.COMPLETE.value])
-        else:
-            event_log = self
+        event_log = self
                                    
         formatted_log = event_log.getLog()
         variants = variants_filter.get_variants(formatted_log)
@@ -380,12 +382,17 @@ class RawEventData(BaseProcessDataObject):
         
         return  TabularEventData(new_df,mandatory_columns_names,optional_column_names)
     
-    def transposeFullDataframe(self) -> DataFrame:
+    def transposeFullDataframe(self) -> TabularEventData:
         mandatory_properties = self.getMandatoryProperties()
-        transposedMandatory = self.transposeToTabular().getData()
+        transposedMandatory = self.transposeToTabular()
         transposedOptional = self._transposeToTabularOptionalProperties()
-        merged_df = pd.merge(transposedMandatory, transposedOptional, on=mandatory_properties[Constants.CASE_ID_KEY], how='inner')
-        return merged_df
+        merged_df = pd.merge(transposedMandatory.getData(), transposedOptional, on=mandatory_properties[Constants.CASE_ID_KEY], how='inner')
+        column_to_remove = mandatory_properties[Constants.CASE_ID_KEY]
+        # Get all optional names and remove the specified one
+        optional_columns = [col for col in transposedOptional.columns if col != column_to_remove]
+        optional_column_dict = {col: col for col in optional_columns}
+        row_dataobject =  TabularEventData(merged_df,transposedMandatory.getMandatoryProperties(),optional_column_dict)
+        return row_dataobject
     
     def _transposeToTabularOptionalProperties(self) -> DataFrame:
         mandatory_properties = self.getMandatoryProperties()
