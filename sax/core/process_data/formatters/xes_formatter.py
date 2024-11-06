@@ -6,7 +6,7 @@ import pm4py
 
 from sax.core.process_data.raw_event_data import RawEventData
 from sax.core.utils import helper_utils
-from sax.core.utils.constants import Constants,LifecycleTypes
+from sax.core.utils.constants import Constants,ConstantsMeta,LifecycleTypes
 from .base_formatter import BaseFormatter
 
 
