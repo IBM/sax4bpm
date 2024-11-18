@@ -49,7 +49,7 @@ class RawEventData(BaseProcessDataObject):
         if (Constants.TYPE_KEY in mandatory_properties):
             if chosen_lifecycle_event is None:
                 chosen_lifecycle_event = LifecycleTypes.COMPLETE
-            filtered_df = self.data[self.data[self.mandatory_properties[Constants.TYPE_KEY]].str.lower().isin([chosen_lifecycle_event.value.lower()])]
+            filtered_df = self.data[self.data[self.mandatory_properties[Constants.TYPE_KEY]].str.lower().isin([chosen_lifecycle_event.value.lower()])]            
 
             self.data = filtered_df  
         self._initLog() 
@@ -95,26 +95,6 @@ class RawEventData(BaseProcessDataObject):
         subset_dataframe = original_dataframe[relevant_columns]
         return subset_dataframe
     
-    # Filter the event log according to the specified lifecycle transition types
-    def filterLifecycleEvents(self, lifecycleTypes)->'RawEventData':
-        """
-        Filter the data according to the provided list of desired event lifecycle types, and return a new data object containing only the chosen lifecycle event types
-
-        Parameters
-        ----------
-        lifecycleTypes : List of chosen lifecycleTypes events (such as 'complete')
-        type lifecycleTypes: List
-
-        Returns
-        -------
-        a new dataobject containing only the chosen event types
-        rtype: RawEventData
-
-        """                        
-        if lifecycleTypes is None:
-            lifecycleTypes = [LifecycleTypes.COMPLETE.value]
-        filtered_df = self.data[self.data[self.mandatory_properties[Constants.TYPE_KEY]].str.lower().isin(lifecycleType.lower() for lifecycleType in lifecycleTypes)]   
-        return RawEventData(filtered_df, self.mandatory_properties, self.optional_properties)
     
     def getVariants(self)->dict:
         """
@@ -126,8 +106,9 @@ class RawEventData(BaseProcessDataObject):
 
         """
         self._permutations = self._getVariants()        
-        count_dict = {key: len(value) for key, value in self._permutations.items()}        
-        return count_dict
+        count_dict = {key: len(value) for key, value in self._permutations.items()} 
+        sorted_dict = dict(sorted(count_dict.items(), key=lambda item: item[1], reverse=True))       
+        return sorted_dict
     
     def getVariantsKeys(self)->dict:
         """
@@ -313,6 +294,14 @@ class RawEventData(BaseProcessDataObject):
         selected_df = self.data[id_columns.isin(all_chosen_ids)]                         
         original_df = selected_df.copy()
 
+        #Check whether the data contains lifecycle event type : in this case the dataframe is already filtered to a particular enum value, pass it to the new object creation
+        #TODO        
+        mandatory_properties = self.getMandatoryProperties()
+        if (Constants.TYPE_KEY in mandatory_properties):
+            lifecycle_event_value = original_df[mandatory_properties[Constants.TYPE_KEY]].iloc[0].lower()            
+            # Get the matching enum
+            matching_enum = LifecycleTypes(lifecycle_event_value)
+            return RawEventData(original_df, self.mandatory_properties, self.optional_properties,matching_enum)
         # Return the new RawEventData object with the filtered data
         return RawEventData(original_df, self.mandatory_properties, self.optional_properties)
 
