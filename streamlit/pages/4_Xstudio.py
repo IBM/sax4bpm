@@ -11,7 +11,16 @@ from sax.core.synthesis.llms.base_llm import ModelTypes
 from sax.core.causal_process_discovery.causal_constants import Modality
 from functools import partial
 
-
+from PIL import Image
+im = Image.open('./images/sax4bpm_logo6_t.png')
+st.html("""
+  <style>
+    [alt=Logo] {
+      height: 7rem;
+    }
+  </style>
+        """)
+st.logo(im, size="large", link=None)
 
 st.title('XStudio')        
 

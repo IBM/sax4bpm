@@ -7,6 +7,17 @@ from pathlib import Path
 
 import streamlit as st
 
+from PIL import Image
+im = Image.open('./images/sax4bpm_logo6_t.png')
+st.html("""
+  <style>
+    [alt=Logo] {
+      height: 7rem;
+    }
+  </style>
+        """)
+st.logo(im, size="large", link=None)
+
 # # Get the current directory (where the notebook is located)
 # notebook_dir = os.getcwd()
 # # Get the parent directory
@@ -47,7 +58,7 @@ def load_data(fileName,case_id, activity_key,timestamp_key,timestamp_format,star
     # Check the file extension and invoke the appropriate parser
     params = {"eventlog":fileName,"case_id": case_id, "activity_key": activity_key, "timestamp_key": timestamp_key,"timestamp_format":timestamp_format}    
     if lifecycle_type is not None:
-        params["lifecycle_type"]:lifecycle_type   
+        params["lifecycle_type"]=lifecycle_type   
     if file_extension == '.csv':
         if start_timestamp_key is not None:
             params["starttime_column"]=start_timestamp_key
@@ -61,8 +72,6 @@ def load_data(fileName,case_id, activity_key,timestamp_key,timestamp_format,star
     return dataframe
 
 st.title('Import and analyze event log')
-
-
 
 # File Uploader
 # Create a session state object
@@ -98,7 +107,7 @@ if uploaded_file is not None:
     if st.button("Perform analysis"):        
         data_load_state = st.text('Loading data...')        
         # Load 10,000 rows of data into the dataframe.
-        try:   
+        try:
             dataframe = load_data(file_path,case_id=case_id,activity_key=activity_key,timestamp_key=timestamp_key,timestamp_format=timestamp_format,start_timestamp_key=start_timestamp_key,lifecycle_type=lifecycle_type)
         except Exception as e:
             print(e)

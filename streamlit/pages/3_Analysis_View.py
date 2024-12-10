@@ -13,7 +13,16 @@ import sax.core.causal_process_discovery.causal_discovery as cd
 import sax.core.process_mining.process_mining as pm
 import sax.core.synthesis.sax_explainability as ex
 
-
+from PIL import Image
+im = Image.open('./images/sax4bpm_logo6_t.png')
+st.html("""
+  <style>
+    [alt=Logo] {
+      height: 7rem;
+    }
+  </style>
+        """)
+st.logo(im, size="large", link=None)
 
 def view_heuristic_net(heu_net: HeuristicsNet, format: str = "png", bgcolor: str = "white"):
     format = str(format).lower()
@@ -45,7 +54,7 @@ def view_causal_dependencies(dependencies: CausalResultInfo, p_value_threshold: 
         # Replace values below the p-value threshold with zeros
         np_matrix[mask] = 0
         
-    dot= make_dot(np_matrix, labels = dependencies.getColumns())        
+    dot= make_dot(np_matrix, labels = dependencies.getColumns())    
     return dot
 
 st.title('Analysis view')
@@ -94,8 +103,8 @@ if (session_state is not None) and hasattr(session_state, "variant") and (sessio
     if (session_state.processModel) is not None and (session_state.causalModel) is not None:      
         col1, col2 = st.columns(2)
 
-        desired_width = 600
-        desired_height = 700
+        desired_width = 300
+        desired_height = 400
 
         scale_factor_image1 = max(desired_width / variant_image.width, desired_height / variant_image.height)
         scale_factor_image2 = max(desired_width / causal_graph_image.width, desired_height / causal_graph_image.height)
@@ -104,12 +113,20 @@ if (session_state is not None) and hasattr(session_state, "variant") and (sessio
         image2 = causal_graph_image.resize((int(causal_graph_image.width * scale_factor_image2), int(causal_graph_image.height * scale_factor_image2)))
 
         
-        st.image(image1, caption='Process Model', use_column_width=False, width=desired_width, output_format='JPEG')
-        st.write(
-            f'<style>div.row-widget.stHorizontal {{"flex-direction": "row";}}</style>',
-            unsafe_allow_html=True,
-        )
-        st.image(image2, caption='Causal Model', use_column_width=False, width=desired_width, output_format='JPEG')
+        #st.image(image1, caption='Process Model', use_column_width=False, width=desired_width, output_format='JPEG')
+        #st.write(
+        #    f'<style>div.row-widget.stHorizontal {{"flex-direction": "row";}}</style>',
+        #    unsafe_allow_html=True,
+        #)
+        #st.image(image2, caption='Causal Model', use_column_width=False, width=desired_width, output_format='JPEG')
+
+        # Display each image in a separate column
+        with col1:
+            st.image(image1, caption="Process Model", use_column_width=False, output_format="JPEG")
+
+        with col2:
+            st.image(image2, caption="Causal Model", use_column_width=False, output_format="JPEG")
+
 
         st.subheader('Explanations')
         explainaiblity=ex.enumerateDisrepancies(session_state.processModel,session_state.causalModel,0.3)
