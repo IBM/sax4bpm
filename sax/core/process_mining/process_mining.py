@@ -15,12 +15,12 @@ from sax.core.process_data.formatters.csv_formatter import CSVFormatter
 from sax.core.process_data.formatters.mxml_formatter import MXMLConstants, MXMLFormatter
 from sax.core.process_data.formatters.xes_formatter import XESFormatter
 from sax.core.process_data.raw_event_data import RawEventData
-from sax.core.utils.constants import Constants
+from sax.core.utils.constants import Constants, LifecycleTypes
 
 import xml.etree.ElementTree as Xet
 
 
-def import_xes(eventlog, kloop_unroling: bool=False, case_id: str=XESFormatter.Parameters.CASE_ID, activity_key: str=XESFormatter.Parameters.ACTIVITY, timestamp_key: str=XESFormatter.Parameters.TIMESTAMP, lifecycle_type: str= XESFormatter.Parameters.TYPE,timestamp_format: str=XESFormatter.Parameters.TIMESTAMP_FORMAT) ->RawEventData:
+def import_xes(eventlog, kloop_unroling: bool=False, case_id: str=XESFormatter.Parameters.CASE_ID, activity_key: str=XESFormatter.Parameters.ACTIVITY, timestamp_key: str=XESFormatter.Parameters.TIMESTAMP, lifecycle_type: str= XESFormatter.Parameters.TYPE,timestamp_format: str=XESFormatter.Parameters.TIMESTAMP_FORMAT,chosen_lifecycle_event: Optional[LifecycleTypes] = None) ->RawEventData:
         """
         Parse XES file into event log
 
@@ -54,17 +54,17 @@ def import_xes(eventlog, kloop_unroling: bool=False, case_id: str=XESFormatter.P
         parameters[Constants.TIMESTAMP_FORMAT_KEY] = timestamp_format  
         parameters[Constants.TYPE_KEY]=lifecycle_type        
         formatter = XESFormatter(parameters)
-        dataframe = formatter.extract_data(eventlog)
-        data = dataframe.getData()
+        dataframe = formatter.extract_data(eventlog,chosen_lifecycle_event)   
+        data = dataframe.getData()     
         
         if kloop_unroling:
                 data = _extract_dataframe_from_dataframe(data, parameters=parameters)
-                dataframe = RawEventData(data=data, mandatory_properties=dataframe.getMandatoryProperties(), optional_properties=dataframe.getOptionalProperties())
+                dataframe = RawEventData(data=data, mandatory_properties=dataframe.getMandatoryProperties(), optional_properties=dataframe.getOptionalProperties(),chosen_lifecycle_event=chosen_lifecycle_event)
         
         return dataframe
     
    
-def import_csv(eventlog, kloop_unroling: bool=False, case_id: str=CSVFormatter.Parameters.CASE_ID, activity_key: str=CSVFormatter.Parameters.ACTIVITY, timestamp_key: str=CSVFormatter.Parameters.TIMESTAMP,lifecycle_type: str= CSVFormatter.Parameters.TYPE, timestamp_format: str=CSVFormatter.Parameters.TIMESTAMP_FORMAT, starttime_column: str=CSVFormatter.Parameters.STARTTIME_COLUMN) ->RawEventData:
+def import_csv(eventlog, kloop_unroling: bool=False, case_id: str=CSVFormatter.Parameters.CASE_ID, activity_key: str=CSVFormatter.Parameters.ACTIVITY, timestamp_key: str=CSVFormatter.Parameters.TIMESTAMP,lifecycle_type: str= CSVFormatter.Parameters.TYPE, timestamp_format: str=CSVFormatter.Parameters.TIMESTAMP_FORMAT, starttime_column: str=CSVFormatter.Parameters.STARTTIME_COLUMN,chosen_lifecycle_event: Optional[LifecycleTypes] = None) ->RawEventData:
         """
         Parse CSV file into event log
 
@@ -101,17 +101,17 @@ def import_csv(eventlog, kloop_unroling: bool=False, case_id: str=CSVFormatter.P
         parameters[Constants.TYPE_KEY]=lifecycle_type      
         parameters[Constants.STARTTIME_COLUMN]=starttime_column
         formatter = CSVFormatter(parameters)
-        dataframe = formatter.extract_data(eventlog)
+        dataframe = formatter.extract_data(eventlog,chosen_lifecycle_event)
         data = dataframe.getData()
         
         if kloop_unroling:
                 data = _extract_dataframe_from_dataframe(data,parameters=parameters)
-                dataframe = RawEventData(data=data, mandatory_properties=dataframe.getMandatoryProperties(), optional_properties=dataframe.getOptionalProperties())
+                dataframe = RawEventData(data=data, mandatory_properties=dataframe.getMandatoryProperties(), optional_properties=dataframe.getOptionalProperties(),chosen_lifecycle_event=chosen_lifecycle_event)
         
         return dataframe
     
    
-def create_from_dataframe(dataframe, kloop_unroling: bool=False, case_id: str=CSVFormatter.Parameters.CASE_ID, activity_key: str=CSVFormatter.Parameters.ACTIVITY, timestamp_key: str=CSVFormatter.Parameters.TIMESTAMP, lifecycle_type: str= CSVFormatter.Parameters.TYPE,timestamp_format: str=CSVFormatter.Parameters.TIMESTAMP_FORMAT,starttime_column: str=CSVFormatter.Parameters.STARTTIME_COLUMN)->RawEventData:
+def create_from_dataframe(dataframe, kloop_unroling: bool=False, case_id: str=CSVFormatter.Parameters.CASE_ID, activity_key: str=CSVFormatter.Parameters.ACTIVITY, timestamp_key: str=CSVFormatter.Parameters.TIMESTAMP, lifecycle_type: str= CSVFormatter.Parameters.TYPE,timestamp_format: str=CSVFormatter.Parameters.TIMESTAMP_FORMAT,starttime_column: str=CSVFormatter.Parameters.STARTTIME_COLUMN,chosen_lifecycle_event: Optional[LifecycleTypes] = None)->RawEventData:
         """
         Creates event log from dataframe
         
@@ -150,17 +150,17 @@ def create_from_dataframe(dataframe, kloop_unroling: bool=False, case_id: str=CS
         parameters[Constants.TYPE_KEY]=lifecycle_type     
         parameters[Constants.STARTTIME_COLUMN]=starttime_column
         formatter = CSVFormatter(parameters)
-        extracted_log = formatter.extract_from_dataframe(dataframe)
+        extracted_log = formatter.extract_from_dataframe(dataframe,chosen_lifecycle_event)
         data = extracted_log.getData()
 
         if kloop_unroling:
-                data = _extract_dataframe_from_dataframe(dataframe, parameters=parameters)
-                extracted_log = RawEventData(data=data, mandatory_properties=extracted_log.getMandatoryProperties(), optional_properties=extracted_log.getOptionalProperties())
+                data = _extract_dataframe_from_dataframe(data, parameters=parameters)
+                extracted_log = RawEventData(data=data, mandatory_properties=extracted_log.getMandatoryProperties(), optional_properties=extracted_log.getOptionalProperties(),chosen_lifecycle_event=chosen_lifecycle_event)
         
         return extracted_log
 
   
-def import_mxml(eventlog, kloop_unroling: bool=False, case_id: str=MXMLFormatter.Parameters.CASE_ID, activity_key: str=MXMLFormatter.Parameters.ACTIVITY, timestamp_key: str=MXMLFormatter.Parameters.TIMESTAMP, lifecycle_type: str= MXMLFormatter.Parameters.TYPE,timestamp_format: str=MXMLFormatter.Parameters.TIMESTAMP_FORMAT) ->RawEventData:
+def import_mxml(eventlog, kloop_unroling: bool=False, case_id: str=MXMLFormatter.Parameters.CASE_ID, activity_key: str=MXMLFormatter.Parameters.ACTIVITY, timestamp_key: str=MXMLFormatter.Parameters.TIMESTAMP, lifecycle_type: str= MXMLFormatter.Parameters.TYPE,timestamp_format: str=MXMLFormatter.Parameters.TIMESTAMP_FORMAT,chosen_lifecycle_event: Optional[LifecycleTypes] = None) ->RawEventData:
         """
         Parse MXML file into event log
 
@@ -199,16 +199,24 @@ def import_mxml(eventlog, kloop_unroling: bool=False, case_id: str=MXMLFormatter
         parameters[Constants.TYPE_KEY] = lifecycle_type 
         formatter = MXMLFormatter(parameters)
         tree = Xet.parse(eventlog)
+
+        dataframe = formatter.extract_data(tree,chosen_lifecycle_event)   
+        data = dataframe.getData()     
+        
         if kloop_unroling:
-                eventlog = _mxml_unroll(tree)
-        dataframe = formatter.extract_data(tree)
+                data = _extract_dataframe_from_dataframe(data, parameters=parameters)
+                dataframe = RawEventData(data=data, mandatory_properties=dataframe.getMandatoryProperties(), optional_properties=dataframe.getOptionalProperties(),chosen_lifecycle_event=chosen_lifecycle_event)
+
+        # if kloop_unroling:
+        #         eventlog = _mxml_unroll(tree)
+        # dataframe = formatter.extract_data(tree)
         return dataframe
     
 
 
 
 
-def discover_heuristics_net(dataframe: RawEventData,variants: Optional[List[str]] = None,lifecycleTypes = None) -> HeuristicsNet:        
+def discover_heuristics_net(dataframe: RawEventData,variants: Optional[List[str]] = None) -> HeuristicsNet:        
         """
         Apply heuristic mining algorithm on the RawEventData event log object to discover heuristic net
 
@@ -225,8 +233,7 @@ def discover_heuristics_net(dataframe: RawEventData,variants: Optional[List[str]
            event_log = dataframe.filterVariants(variants)               
         else:
            event_log = dataframe     
-        if (lifecycleTypes is not None) or (Constants.TYPE_KEY in dataframe.getMandatoryProperties()):
-                event_log= event_log.filterLifecycleEvents(lifecycleTypes)        
+              
         formatted_log = event_log.getLog()        
         map =  pm4py.discover_heuristics_net(formatted_log)
 
@@ -243,7 +250,7 @@ def view_heuristics_net(map: HeuristicsNet):
         """        
         pm4py.view_heuristics_net(map)
 
-def discover_dfg(dataframe: RawEventData,variants: Optional[List[str]] = None,lifecycleTypes = None):        
+def discover_dfg(dataframe: RawEventData,variants: Optional[List[str]] = None):        
         """
         Apply dfg mining algorithm on the RawEventData event log object to discover heuristic net
 
@@ -260,8 +267,7 @@ def discover_dfg(dataframe: RawEventData,variants: Optional[List[str]] = None,li
            event_log = dataframe.filterVariants(variants)    
         else:
            event_log = dataframe    
-        if (lifecycleTypes is not None) or (Constants.TYPE_KEY in dataframe.getMandatoryProperties()):
-                event_log= event_log.filterLifecycleEvents(lifecycleTypes)
+        
                                    
         formatted_log = event_log.getLog()
         dfg =  dfg_discovery.apply(formatted_log, variant=dfg_discovery.Variants.FREQUENCY)
@@ -300,7 +306,7 @@ def view_bpmn_model(bpmn_model: BPMN):
         pm4py.view_bpmn(bpmn_model)
 
     
-def discover_process_tree(dataframe: RawEventData,variants: Optional[List[str]] = None,lifecycleTypes = None) ->ProcessTree:
+def discover_process_tree(dataframe: RawEventData,variants: Optional[List[str]] = None) ->ProcessTree:
         """
         Perform process mining on the event log to discover process tree
 
@@ -318,8 +324,7 @@ def discover_process_tree(dataframe: RawEventData,variants: Optional[List[str]] 
            event_log = dataframe.filterVariants(variants)    
         else:
            event_log = dataframe     
-        if (lifecycleTypes is not None) or (Constants.TYPE_KEY in dataframe.getMandatoryProperties()):
-                event_log= event_log.filterLifecycleEvents(lifecycleTypes)
+        
    
         formatted_log = event_log.getLog()
 
@@ -339,7 +344,7 @@ def view_process_tree(process_tree: ProcessTree):
 
 
    
-def discover_process_map( dataframe: RawEventData,variants: Optional[List[str]] = None,lifecycleTypes = None) -> Tuple[dict,dict,dict]:
+def discover_process_map( dataframe: RawEventData,variants: Optional[List[str]] = None) -> Tuple[dict,dict,dict]:
         """
         Discover process map
 
@@ -356,8 +361,7 @@ def discover_process_map( dataframe: RawEventData,variants: Optional[List[str]] 
            event_log = dataframe.filterVariants(variants)    
         else:
            event_log = dataframe        
-        if (lifecycleTypes is not None) or (Constants.TYPE_KEY in dataframe.getMandatoryProperties()):
-                event_log= event_log.filterLifecycleEvents(lifecycleTypes)
+        
           
         formatted_log = event_log.getLog()
 
@@ -538,35 +542,35 @@ def _extract_dataframe_from_dataframe(activities_dataframe, parameters):
         else:                
                 return _extract_dataframe_per_lifecycle(activities_dataframe, parameters).sort_values(by = [parameters[Constants.CASE_ID_KEY],parameters[Constants.TIMESTAMP_KEY]])
         
-def _mxml_unroll(eventlog):
-        root = eventlog.getroot()
-        rows = []       
-        for process_instance in root.findall(MXMLConstants.PROCESS_INSTANCE):
-            activities = []
-            for audit_entry in process_instance.findall(MXMLConstants.TRACE_INSTANCE):
+# def _mxml_unroll(eventlog):
+#         root = eventlog.getroot()
+#         rows = []       
+#         for process_instance in root.findall(MXMLConstants.PROCESS_INSTANCE):
+#             activities = []
+#             for audit_entry in process_instance.findall(MXMLConstants.TRACE_INSTANCE):
 
-                for child_element in audit_entry:
-                    tag_name_lower = child_element.tag.lower()
-                    if tag_name_lower == MXMLConstants.ACTIVITY.lower():
-                        activity = child_element.text
-                        if not activity in activities:
-                                activity = child_element.text
-                                activities.append(activity)
-                        else:
-                                added = False
-                                counter = 0
-                                while not added:
-                                    if not activity+str(counter) in activities:
-                                        activity = activity+str(counter)
-                                        activities.append(activity)
-                                        added = True
-                                        child_element.text = activity
-                                    else:
-                                        counter = counter+1
+#                 for child_element in audit_entry:
+#                     tag_name_lower = child_element.tag.lower()
+#                     if tag_name_lower == MXMLConstants.ACTIVITY.lower():
+#                         activity = child_element.text
+#                         if not activity in activities:
+#                                 activity = child_element.text
+#                                 activities.append(activity)
+#                         else:
+#                                 added = False
+#                                 counter = 0
+#                                 while not added:
+#                                     if not activity+str(counter) in activities:
+#                                         activity = activity+str(counter)
+#                                         activities.append(activity)
+#                                         added = True
+#                                         child_element.text = activity
+#                                     else:
+#                                         counter = counter+1
                             
-                    elif tag_name_lower == MXMLConstants.EVENT_TYPE.lower():
-                        event_type = child_element.text
-                        if event_type != 'complete':
-                                activities.remove(activity)
-                                break
-        return eventlog
+#                     elif tag_name_lower == MXMLConstants.EVENT_TYPE.lower():
+#                         event_type = child_element.text
+#                         if event_type != 'complete':
+#                                 activities.remove(activity)
+#                                 break
+#         return eventlog
