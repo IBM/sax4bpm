@@ -2,11 +2,12 @@
 # Copyright contributors to the SAX4BPM project
 # -----------------------------------------------------------------------------
 from abc import abstractmethod
-from typing import Tuple
+from typing import Optional, Tuple
 
 from pandas import DataFrame
 
 from sax.core.process_data.raw_event_data import RawEventData
+from sax.core.utils.constants import LifecycleTypes
 
 
 class BaseFormatter:
@@ -34,7 +35,7 @@ class BaseFormatter:
         self.parameters = dict(parameters)
     
     @abstractmethod
-    def extract_data(self, event_log_data) -> RawEventData:
+    def extract_data(self, event_log_data,lifecycle_type: Optional[LifecycleTypes]) -> RawEventData:
         """
         Create RawEventData data object from the provided event log file
 
