@@ -74,11 +74,11 @@ class CSVFormatter(BaseFormatter):
         ------
         ValueError
             If the event_log_data argument is not a file.
-
+         """
         separator=self.parameters[Constants.CSV_SEPARATOR]        
         dataframe = pd.read_csv(event_log_data, sep=separator) #original dataframe
         return self._format_dataframe(dataframe,lifecycle_type)
-    
+       
     def _format_dataframe(self, dataframe : pd.DataFrame,lifecycle_type: Optional[LifecycleTypes] = None) -> RawEventData:
         """
         Format the provided dataframe to represent event log: format timestamps, calculate trace start timestamps
