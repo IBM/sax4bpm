@@ -64,7 +64,9 @@ def import_xes(eventlog, kloop_unroling: bool=False, case_id: str=XESFormatter.P
         return dataframe
     
    
-def import_csv(eventlog, kloop_unroling: bool=False, case_id: str=CSVFormatter.Parameters.CASE_ID, activity_key: str=CSVFormatter.Parameters.ACTIVITY, timestamp_key: str=CSVFormatter.Parameters.TIMESTAMP,lifecycle_type: str= CSVFormatter.Parameters.TYPE, timestamp_format: str=CSVFormatter.Parameters.TIMESTAMP_FORMAT, starttime_column: str=CSVFormatter.Parameters.STARTTIME_COLUMN,chosen_lifecycle_event: Optional[LifecycleTypes] = None) ->RawEventData:
+
+def import_csv(eventlog, kloop_unroling: bool=False, case_id: str=CSVFormatter.Parameters.CASE_ID, activity_key: str=CSVFormatter.Parameters.ACTIVITY, timestamp_key: str=CSVFormatter.Parameters.TIMESTAMP,lifecycle_type: str= CSVFormatter.Parameters.TYPE, timestamp_format: str=CSVFormatter.Parameters.TIMESTAMP_FORMAT, csv_separator: str=CSVFormatter.Parameters.CSV_SEPARATOR,starttime_column: str=CSVFormatter.Parameters.STARTTIME_COLUMN,chosen_lifecycle_event: Optional[LifecycleTypes] = None) ->RawEventData:
+
         """
         Parse CSV file into event log
 
@@ -100,6 +102,7 @@ def import_csv(eventlog, kloop_unroling: bool=False, case_id: str=CSVFormatter.P
         parameters[Constants.TIMESTAMP_FORMAT_KEY] = timestamp_format    
         parameters[Constants.TYPE_KEY]=lifecycle_type      
         parameters[Constants.STARTTIME_COLUMN]=starttime_column
+        parameters[Constants.CSV_SEPARATOR]=csv_separator
         formatter = CSVFormatter(parameters)
         dataframe = formatter.extract_data(eventlog,chosen_lifecycle_event)
         data = dataframe.getData()
