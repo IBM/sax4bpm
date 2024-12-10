@@ -49,6 +49,7 @@ class CSVFormatter(BaseFormatter):
         self.parameters[Constants.TYPE_KEY] = helper_utils.get_param_value(Constants.TYPE_KEY, parameters, CSVFormatter.Parameters.TYPE)
         self.parameters[Constants.TIMESTAMP_FORMAT_KEY] = helper_utils.get_param_value(Constants.TIMESTAMP_FORMAT_KEY, parameters, CSVFormatter.Parameters.TIMESTAMP_FORMAT)
         self.parameters[Constants.STARTTIME_COLUMN]= helper_utils.get_param_value(Constants.STARTTIME_COLUMN, parameters, CSVFormatter.Parameters.STARTTIME_COLUMN)
+        self.parameters[Constants.CSV_SEPARATOR] = helper_utils.get_param_value(Constants.CSV_SEPARATOR, parameters,CSVFormatter.Parameters.CSV_SEPARATOR)
         
     
     
@@ -72,7 +73,9 @@ class CSVFormatter(BaseFormatter):
         ------
         ValueError
             If the event_log_data argument is not a file.
-        """           
+
+        """
+        separator=self.parameters[Constants.CSV_SEPARATOR]        
         dataframe = pd.read_csv(event_log_data, sep=separator) #original dataframe
         return self._format_dataframe(dataframe)
     
