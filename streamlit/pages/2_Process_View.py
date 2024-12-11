@@ -8,6 +8,17 @@ from pm4py.objects.heuristics_net.obj import HeuristicsNet
 
 import sax.core.process_mining.process_mining as pm
 
+from PIL import Image
+im = Image.open('./images/sax4bpm_logo6_t.png')
+st.html("""
+  <style>
+    [alt=Logo] {
+      height: 7rem;
+    }
+  </style>
+        """)
+st.logo(im, size="large", link=None)
+
 
 # Function to get the key for a given value
 def get_key_for_value(df, value):
