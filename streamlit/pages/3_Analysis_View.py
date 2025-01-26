@@ -22,7 +22,8 @@ st.html("""
     }
   </style>
         """)
-st.logo(im, size="large", link=None)
+#st.logo(im, size="large", link=None)
+st.logo(im,  link=None)
 
 def view_heuristic_net(heu_net: HeuristicsNet, format: str = "png", bgcolor: str = "white"):
     format = str(format).lower()

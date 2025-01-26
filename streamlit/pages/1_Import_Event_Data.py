@@ -5,6 +5,7 @@ import os
 import sys
 from pathlib import Path
 
+
 import streamlit as st
 
 from PIL import Image
@@ -16,7 +17,8 @@ st.html("""
     }
   </style>
         """)
-st.logo(im, size="large", link=None)
+#st.logo(im, size="large", link=None)
+st.logo(im, link=None)
 
 # # Get the current directory (where the notebook is located)
 # notebook_dir = os.getcwd()
@@ -36,6 +38,7 @@ print("root",root_dir)
 sys.path.append(root_dir)
 
 import sax.core.process_mining.process_mining as pm
+
 
 def save_uploaded_file(uploaded_file):
     # Check if the file was uploaded
@@ -78,6 +81,8 @@ st.title('Import and analyze event log')
 session_state = st.session_state
 if 'data' not in session_state:
     session_state.data = None
+
+
 
 st.divider()    
 st.header("Event Log Uploader")

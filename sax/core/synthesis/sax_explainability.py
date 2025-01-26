@@ -38,8 +38,8 @@ def createDocumentContextRetriever(modelType:ModelTypes, modelName: str, tempera
     :return: document retriever to be used later in rag-enhanced syntethis
     :rtype: BaseRetriever
     """
-    model = BaseLLM.getModelLLM(modelType, modelName, temperature)
-    retriever = DocumentRetrieverLLM(model,documentsPath,filter,chunk_size=chunk_size,chunk_overlap=chunk_overlap,retrieved_results=retrieved_results,dbPath=dbPath)
+    model = BaseLLM.getModelLLM(modelType, modelName, temperature)    
+    retriever = DocumentRetrieverLLM(model,documentsPath,filter,chunk_size=chunk_size,chunk_overlap=chunk_overlap,retrieved_results=retrieved_results,dbPath=dbPath)   
     return retriever
 
 def _getChain(model: BaseLLM,causal: bool, process:bool, xai:bool, rag:bool, retriever: DocumentRetrieverLLM =None):   
@@ -82,6 +82,7 @@ def _getChain(model: BaseLLM,causal: bool, process:bool, xai:bool, rag:bool, ret
             return "\n\n ------------".join(doc.page_content for doc in docs)
         retriver = retriever.get_retriever()
         return retriver | format_docs
+
     
     causal_runnable = RunnableLambda(lambda x: {"causal": getCausalPerspective(x["data"],x["modality"],x["prior_knowledge"],x["p_value_threshold"],x["variants"])})
     process_runnable = RunnableLambda(lambda x: {"process": getProcessPerspective(x["data"],x["variants"])})

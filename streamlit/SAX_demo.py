@@ -22,7 +22,8 @@ st.html("""
   </style>
         """)
 
-st.logo(im, size="large", link=None)
+#st.logo(im, size="large", link=None)
+st.logo(im,  link=None)
 
 st.write("# Welcome to SAX4BPM! 👋")
 

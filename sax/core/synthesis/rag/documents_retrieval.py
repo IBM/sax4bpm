@@ -1,6 +1,7 @@
 # -----------------------------------------------------------------------------
 # Copyright contributors to the SAX4BPM project
 # -----------------------------------------------------------------------------
+import traceback
 from langchain_community.document_loaders.pdf import PyPDFLoader
 from langchain_community.document_loaders.csv_loader import CSVLoader
 from langchain_community.document_loaders.directory import DirectoryLoader
@@ -23,7 +24,7 @@ class DocumentRetrieverLLM(BaseRetriever):
 
     def __init__(self,modelClass: BaseLLM,docLocation,filterFiles=None, chunk_size=None, chunk_overlap=None,retrieved_results=None, dbPath=None):
         self._model = modelClass
-        self._retriever = self._indexDocuments(modelClass,docLocation,filterFiles,chunk_size,chunk_overlap,retrieved_results,dbPath)
+        self._retriever = self._indexDocuments(modelClass,docLocation,filterFiles,chunk_size,chunk_overlap,retrieved_results,dbPath)        
 
     def _getDocuments(self,docPath,glob = None):
         """Load all the documents in the given path with the given type and return the loaded docs as array
@@ -90,26 +91,36 @@ class DocumentRetrieverLLM(BaseRetriever):
         :rtype: BaseRetriever
         """
         # load the doc/docs
-        pages = self._getDocuments(docLocation,filterFiles)        
+        try:
+            pages = self._getDocuments(docLocation,filterFiles)        
 
-        # split the doc into smaller chunks i.e. chunk_size=500
-        chunk_size_to_pass = chunk_size if chunk_size is not None else 500
-        chunk_overlap_to_pass = chunk_overlap if chunk_overlap is not None else 50
-        text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size_to_pass, chunk_overlap=chunk_overlap_to_pass)
-        chunks = text_splitter.split_documents(pages)
+            # split the doc into smaller chunks i.e. chunk_size=500
+            chunk_size_to_pass = chunk_size if chunk_size is not None else 500
+            chunk_overlap_to_pass = chunk_overlap if chunk_overlap is not None else 50
+            text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size_to_pass, chunk_overlap=chunk_overlap_to_pass)            
+            chunks = text_splitter.split_documents(pages)
+            import chromadb
+            # get embedding model
+            embeddings = model.getEmbeddingModel()
 
-        # get embedding model
-        embeddings = model.getEmbeddingModel()
+            # embed the chunks as vectors and load them into the database
+            dbpath_to_pass = dbPath if dbPath is not None else CHROMA_PATH                                                
+            db= Chroma.from_documents(chunks, embeddings, persist_directory=dbpath_to_pass,
+                    client_settings=chromadb.config.Settings(
+                    anonymized_telemetry=False,
+                    is_persistent=True,
+                    persist_directory=dbpath_to_pass
+                ))
+            db.persist()  # Add explicit persist        
+            # expose this index in a retriever interface
+            kwargs_to_pass= retrieved_results if retrieved_results is not None else 10
+            retriever = db.as_retriever(search_type="similarity", search_kwargs={"k":kwargs_to_pass})        
 
-        # embed the chunks as vectors and load them into the database
-        dbpath_to_pass = dbPath if dbPath is not None else CHROMA_PATH
-        db= Chroma.from_documents(chunks, embeddings, persist_directory=dbpath_to_pass)
-        # expose this index in a retriever interface
-        kwargs_to_pass= retrieved_results if retrieved_results is not None else 10
-        retriever = db.as_retriever(search_type="similarity", search_kwargs={"k":kwargs_to_pass})
-
-        # create a chain to answer questions 
-        return retriever
+            # create a chain to answer questions 
+            return retriever
+        except Exception as e:
+            print(f"Stack trace: ", traceback.format_exc())
+            raise e
     
 
     # ----- Retrieval and Generation Process -----

@@ -17,7 +17,9 @@ st.html("""
     }
   </style>
         """)
-st.logo(im, size="large", link=None)
+#st.logo(im, size="large", link=None)
+st.logo(im, link=None)
+
 
 
 # Function to get the key for a given value
