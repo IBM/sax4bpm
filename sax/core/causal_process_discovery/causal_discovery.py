@@ -1,6 +1,7 @@
 # -----------------------------------------------------------------------------
 # Copyright contributors to the SAX4BPM project
 # -----------------------------------------------------------------------------
+import collections
 from itertools import chain
 import pandas as pd
 from typing import Dict
@@ -256,214 +257,239 @@ def __results_per_variants__(rawEventData : RawEventData, variants_dict: Dict[st
     return results
 
 
-def __unification_of_results__(results: List[CausalResultInfo]):
+def __simplify_descendants__(descendants_list, G, or_counter, permmisive=True):
+    while True:
+        merged = False
+        # Sort descendants_list by length of sublists, descending order
+        descendants_list = sorted(descendants_list, key=len, reverse=True)
+        for i, current_list in enumerate(descendants_list):
+            # Find all sublists of the current list in descendants_list
+            sublists = [lst for lst in descendants_list if set(lst).issubset(set(current_list))]
+            print(f'we start from {current_list}')
+            print(f'all the sons are {sublists}')
+            # Restrictive OR Gate
+            if len(sublists) == 2**len(current_list)-1 and len(sublists) != 1:
+                merged = True
+
+                # Remove all the sublists and the current list from descendants_list
+                descendants_list = [lst for lst in descendants_list if lst not in sublists]
+
+                # Create a new OR node
+                or_node = f"OR_{or_counter}"
+                or_counter += 1
+                G.add_node(or_node)
+
+                # Connect all elements of the removed sublists to the new OR node
+                for node in current_list:
+                    G.add_edge(or_node, node)
+
+                # Add the new OR node to descendants_list
+                descendants_list.append([or_node])
+
+                break  # Restart the process to ensure recursive merging
+
+        if not merged:
+            break
+    # Permissive OR Gate
+    if permmisive:
+        compare = lambda x, y: collections.Counter(x) == collections.Counter(y)
+        while True:
+            merged = False
+            #Sort descendants_list by length of sublists, descending order
+            descendants_list = sorted(descendants_list, key=len, reverse=True)
+            for i, current_list in enumerate(descendants_list):
+                sublists = [lst for lst in descendants_list if set(lst).issubset(set(current_list))]
+                #this is where we flat the list of descentdents
+                flat_list = [
+                    x
+                    for xs in sublists
+                    for x in xs
+                ]
+                flat_list = list(set(flat_list))
+
+                if len(current_list) > 1 and compare(current_list, flat_list):
+                    merged = True
+
+                    # Remove identified sublists and the current list from descendants_list
+                    descendants_list = [lst for lst in descendants_list if lst not in sublists]
+
+                    # Create a new OR node
+                    or_node = f"or_{or_counter}"
+                    or_counter += 1
+                    G.add_node(or_node)
+
+                    # Connect all elements of the removed sublists to the new OR node
+                    for node in current_list:
+                        G.add_edge(or_node, node)
+
+                    # Add the new OR node to descendants_list
+                    descendants_list.append([or_node])
+
+            # Restart the process to ensure recursive merging
+            if not merged:
+                break
+
+
+    return descendants_list, G, or_counter
+
+# Step 1: XOR Check
+def xor_check(family_of_sets):
+    for i in range(len(family_of_sets)):
+        for j in range(i + 1, len(family_of_sets)):
+            if family_of_sets[i].intersection(family_of_sets[j]):
+                return False  # XOR condition fails
+    return True  # XOR condition satisfied
+
+# Step 2: Exhaustive OR Check
+def exhaustive_or_check(family_of_sets):
+    # Step 1: Compute the universal set
+    universal_set = set().union(*family_of_sets)
+    
+    # Step 2: Generate the powerset of U
+    num_of_expected = 2**len(universal_set) - 1
+    
+    # Step 3: Compare with the input family
+    return len(family_of_sets) == num_of_expected, universal_set
+
+# Step 3.1: Partial Intersection Check with Propagation
+def partial_intersection_check_with_propagation(family_of_sets, and_counter):
+    updated_family = []
+    replacements = {}  # Track replacements of sets with their concatenated labels
+    
+    # Step 1: Check each set
+    for S_i in family_of_sets:
+        if len(S_i) <= 1:  # Skip single-element sets
+            updated_family.append(S_i)
+            continue
+        
+        partially_intersects = False
+        for S_j in family_of_sets:
+            if S_i == S_j:
+                continue
+            if S_i.intersection(S_j) and S_i - S_j:  # Partial intersection check
+                partially_intersects = True
+                break
+        
+        if partially_intersects:
+            updated_family.append(S_i)  # Retain original set
+        else:
+            # Replace with concatenated label
+            label = f'AND_{and_counter}'  # Create a concatenated label
+            and_counter += 1
+            replacements[label] = frozenset(S_i)  # Map original set to its replacement
+            updated_family.append({label})
+    
+    # Step 2: Propagate replacements
+    final_family = []
+    for S in updated_family:
+        new_set = set()
+        for element in S:
+            # Replace element if it belongs to a replaced set
+            added = False
+            for replacement_set, original_set in replacements.items():
+                if element in original_set:
+                    new_set.update({replacement_set})
+                    added = True
+                    break
+            if not added:
+                new_set.add(element)
+        final_family.append(new_set)
+    
+    return final_family, replacements, and_counter
+
+# Combined Algorithm
+def process_family_of_sets(family_of_sets, and_counter):
+    # Step 1: create AND gates
+    revised_family, replacements, and_counter = partial_intersection_check_with_propagation(family_of_sets, and_counter)
+    if len(revised_family)==1 and len(revised_family[0])==1:
+        return "", revised_family, and_counter, replacements, {}
+    # Step 2: XOR Check on Revised Family
+    if xor_check(revised_family):
+        return "XOR", revised_family, and_counter, replacements, {}
+    
+    # Step 3: Exhaustive OR Check on Revised Family
+    result_or = exhaustive_or_check(revised_family)
+    if result_or[0]:
+        return "EOR", result_or[1], and_counter, replacements, {}
+    
+    # If all checks fail
+    return "OR", result_or[1], and_counter, replacements, revised_family
+
+
+def __unification_of_results__(results: List[CausalResultInfo]) -> nx.DiGraph:
+    # 1) Gather all unique columns
     all_columns = []
     for result in results:
-        all_columns = all_columns + result.columns
+        all_columns += result.columns
     all_columns = list(set(all_columns))
 
+    # 2) Create empty DiGraph
     G = nx.DiGraph()
-    label = ''
-    and_counter = 0
+    G.add_nodes_from(all_columns)  # Add your “data” nodes
+
+    # Gate counters
+    and_counter = 0  # In case you need AND
     xor_counter = 0
     or_counter = 0
-    G.add_nodes_from(all_columns)
-    
-    for node in all_columns:
-        current_sons = []
-        label = ''
-        mapper_inside_gates = {}
+    OR_counter = 0
 
+    # 3) Iterate over all the nodes in the original (unified) set
+    for node in all_columns:
+        # Collect child sets from each graph
+        child_sets = []
         for result in results:
             current_graph = __create_graph__(result, 0.4)
             if node in current_graph.nodes():
-                sons_node = list(current_graph.successors(node))
-                if sons_node in current_sons or len(sons_node)==0:
-                        continue     
-                else:
-                    sons_node.sort()
+                successors_list = list(current_graph.successors(node))
+                if len(successors_list) == 0:
+                    continue
+                # Convert to a set for easier logic
+                successors_set = set(successors_list)
+                if successors_set not in child_sets:
+                    child_sets.append(successors_set)
 
-                    current_sons.append(sons_node)
-                    
-    
-        if len(current_sons) == 1:
-            label = 'and'
-        else:
-            #find largest group of sons
-            num_largest_group = 0
-            largest_group = []
-            for son_list in current_sons:
-                if len(son_list) > num_largest_group:
-                    num_largest_group = len(son_list)
-                    largest_group = son_list
-            changed = True
-            while changed:
-                changed = False
-                all_son_list = list(set(list(chain.from_iterable(current_sons))))
-                for i, first_son in enumerate(all_son_list[:-1]):
-                    for second_son in all_son_list[(i+1):]:
-                        change_to_add = True
-                        #check if both of the selected sons appear togther in all of the graphs (if so we need to combine them into and because they always appear togther)
-                        for son_list in current_sons:
-                            if (first_son in son_list and not second_son in son_list) or (second_son in son_list and not first_son in son_list):
-                                change_to_add = False
-                                break
-                        if change_to_add:
-                            changed = True
-                            #if one of the sons is and we combine the other with the and gate
-                            if 'and_' in first_son:
-                                new_node = first_son
-                                G.add_edge(new_node, second_son, label=label)
+        # If node has no children in any graph, skip
+        if not child_sets:
+            continue
 
-                                for son_list in current_sons:
-                                    if first_son in son_list:
-                                        son_list.remove(second_son)
-                            elif 'and_' in second_son:
-                                new_node = second_son
-                                G.add_edge(new_node, first_son, label=label)
-                                
-                                for son_list in current_sons:
-                                    if first_son in son_list:
-                                        son_list.remove(first_son)
-                            #if none of the sons are and we create a and gate to combine them
-                            else:
-                                new_node = f'and_{and_counter}'
-                                G.add_node(new_node)
-                                and_counter+=1
-                                G.add_edge(new_node, first_son, label=label)
-                                G.add_edge(new_node, second_son, label=label)
-                                for son_list in current_sons:
-                                    if first_son in son_list:
-                                        son_list.remove(first_son)
-                                        son_list.remove(second_son)
-                                        son_list.append(new_node) 
+        # If exactly 1 child set, just connect directly, no gate
 
-
-
-
-            #check if the gate should be or 
-            label = 'xor'
-            #find largest group of sons
-            num_largest_group = 0
-            largest_group = []
-            for son_list in current_sons:
-                if len(son_list) > num_largest_group:
-                    num_largest_group = len(son_list)
-                    largest_group = son_list
-            changed = True
-            while changed:
-                changed = False
-                all_son_list = list(set(list(chain.from_iterable(current_sons))))
-                for i, first_son in enumerate(all_son_list[:-1]):
-                    for second_son in all_son_list[(i+1):]:
-                        change_to_add = True
-                        #check if both of the selected sons appear togther in all of the graphs (if so we need to combine them into and because they always appear togther)
-                        for son_list in current_sons:
-                            if (first_son in son_list and not second_son in son_list) or (second_son in son_list and not first_son in son_list):
-                                change_to_add = False
-                                break
-                        if change_to_add:
-                            changed = True
-                            #if one of the sons is and we combine the other with the and gate
-                            if 'and_' in first_son:
-                                new_node = first_son
-                                G.add_edge(new_node, second_son, label=label)
-
-                                for son_list in current_sons:
-                                    if first_son in son_list:
-                                        son_list.remove(second_son)
-                            elif 'and_' in second_son:
-                                new_node = second_son
-                                G.add_edge(new_node, first_son, label=label)
-                                
-                                for son_list in current_sons:
-                                    if first_son in son_list:
-                                        son_list.remove(first_son)
-                            #if none of the sons are and we create a and gate to combine them
-                            else:
-                                new_node = f'and_{and_counter}'
-                                G.add_node(new_node)
-                                and_counter+=1
-                                G.add_edge(new_node, first_son, label=label)
-                                G.add_edge(new_node, second_son, label=label)
-                                for son_list in current_sons:
-                                    if first_son in son_list:
-                                        son_list.remove(first_son)
-                                        son_list.remove(second_son)
-                                        son_list.append(new_node) 
-
-
-
-
-            #check if the gate should be or 
-            label = 'xor'
-            for i, son_list in enumerate(current_sons[:-1]):
-                for current_son in current_sons[(i+1):]:
-                    if set(son_list)<= set(current_son):
-                        res = set(current_son) - set(son_list)
-                        remove_func = False
-                        for sub_set in current_sons[(i+1):]:
-                            if set(sub_set) == res:
-                                remove_func = True
-                        if remove_func:
-                            label = 'or'
-                            current_sons.remove(current_son)
-                            break
-                    elif set(son_list) >= set(current_son):
-                        res = set(son_list) - set(current_son)
-                        remove_func = False
-                        for sub_set in current_sons[(i+1):]:
-                            if set(sub_set) == res:
-                                remove_func = True
-                        if remove_func:
-                            label = 'or'
-                            current_sons.remove(son_list)
-                            break
-
-        for sons_node in current_sons:
-            if len(sons_node) >= 2:
-                new_node = f'and_{and_counter}'
-                G.add_node(new_node)
-                and_counter+=1
-                for son_node in sons_node:
-                    G.add_edge(new_node, son_node, label=label)
-                G.add_edge(node, new_node, label=label)
-                sons_node.sort()
-                mapper_inside_gates[str(sons_node)] = new_node            
-                            
-        connected_nodes = []
-        to_remove = []
-        for son_list in current_sons:
-            should_add = True
-
-            for insider in mapper_inside_gates.keys():
-                son_list.sort()
-                if insider == str(son_list):
-                    should_add = False
-                    connected_nodes.append(mapper_inside_gates[str(son_list)])
-                    to_remove.append(mapper_inside_gates[str(son_list)])
-            if should_add:
-                connected_nodes = connected_nodes + son_list
+        #if len(child_sets) == 1:
+        #    print(f'we got from {node} to {child_sets}')
+        #    for child in child_sets[0]:
+        #        G.add_edge(node, child)
+        #    continue
+        # 4) Decide which gateway to create
+        type_gate, child_desendents, and_counter, replacements, dict_for_or = process_family_of_sets(child_sets, and_counter)
+        if type_gate == 'XOR':
+            gate_label = f'XOR_{xor_counter}'
+            xor_counter+=1
+            G.add_node(gate_label)
+        elif type_gate == 'EOR':
+            gate_label = f'OR_{OR_counter}'
+            OR_counter+=1
+            G.add_node(gate_label)
+        elif type_gate == 'OR':
+            gate_label = f'or_{or_counter}'
+            or_counter+=1
+            G.add_node(gate_label)
+        for replacement, original_set in replacements.items():
+            G.add_node(replacement)
+            for item in original_set:
+                G.add_edge(replacement, item)
+            if type_gate == "":
+                G.add_edge(node, replacement)
+        if type_gate != '':
+            for desendent in child_desendents:
+                if len(desendent) > 0:
+                    if type(desendent) is set:
+                        for item in desendent:
+                            G.add_edge(gate_label, item)    
+                    else:
+                        G.add_edge(gate_label, desendent)
         
-        if len(connected_nodes) >=2 :
-            if label == 'and':
-                G.add_node(f'{label}_{and_counter}')
-                new_node = f'{label}_{and_counter}'
-                and_counter+=1
-            if label == 'or':
-                G.add_node(f'{label}_{or_counter}')
-                new_node = f'{label}_{or_counter}'
-                or_counter+=1
-            if label == 'xor':
-                G.add_node(f'{label}_{xor_counter}')
-                new_node = f'{label}_{xor_counter}'
-                xor_counter+=1
-            G.add_edge(node, new_node, label=label)
-            for parent in connected_nodes:
-                G.add_edge(new_node, parent, label=label)
-            for remove_node in to_remove:
-                G.remove_edge(node, remove_node)
-        elif len(connected_nodes) == 1:
-            G.add_edge(node, connected_nodes[0])
+            G.add_edge(node, gate_label)
+        elif len(replacements) == 0 and len(child_desendents)==1:
+            G.add_edge(node,list(child_desendents[0])[0])
 
     return G
