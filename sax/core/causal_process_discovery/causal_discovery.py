@@ -188,7 +188,34 @@ def view_causal_dependencies(dependencies: CausalResultInfo, p_value_threshold: 
         # Replace values below the p-value threshold with zeros
         np_matrix[mask] = 0
         
-    return make_dot(np_matrix, labels = dependencies.getColumns())    
+        dot = make_dot(np_matrix, labels = dependencies.getColumns())
+
+    for i, line in enumerate(dot.body):
+        if '->' in line:  # Check if the line represents an edge
+            if '[' in line and 'label=' in line:  # Check for edge attributes
+                # Remove the label attribute while keeping other attributes
+                parts = line.split('[')
+                edge_definition = parts[0]
+                attributes = parts[1] if len(parts) > 1 else ''
+                # Remove label attribute
+                new_attributes = ','.join(attr for attr in attributes.split(',') if not attr.strip().startswith('label='))
+                dot.body[i] = '\t' + edge_definition.strip() + (' [' + new_attributes + ']' if new_attributes else '') + '\n'
+    # Update nodes with labels starting with "and", "or", "xor" to have a diamond shape
+    # Update nodes with prefixes "and", "or", "xor" to have a diamond shape
+    
+        # Check for node definitions (ignore edges and other elements)
+        if '->' not in line and not line.strip().startswith("{"):
+            # Extract the node name (strip quotes if present)
+            node_name = line.split()[0]#.strip('"')
+            # Check if the node name starts with the desired prefixes
+            if node_name.startswith(("AND", "or", "XOR", "OR")):
+                # Add the diamond shape to the node
+                if "[" in line:  # If attributes already exist
+                    dot.body[i] = line.replace("[", "[shape=diamond, ")
+                else:  # Add attributes if none exist
+                    dot.body[i] = f'{line[:-1]} [shape=diamond]\n'
+
+    return dot    
 
 
 def __get_variants_dict__(rawEventData:RawEventData) -> Dict[str,List[str]]:
