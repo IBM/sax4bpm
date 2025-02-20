@@ -2,10 +2,11 @@
 # Copyright contributors to the SAX4BPM project
 # -----------------------------------------------------------------------------
 import collections
+import collections
 from itertools import chain
 import pandas as pd
 from typing import Dict
-from typing import List
+from typing import List, Set
 from typing import Optional
 
 
@@ -71,10 +72,18 @@ def _discover_causal_dependencies_unification_variant_specific(dataObject:RawEve
         variant_specific_dict = {}
         variant_specific_dict[variant_set_str] = variants_dict[variant_set_str]
         results_per_variant =  __results_per_variants__(rawEventData=dataObject, variants_dict=variant_specific_dict,modality=modality ,prior_knowledge=prior_knowledge, threshold=threshold,algorithm=algorithm)
-        general_graph = __unification_of_results__(results=results_per_variant)
-        results_per_variants.append(CausalResultInfo((nx.to_numpy_array(general_graph)).T, list(general_graph.nodes())))
+        results_per_variants.append(results_per_variant)
+        #general_graph = __unification_of_results__(results=results_per_variant)
+        #results_per_variants.append(CausalResultInfo((nx.to_numpy_array(general_graph)).T, list(general_graph.nodes())))
 
-    if len(results_per_variants)>1:
+
+    results_per_variants = [
+    x
+    for xs in results_per_variants
+    for x in xs
+    ]   
+
+    if len(results_per_variants)>=1:
         general_graph = __unification_of_results__(results=results_per_variants)
 
     return CausalResultInfo((nx.to_numpy_array(general_graph)).T, list(general_graph.nodes()))
@@ -187,8 +196,7 @@ def view_causal_dependencies(dependencies: CausalResultInfo, p_value_threshold: 
         
         # Replace values below the p-value threshold with zeros
         np_matrix[mask] = 0
-        
-        dot = make_dot(np_matrix, labels = dependencies.getColumns())
+    dot = make_dot(np_matrix, labels = dependencies.getColumns())
 
     for i, line in enumerate(dot.body):
         if '->' in line:  # Check if the line represents an edge
@@ -215,8 +223,9 @@ def view_causal_dependencies(dependencies: CausalResultInfo, p_value_threshold: 
                 else:  # Add attributes if none exist
                     dot.body[i] = f'{line[:-1]} [shape=diamond]\n'
 
-    return dot    
-
+    return dot
+        
+        
 
 def __get_variants_dict__(rawEventData:RawEventData) -> Dict[str,List[str]]:
     variants_dict = {}
@@ -260,7 +269,7 @@ def __results_per_variants__(rawEventData : RawEventData, variants_dict: Dict[st
         variants_combined = []
         #find activities from other 
         for second_variant in variants_dict: 
-            if set(variants_dict[variant][0]) <= set(variants_dict[second_variant][0]):
+            if variant == second_variant:
                 for sub_variant in variants_dict[second_variant]:
                     sub_variant_str = ','.join(sub_variant)                    
                     or_variant = rawEventData.filterVariants([sub_variant_str])
@@ -282,82 +291,6 @@ def __results_per_variants__(rawEventData : RawEventData, variants_dict: Dict[st
                 pass
 
     return results
-
-
-def __simplify_descendants__(descendants_list, G, or_counter, permmisive=True):
-    while True:
-        merged = False
-        # Sort descendants_list by length of sublists, descending order
-        descendants_list = sorted(descendants_list, key=len, reverse=True)
-        for i, current_list in enumerate(descendants_list):
-            # Find all sublists of the current list in descendants_list
-            sublists = [lst for lst in descendants_list if set(lst).issubset(set(current_list))]
-            print(f'we start from {current_list}')
-            print(f'all the sons are {sublists}')
-            # Restrictive OR Gate
-            if len(sublists) == 2**len(current_list)-1 and len(sublists) != 1:
-                merged = True
-
-                # Remove all the sublists and the current list from descendants_list
-                descendants_list = [lst for lst in descendants_list if lst not in sublists]
-
-                # Create a new OR node
-                or_node = f"OR_{or_counter}"
-                or_counter += 1
-                G.add_node(or_node)
-
-                # Connect all elements of the removed sublists to the new OR node
-                for node in current_list:
-                    G.add_edge(or_node, node)
-
-                # Add the new OR node to descendants_list
-                descendants_list.append([or_node])
-
-                break  # Restart the process to ensure recursive merging
-
-        if not merged:
-            break
-    # Permissive OR Gate
-    if permmisive:
-        compare = lambda x, y: collections.Counter(x) == collections.Counter(y)
-        while True:
-            merged = False
-            #Sort descendants_list by length of sublists, descending order
-            descendants_list = sorted(descendants_list, key=len, reverse=True)
-            for i, current_list in enumerate(descendants_list):
-                sublists = [lst for lst in descendants_list if set(lst).issubset(set(current_list))]
-                #this is where we flat the list of descentdents
-                flat_list = [
-                    x
-                    for xs in sublists
-                    for x in xs
-                ]
-                flat_list = list(set(flat_list))
-
-                if len(current_list) > 1 and compare(current_list, flat_list):
-                    merged = True
-
-                    # Remove identified sublists and the current list from descendants_list
-                    descendants_list = [lst for lst in descendants_list if lst not in sublists]
-
-                    # Create a new OR node
-                    or_node = f"or_{or_counter}"
-                    or_counter += 1
-                    G.add_node(or_node)
-
-                    # Connect all elements of the removed sublists to the new OR node
-                    for node in current_list:
-                        G.add_edge(or_node, node)
-
-                    # Add the new OR node to descendants_list
-                    descendants_list.append([or_node])
-
-            # Restart the process to ensure recursive merging
-            if not merged:
-                break
-
-
-    return descendants_list, G, or_counter
 
 # Step 1: XOR Check
 def xor_check(family_of_sets):
