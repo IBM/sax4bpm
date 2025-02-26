@@ -105,8 +105,8 @@ class BaseProcessDataObject:
         :return: The extracted mandatory and optional properties dictionaries.
         :rtype: Tuple[dict, dict]
         """
-        mandatory_columns_names = [col for col in df.columns if "__" not in col]
-        optional_column_names = [col for col in df.columns if "__" in col]
+        mandatory_columns_names = [col for col in df.columns]
+        optional_column_names = [col for col in df.columns]
         #create dictionaries from the column names
         Id_column_name = mandatory_properties[Constants.CASE_ID_KEY]
       
