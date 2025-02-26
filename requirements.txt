@@ -13,7 +13,7 @@ build==1.2.1
 cachetools==5.4.0
 certifi==2024.7.4
 charset-normalizer==3.3.2
-chroma-hnswlib==0.7.6
+chroma-hnswlib
 chromadb==0.4.22
 click==8.1.7
 coloredlogs==15.0.1
